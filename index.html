@@ -728,17 +728,18 @@ function renderEinstellungen(){
   const folder=settings['blender_folder']||'';
   pg.innerHTML=`<div><div class="page-header"><div><div class="page-sub">System</div><div class="page-title">Einstellungen</div></div></div>
     <div class="settings-card">
-      <div class="settings-title">📁 Blender Projekt-Ordner</div>
-      <div class="settings-sub">Wähle deinen Blender-Ordner – das System liest alle .blend Dateien und legt fehlende Projekte automatisch an. Bereits vorhandene Projekte werden nicht doppelt erstellt.</div>
-      <div style="display:flex;gap:10px;margin-bottom:10px">
-        <input class="input-field input-mono" style="flex:1" id="setting-folder" placeholder="Ordnername wird nach dem Scan angezeigt" value="${folder}" readonly/>
-      </div>
+      <div class="settings-title">📁 Blender Dateien importieren</div>
+      <div class="settings-sub">Trag deine Blender-Dateinamen ein – einer pro Zeile oder kommagetrennt. Unterstützt .blend und .blend1. Bereits vorhandene Projekte werden nicht doppelt erstellt.</div>
+      <textarea class="notes-area" id="setting-blend-files" placeholder="kokiri_forest_v2.blend1
+raccoon_city_main.blend1
+midgar_scene.blend1
+..." style="height:120px;font-family:'Space Mono',monospace;font-size:12px;margin-bottom:10px">${settings['blend_files_raw']||''}</textarea>
       <div style="display:flex;gap:10px">
-        <button class="btn-accent" onclick="scanBlenderFolder()" style="flex:1;justify-content:center">📂 Ordner scannen & Projekte importieren</button>
-        <button class="btn" onclick="document.getElementById('setting-folder').value='';saveSetting('blender_folder','')" title="Zurücksetzen">✕</button>
+        <button class="btn-accent" onclick="importBlendFiles()" style="flex:1;justify-content:center">📥 Projekte importieren</button>
+        <button class="btn" onclick="document.getElementById('setting-blend-files').value=''" title="Leeren">✕</button>
       </div>
       <div style="margin-top:10px;background:var(--bg3);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text3);line-height:1.7">
-        💡 <strong style="color:var(--text2)">Tipp:</strong> Funktioniert in Chrome & Edge. Der Browser fragt einmalig um Erlaubnis. Keine Dateien werden hochgeladen – nur die Dateinamen werden gelesen.
+        💡 <strong style="color:var(--text2)">Tipp:</strong> Öffne deinen Blender-Ordner im Explorer, markiere alle Dateien, kopiere die Namen (Shift+Rechtsklick → Pfad kopieren oder einfach die Namen abtippen). Funktioniert in jedem Browser.
       </div>
     </div>
     <div class="settings-card">
@@ -1115,53 +1116,45 @@ async function syncYouTube(silent=false) {
 // ============================================================
 
 // ============================================================
-// BLENDER FOLDER SCANNER
+// BLENDER FILE IMPORTER
 // ============================================================
-async function scanBlenderFolder() {
-  if (!('showDirectoryPicker' in window)) {
-    showToast('Dein Browser unterstützt das nicht – bitte Chrome oder Edge nutzen');
-    return;
+function makeProjectName(filename) {
+  let name = filename.replace(/\.blend\d*$/i, '');
+  name = name.replace(/[_\-]+/g, ' ');
+  name = name.replace(/\s+v\d+\s*$/i, '').replace(/\s+final\s*$/i, '').replace(/\s+/g, ' ').trim();
+  return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+async function importBlendFiles() {
+  const raw = document.getElementById('setting-blend-files').value.trim();
+  if (!raw) { showToast('Bitte Dateinamen eingeben'); return; }
+
+  // Parse: split by newline or comma, clean up
+  const files = raw.split(/[
+,]+/).map(f => f.trim()).filter(f => f.length > 0);
+
+  // Accept .blend and .blend1/.blend2 etc.
+  const blendFiles = files.filter(f => /\.blend\d*$/i.test(f));
+
+  if (!blendFiles.length) { showToast('Keine gültigen .blend oder .blend1 Dateien gefunden'); return; }
+
+  let created = 0, skipped = 0;
+  for (const filename of blendFiles) {
+    const existing = projects.find(p => p.blender_file === filename);
+    if (existing) { skipped++; continue; }
+    const name = makeProjectName(filename);
+    await db.from('projects').insert({
+      name, blender_file: filename, status: 'bearbeitung',
+      last_worked: new Date().toISOString(), checklist: {}
+    });
+    created++;
   }
-  try {
-    showToast('📂 Ordner wird geöffnet...');
-    const dirHandle = await window.showDirectoryPicker({ mode: 'read' });
-    const blendFiles = [];
-    for await (const entry of dirHandle.values()) {
-      if (entry.kind === 'file' && entry.name.endsWith('.blend') && !entry.name.startsWith('.') && !entry.name.includes('backup')) {
-        blendFiles.push(entry.name);
-      }
-    }
 
-    if (!blendFiles.length) { showToast('Keine .blend Dateien gefunden'); return; }
-
-    let created = 0, skipped = 0;
-    for (const filename of blendFiles) {
-      const existing = projects.find(p => p.blender_file === filename);
-      if (existing) { skipped++; continue; }
-
-      // Make readable name from filename
-      let name = filename.replace(/\.blend$/i, '');
-      name = name.replace(/[_\-]/g, ' ').replace(/\s+v\d+$/i, '').replace(/\s+final$/i, '').replace(/\s+/g, ' ').trim();
-      name = name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-
-      await db.from('projects').insert({
-        name, blender_file: filename, status: 'bearbeitung',
-        last_worked: new Date().toISOString(), checklist: {}
-      });
-      created++;
-    }
-
-    await loadAll();
-    renderProjects();
-    showToast(`✅ ${blendFiles.length} Dateien gefunden · ${created} neue Projekte · ${skipped} bereits vorhanden`);
-
-    // Save folder path name as info
-    await saveSetting('blender_folder', dirHandle.name);
-    renderEinstellungen();
-
-  } catch(e) {
-    if (e.name !== 'AbortError') showToast('Fehler: ' + e.message);
-  }
+  await saveSetting('blend_files_raw', raw);
+  await loadAll();
+  renderProjects();
+  renderEinstellungen();
+  showToast(`✅ ${blendFiles.length} Dateien · ${created} neue Projekte · ${skipped} bereits vorhanden`);
 }
 
 // ============================================================
