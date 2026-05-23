@@ -296,7 +296,6 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 </div>
 
 <script>
-const{createClient}=supabase;
 let db=null;
 let projects=[],todos=[],shorts=[],sessions=[],settings={},notes=[],inspirations=[],shortPlatforms=[],projectRefs=[];
 let activeFilter=null,expandedIds=new Set(),newTodoInputs={};
@@ -1130,8 +1129,7 @@ async function importBlendFiles() {
   if (!raw) { showToast('Bitte Dateinamen eingeben'); return; }
 
   // Parse: split by newline or comma, clean up
-  const files = raw.split(/[
-,]+/).map(f => f.trim()).filter(f => f.length > 0);
+  const files = raw.replace(/,/g,'\n').split('\n').map(f=>f.trim()).filter(f=>f.length>0);
 
   // Accept .blend and .blend1/.blend2 etc.
   const blendFiles = files.filter(f => /\.blend\d*$/i.test(f));
