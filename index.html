@@ -6,14 +6,12 @@
 <title>Blender Projects</title>
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#18181f;--bg4:#1e1e28;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0f0f5;--text2:#8888a0;--text3:#555565;--accent:#6c63ff;--accent2:#9b95ff;--green:#3ecf8e;--green2:#0a2e1e;--blue:#3b82f6;--blue2:#0a1a2e;--amber:#f59e0b;--amber2:#2a1a00;--red:#ef4444;--red2:#2a0a0a;--purple:#a855f7;--purple2:#1a0a2e;--radius:10px;--radius-lg:14px}
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#18181f;--bg4:#1e1e28;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0f0f5;--text2:#8888a0;--text3:#555565;--accent:#6c63ff;--accent2:#9b95ff;--green:#3ecf8e;--green2:#0a2e1e;--blue:#3b82f6;--blue2:#0a1a2e;--amber:#f59e0b;--amber2:#2a1a00;--red:#ef4444;--red2:#2a0a0a;--pink:#ec4899;--pink2:#2a0a1a;--radius:10px;--radius-lg:14px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;min-height:100vh}
-.mono{font-family:'Space Mono',monospace}
-.nav{display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border);padding:0 1.5rem;background:var(--bg2);position:sticky;top:0;z-index:50;overflow-x:auto}
+.nav{display:flex;align-items:center;border-bottom:1px solid var(--border);padding:0 1.5rem;background:var(--bg2);position:sticky;top:0;z-index:50;overflow-x:auto}
 .nav-logo{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--text);padding:1rem 1.5rem 1rem 0;border-right:1px solid var(--border);margin-right:1rem;letter-spacing:-0.02em;white-space:nowrap;flex-shrink:0}
 .nav-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
@@ -47,7 +45,6 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .stat-card.idee .stat-num{color:var(--amber)}
 .stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
 .last-worked{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;display:flex;align-items:center;gap:14px;margin-bottom:1.5rem}
-.lw-icon{width:38px;height:38px;background:var(--bg4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .proj-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;overflow:hidden;transition:border-color 0.15s}
 .proj-card:hover{border-color:var(--border2)}
 .proj-header{padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px}
@@ -69,8 +66,8 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .proj-body{padding:16px;border-top:1px solid var(--border);display:none}
 .proj-body.open{display:block}
 .time-section{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px}
-.time-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.time-total{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--text)}
+.time-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.time-total{font-family:'Space Mono',monospace;font-size:22px;font-weight:700}
 .time-sub{font-size:11px;color:var(--text3);margin-top:2px}
 .session-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;color:var(--text3);border-bottom:1px solid var(--border)}
 .session-row:last-child{border-bottom:none}
@@ -94,21 +91,41 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .todo-del:hover{color:var(--red)}
 .progress-bar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:10px}
 .progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.3s}
-.short-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.short-play{width:28px;height:28px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-.tag{font-size:11px;background:var(--bg4);color:var(--text3);padding:1px 7px;border-radius:20px;border:1px solid var(--border)}
 .add-row{display:flex;gap:8px;margin-top:10px}
 .add-row input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;outline:none}
 .add-row input:focus{border-color:var(--accent)}
 .add-row input::placeholder{color:var(--text3)}
-.notes-area{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:100px;line-height:1.6;transition:border-color 0.15s}
+.notes-area{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:90px;line-height:1.6;transition:border-color 0.15s}
 .notes-area:focus{border-color:var(--accent)}
 .notes-area::placeholder{color:var(--text3)}
 .inspo-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.inspo-icon{width:28px;height:28px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.inspo-title{font-size:13px;font-weight:500;flex:1}
-.inspo-link{font-size:12px;color:var(--accent2);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
-.inspo-link:hover{text-decoration:underline}
+
+/* SHORT CARDS */
+.short-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px}
+.short-card-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.short-card-title{font-size:13px;font-weight:500;flex:1}
+.short-card-total{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3)}
+.platform-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--border)}
+.platform-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.platform-yt{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.2)}
+.platform-tiktok{background:rgba(236,72,153,0.15);border:1px solid rgba(236,72,153,0.2)}
+.platform-ig{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.2)}
+.platform-views{font-family:'Space Mono',monospace;font-size:12px;color:var(--text2);min-width:60px}
+.platform-revenue{font-family:'Space Mono',monospace;font-size:12px;color:var(--green);min-width:60px}
+.platform-link{font-size:11px;color:var(--accent2);text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.platform-link:hover{text-decoration:underline}
+
+/* CHECKLIST */
+.checklist-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.check-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all 0.15s}
+.check-step:hover{border-color:var(--border2)}
+.check-step.done{background:var(--green2);border-color:rgba(62,207,142,0.2)}
+.check-step-icon{width:18px;height:18px;border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0;transition:all 0.15s}
+.check-step.done .check-step-icon{background:var(--green);border-color:var(--green);color:#000}
+.check-step-label{font-size:12px;color:var(--text2)}
+.check-step.done .check-step-label{color:var(--green)}
+
+/* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:24px;width:400px;max-width:calc(100vw - 2rem)}
@@ -116,11 +133,14 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .form-group{margin-bottom:14px}
 .form-label{font-size:12px;color:var(--text3);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.05em}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+
+/* SETTINGS */
 .settings-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:16px}
 .settings-title{font-size:15px;font-weight:600;margin-bottom:4px}
 .settings-sub{font-size:13px;color:var(--text3);margin-bottom:18px;line-height:1.6}
-.code-block{background:var(--bg4);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-family:'Space Mono',monospace;font-size:12px;color:var(--accent2);line-height:1.7;margin:10px 0}
 .info-box{background:var(--blue2);border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius);padding:12px 14px;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px}
+
+/* STATS */
 .chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
 .chart-title{font-size:14px;font-weight:500;margin-bottom:16px;color:var(--text2)}
 .stat-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
@@ -128,11 +148,13 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .stat-row-label{font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stat-row-bar{flex:2;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
 .stat-row-fill{height:100%;border-radius:3px}
-.stat-row-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3);min-width:60px;text-align:right}
+.stat-row-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3);min-width:70px;text-align:right}
 .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .summary-card{background:var(--bg3);border-radius:var(--radius);padding:14px;text-align:center}
-.summary-num{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;margin-bottom:4px}
+.summary-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;margin-bottom:4px}
 .summary-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+
+/* CALENDAR */
 .cal-grid{display:grid;gap:8px}
 .cal-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color 0.15s}
 .cal-item:hover{border-color:var(--border2)}
@@ -143,12 +165,11 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .cal-date-box.none{background:var(--bg3);border:1px solid var(--border)}
 .cal-day{font-size:20px;font-weight:700;line-height:1}
 .cal-month{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
-.cal-item .overdue .cal-day,.cal-item .overdue .cal-month{color:var(--red)}
 .cal-info{flex:1;min-width:0}
 .cal-name{font-size:14px;font-weight:500;margin-bottom:4px}
 .cal-meta{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:8px}
-.cal-days-left{font-size:12px;font-family:'Space Mono',monospace;margin-left:auto;white-space:nowrap}
-.no-date{font-size:13px;color:var(--text3);text-align:center;padding:2rem 0}
+
+/* TOAST + MISC */
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:10px 18px;border-radius:var(--radius);font-size:13px;opacity:0;transform:translateY(8px);transition:all 0.2s;z-index:300;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 .loading{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:16px}
@@ -159,7 +180,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .page-title{font-size:20px;font-weight:600}
 .page-sub{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
 .filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.filter-tag{font-size:12px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:4px 12px;border-radius:20px;cursor:pointer}
+.filter-tag{font-size:12px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:4px 12px;border-radius:20px}
 .filter-clear{color:var(--text3);font-size:12px;cursor:pointer}
 .filter-clear:hover{color:var(--text2)}
 .section-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
@@ -173,7 +194,6 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
   <button class="nav-tab" onclick="switchTab('statistiken',this)">📊 Statistiken</button>
   <button class="nav-tab" onclick="switchTab('einstellungen',this)">⚙️ Einstellungen</button>
 </nav>
-
 <div class="page active" id="page-projekte"></div>
 <div class="page" id="page-kalender"></div>
 <div class="page" id="page-statistiken"></div>
@@ -184,18 +204,13 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 <div class="modal-overlay" id="modal-project">
   <div class="modal">
     <div class="modal-title">Neues Projekt</div>
-    <div class="form-group"><label class="form-label">Projektname</label><input class="input-field" style="width:100%" id="np-name" placeholder="z.B. Kokiri Forest – OoT" /></div>
+    <div class="form-group"><label class="form-label">Projektname</label><input class="input-field" style="width:100%" id="np-name" placeholder="z.B. Kokiri Forest – OoT"/></div>
     <div class="form-group"><label class="form-label">Status</label>
-      <select class="select-field" style="width:100%" id="np-status">
-        <option value="idee">💡 Idee</option><option value="bearbeitung" selected>🔵 In Bearbeitung</option><option value="fertig">✅ Fertig</option>
-      </select>
+      <select class="select-field" style="width:100%" id="np-status"><option value="idee">💡 Idee</option><option value="bearbeitung" selected>🔵 In Bearbeitung</option><option value="fertig">✅ Fertig</option></select>
     </div>
-    <div class="form-group"><label class="form-label">Blender Dateiname (optional)</label><input class="input-field input-mono" style="width:100%" id="np-file" placeholder="projekt_v1.blend" /></div>
-    <div class="form-group"><label class="form-label">Deadline (optional)</label><input class="input-field" style="width:100%" id="np-due" type="date" /></div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal('modal-project')">Abbrechen</button>
-      <button class="btn-accent" onclick="createProject()">Erstellen</button>
-    </div>
+    <div class="form-group"><label class="form-label">Blender Dateiname (optional)</label><input class="input-field input-mono" style="width:100%" id="np-file" placeholder="projekt_v1.blend"/></div>
+    <div class="form-group"><label class="form-label">Deadline (optional)</label><input class="input-field" style="width:100%" id="np-due" type="date"/></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-project')">Abbrechen</button><button class="btn-accent" onclick="createProject()">Erstellen</button></div>
   </div>
 </div>
 
@@ -203,15 +218,29 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 <div class="modal-overlay" id="modal-short">
   <div class="modal">
     <div class="modal-title">Short hinzufügen</div>
-    <input type="hidden" id="ns-projid" />
-    <div class="form-group"><label class="form-label">Titel</label><input class="input-field" style="width:100%" id="ns-title" placeholder="Short-Titel" /></div>
-    <div class="form-group"><label class="form-label">Aufrufe</label><input class="input-field" style="width:100%" id="ns-views" type="number" placeholder="0" /></div>
-    <div class="form-group"><label class="form-label">YouTube / TikTok Link</label><input class="input-field" style="width:100%" id="ns-link" placeholder="https://youtube.com/..." /></div>
-    <div class="form-group"><label class="form-label">Tags (kommagetrennt)</label><input class="input-field" style="width:100%" id="ns-tags" placeholder="Blender, Retro, GameScene" /></div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal('modal-short')">Abbrechen</button>
-      <button class="btn-accent" onclick="createShort()">Hinzufügen</button>
+    <input type="hidden" id="ns-projid"/>
+    <div class="form-group"><label class="form-label">Titel</label><input class="input-field" style="width:100%" id="ns-title" placeholder="Short-Titel"/></div>
+    <div class="form-group"><label class="form-label">Tags (kommagetrennt)</label><input class="input-field" style="width:100%" id="ns-tags" placeholder="Blender, Retro, GameScene"/></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-short')">Abbrechen</button><button class="btn-accent" onclick="createShort()">Hinzufügen</button></div>
+  </div>
+</div>
+
+<!-- Modal: Plattform -->
+<div class="modal-overlay" id="modal-platform">
+  <div class="modal">
+    <div class="modal-title">Plattform hinzufügen</div>
+    <input type="hidden" id="np2-shortid"/>
+    <div class="form-group"><label class="form-label">Plattform</label>
+      <select class="select-field" style="width:100%" id="np2-platform">
+        <option value="youtube">📺 YouTube</option>
+        <option value="tiktok">🎵 TikTok</option>
+        <option value="instagram">📸 Instagram</option>
+      </select>
     </div>
+    <div class="form-group"><label class="form-label">Aufrufe</label><input class="input-field" style="width:100%" id="np2-views" type="number" placeholder="0"/></div>
+    <div class="form-group"><label class="form-label">Einnahmen (€)</label><input class="input-field" style="width:100%" id="np2-revenue" type="number" step="0.01" placeholder="0.00"/></div>
+    <div class="form-group"><label class="form-label">Link</label><input class="input-field" style="width:100%" id="np2-link" placeholder="https://..."/></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-platform')">Abbrechen</button><button class="btn-accent" onclick="createPlatform()">Hinzufügen</button></div>
   </div>
 </div>
 
@@ -219,28 +248,35 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 <div class="modal-overlay" id="modal-inspo">
   <div class="modal">
     <div class="modal-title">Inspiration hinzufügen</div>
-    <input type="hidden" id="ni-projid" />
-    <div class="form-group"><label class="form-label">Titel</label><input class="input-field" style="width:100%" id="ni-title" placeholder="z.B. RE2 Remake Artwork" /></div>
-    <div class="form-group"><label class="form-label">Link (URL)</label><input class="input-field" style="width:100%" id="ni-url" placeholder="https://..." /></div>
+    <input type="hidden" id="ni-projid"/>
+    <div class="form-group"><label class="form-label">Titel</label><input class="input-field" style="width:100%" id="ni-title" placeholder="z.B. RE2 Remake Artwork"/></div>
+    <div class="form-group"><label class="form-label">Link (URL)</label><input class="input-field" style="width:100%" id="ni-url" placeholder="https://..."/></div>
     <div class="form-group"><label class="form-label">Typ</label>
-      <select class="select-field" style="width:100%" id="ni-type">
-        <option value="link">🔗 Link</option><option value="video">▶ Video</option><option value="image">🖼 Bild</option><option value="ref">📌 Referenz</option>
-      </select>
+      <select class="select-field" style="width:100%" id="ni-type"><option value="link">🔗 Link</option><option value="video">▶ Video</option><option value="image">🖼 Bild</option><option value="ref">📌 Referenz</option></select>
     </div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal('modal-inspo')">Abbrechen</button>
-      <button class="btn-accent" onclick="createInspo()">Hinzufügen</button>
-    </div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-inspo')">Abbrechen</button><button class="btn-accent" onclick="createInspo()">Hinzufügen</button></div>
   </div>
 </div>
 
 <script>
-const { createClient } = supabase;
-let db = null;
-let projects=[], todos=[], shorts=[], sessions=[], settings={}, notes=[], inspirations=[];
-let activeFilter=null, expandedIds=new Set(), newTodoInputs={};
-let activeTimers={}, activeSessionIds={}, activeStartTimes={};
+const{createClient}=supabase;
+let db=null;
+let projects=[],todos=[],shorts=[],sessions=[],settings={},notes=[],inspirations=[],shortPlatforms=[];
+let activeFilter=null,expandedIds=new Set(),newTodoInputs={};
+let activeTimers={},activeSessionIds={},activeStartTimes={};
 let noteDebounce={};
+
+const CHECKLIST_STEPS=[
+  {key:'render',label:'🎬 Render fertig'},
+  {key:'short_cut',label:'✂️ Short geschnitten'},
+  {key:'long_cut',label:'🎞️ Long Version fertig'},
+  {key:'thumbnail',label:'🖼️ Thumbnail erstellt'},
+  {key:'posted_yt',label:'📺 YouTube gepostet'},
+  {key:'posted_tiktok',label:'🎵 TikTok gepostet'},
+  {key:'posted_ig',label:'📸 Instagram gepostet'},
+];
+
+const PLATFORM_INFO={youtube:{icon:'📺',label:'YouTube',color:'var(--red)',cls:'platform-yt'},tiktok:{icon:'🎵',label:'TikTok',color:'var(--pink)',cls:'platform-tiktok'},instagram:{icon:'📸',label:'Instagram',color:'var(--amber)',cls:'platform-ig'}};
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 function openModal(id){document.getElementById(id).classList.add('open')}
@@ -250,32 +286,23 @@ document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('cli
 function switchTab(name,el){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('page-'+name).classList.add('active');
-  if(name==='kalender') renderKalender();
-  if(name==='statistiken') renderStatistiken();
-  if(name==='einstellungen') renderEinstellungen();
+  el.classList.add('active');document.getElementById('page-'+name).classList.add('active');
+  if(name==='kalender')renderKalender();
+  if(name==='statistiken')renderStatistiken();
+  if(name==='einstellungen')renderEinstellungen();
 }
 
-function isConfigured(){return typeof SUPABASE_URL!=='undefined' && SUPABASE_URL!=='DEINE_SUPABASE_URL_HIER' && typeof SUPABASE_KEY!=='undefined' && SUPABASE_KEY!=='DEIN_SUPABASE_ANON_KEY_HIER'}
+function isConfigured(){return typeof SUPABASE_URL!=='undefined'&&SUPABASE_URL!=='DEINE_SUPABASE_URL_HIER'&&typeof SUPABASE_KEY!=='undefined'&&SUPABASE_KEY!=='DEIN_SUPABASE_ANON_KEY_HIER'}
 
 async function init(){
-  if(!isConfigured()){
-    document.getElementById('page-projekte').innerHTML=`<div style="max-width:460px;margin:4rem auto;padding:1.25rem"><div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;margin-bottom:8px">// Setup erforderlich</div><div style="font-size:13px;color:var(--text3);line-height:1.7;margin-bottom:16px">Trag deine Supabase Zugangsdaten in der config.js ein.</div></div>`;
-    return;
-  }
+  if(!isConfigured()){document.getElementById('page-projekte').innerHTML=`<div style="max-width:460px;margin:4rem auto;padding:1.25rem"><div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;margin-bottom:8px">// Setup erforderlich</div><div style="font-size:13px;color:var(--text3);line-height:1.7">Trag deine Supabase Zugangsdaten in config.js ein.</div></div>`;return}
   document.getElementById('page-projekte').innerHTML=`<div class="loading"><div class="spinner"></div></div>`;
-  try{
-    db=createClient(SUPABASE_URL,SUPABASE_KEY);
-    await loadAll();
-    renderProjects();
-  }catch(e){
-    document.getElementById('page-projekte').innerHTML=`<div class="loading"><div style="color:var(--red)">Fehler: ${e.message}</div></div>`;
-  }
+  try{db=createClient(SUPABASE_URL,SUPABASE_KEY);await loadAll();renderProjects()}
+  catch(e){document.getElementById('page-projekte').innerHTML=`<div class="loading"><div style="color:var(--red)">Fehler: ${e.message}</div></div>`}
 }
 
 async function loadAll(){
-  const [p,t,s,se,st,n,ins]=await Promise.all([
+  const[p,t,s,se,st,n,ins,sp]=await Promise.all([
     db.from('projects').select('*').order('created_at',{ascending:false}),
     db.from('todos').select('*').order('created_at',{ascending:true}),
     db.from('shorts').select('*').order('created_at',{ascending:false}),
@@ -283,30 +310,29 @@ async function loadAll(){
     db.from('settings').select('*'),
     db.from('notes').select('*'),
     db.from('inspirations').select('*').order('created_at',{ascending:false}),
+    db.from('short_platforms').select('*').order('created_at',{ascending:false}),
   ]);
-  projects=p.data||[]; todos=t.data||[]; shorts=s.data||[]; sessions=se.data||[];
-  notes=n.data||[]; inspirations=ins.data||[];
-  if(st.data) st.data.forEach(s=>settings[s.key]=s.value);
-  sessions.filter(s=>!s.ended_at).forEach(s=>{
-    if(!activeSessionIds[s.project_id]){activeSessionIds[s.project_id]=s.id;activeStartTimes[s.project_id]=new Date(s.started_at)}
-  });
+  projects=p.data||[];todos=t.data||[];shorts=s.data||[];sessions=se.data||[];
+  notes=n.data||[];inspirations=ins.data||[];shortPlatforms=sp.data||[];
+  if(st.data)st.data.forEach(s=>settings[s.key]=s.value);
+  sessions.filter(s=>!s.ended_at).forEach(s=>{if(!activeSessionIds[s.project_id]){activeSessionIds[s.project_id]=s.id;activeStartTimes[s.project_id]=new Date(s.started_at)}});
 }
 
-function getLastWorked(){return [...projects].filter(p=>p.last_worked).sort((a,b)=>new Date(b.last_worked)-new Date(a.last_worked))[0]}
-function timeAgo(iso){if(!iso)return '';const d=Date.now()-new Date(iso).getTime(),h=Math.floor(d/3600000);if(h<1)return 'Gerade eben';if(h<24)return `Vor ${h}h`;return `Vor ${Math.floor(h/24)}d`}
-function fmtDuration(ms){if(!ms||ms<0)return '00:00:00';const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60);return `${String(h).padStart(2,'0')}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
-function fmtDurationShort(ms){if(!ms||ms<0)return '0m';const m=Math.floor(ms/60000),h=Math.floor(m/60);if(h>0)return `${h}h ${m%60}m`;return `${m}m`}
+function getLastWorked(){return[...projects].filter(p=>p.last_worked).sort((a,b)=>new Date(b.last_worked)-new Date(a.last_worked))[0]}
+function timeAgo(iso){if(!iso)return'';const d=Date.now()-new Date(iso).getTime(),h=Math.floor(d/3600000);if(h<1)return'Gerade eben';if(h<24)return`Vor ${h}h`;return`Vor ${Math.floor(h/24)}d`}
+function fmtDuration(ms){if(!ms||ms<0)return'00:00:00';const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60);return`${String(h).padStart(2,'0')}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+function fmtDurationShort(ms){if(!ms||ms<0)return'0m';const m=Math.floor(ms/60000),h=Math.floor(m/60);if(h>0)return`${h}h ${m%60}m`;return`${m}m`}
 function getTotalTime(projId){let t=0;sessions.filter(s=>s.project_id===projId).forEach(s=>{const e=s.ended_at?new Date(s.ended_at):new Date();t+=e-new Date(s.started_at)});return t}
 function statusLabel(s){return s==='fertig'?'Fertig':s==='bearbeitung'?'In Bearbeitung':'Idee'}
 function statusIcon(s){return s==='fertig'?'✅':s==='bearbeitung'?'🔵':'💡'}
-function fmt(n){return n>=1000?(n/1000).toFixed(1)+'k':n.toString()}
+function fmt(n){return n>=1000?(n/1000).toFixed(1)+'k':String(n)}
+function fmtEuro(n){return'€'+parseFloat(n||0).toFixed(2)}
+function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d)-new Date(new Date().toDateString()))/(864e5))}
 function typeIcon(t){return t==='video'?'▶':t==='image'?'🖼':t==='ref'?'📌':'🔗'}
-
-function daysUntil(dateStr){
-  if(!dateStr) return null;
-  const diff=new Date(dateStr)-new Date(new Date().toDateString());
-  return Math.ceil(diff/(1000*60*60*24));
-}
+function getChecklist(p){return p.checklist||{}}
+function getChecklistPct(p){const cl=getChecklist(p);const done=CHECKLIST_STEPS.filter(s=>cl[s.key]).length;return Math.round(done/CHECKLIST_STEPS.length*100)}
+function getTotalRevenue(projId){let r=0;shorts.filter(s=>s.project_id===projId).forEach(s=>{shortPlatforms.filter(pl=>pl.short_id===s.id).forEach(pl=>{r+=parseFloat(pl.revenue||0)})});return r}
+function getTotalViews(projId){let v=0;shorts.filter(s=>s.project_id===projId).forEach(s=>{shortPlatforms.filter(pl=>pl.short_id===s.id).forEach(pl=>{v+=parseInt(pl.views||0)})});return v}
 
 function renderProjects(){
   const pg=document.getElementById('page-projekte');
@@ -317,7 +343,7 @@ function renderProjects(){
   const filtered=activeFilter?projects.filter(p=>p.status===activeFilter):projects;
   let html=`<div>`;
 
-  html+=`<div class="page-header"><div><div class="page-sub">Übersicht</div><div class="page-title">${projects.length} Projekte gesamt</div></div><button class="btn-accent" onclick="openModal('modal-project')">+ Neues Projekt</button></div>`;
+  html+=`<div class="page-header"><div><div class="page-sub">Übersicht</div><div class="page-title">${projects.length} Projekte</div></div><button class="btn-accent" onclick="openModal('modal-project')">+ Neues Projekt</button></div>`;
 
   html+=`<div class="stats-grid">
     <div class="stat-card fertig${activeFilter==='fertig'?' active':''}" onclick="setFilter('fertig')"><div style="font-size:20px;margin-bottom:8px">✅</div><div class="stat-num">${fertig}</div><div class="stat-label">Fertig</div></div>
@@ -327,20 +353,21 @@ function renderProjects(){
 
   if(last){
     const lt=todos.filter(t=>t.project_id===last.id),ld=lt.filter(t=>t.done).length,pct=lt.length?Math.round(ld/lt.length*100):0;
-    const totalMs=getTotalTime(last.id);
-    const days=daysUntil(last.due_date);
-    html+=`<div class="last-worked"><div class="lw-icon">🎬</div><div style="flex:1;min-width:0">
-      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Zuletzt bearbeitet</div>
-      <div style="font-size:15px;font-weight:500">${last.name}</div>
-      ${last.blender_file?`<div style="font-size:12px;color:var(--text3);font-family:'Space Mono',monospace;margin-top:2px">📁 ${last.blender_file}</div>`:''}
-      <div style="margin-top:6px"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-      <div style="font-size:11px;color:var(--text3)">${ld}/${lt.length} Tasks · ⏱ ${fmtDurationShort(totalMs)} gesamt${days!==null?` · 📅 ${days<0?`${Math.abs(days)}d überfällig`:days===0?'Heute fällig':`${days}d verbleibend`}`:''}</div></div>
-    </div><div style="font-size:12px;color:var(--text3);margin-left:auto;white-space:nowrap">${timeAgo(last.last_worked)}</div></div>`;
+    const rev=getTotalRevenue(last.id),views=getTotalViews(last.id);
+    html+=`<div class="last-worked"><div style="width:38px;height:38px;background:var(--bg4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎬</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Zuletzt bearbeitet</div>
+        <div style="font-size:15px;font-weight:500">${last.name}</div>
+        <div style="margin-top:6px"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div style="font-size:11px;color:var(--text3)">${ld}/${lt.length} Tasks · ⏱ ${fmtDurationShort(getTotalTime(last.id))}${views>0?` · 👁 ${fmt(views)}`:''}${rev>0?` · 💰 ${fmtEuro(rev)}`:''}</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-left:auto;white-space:nowrap">${timeAgo(last.last_worked)}</div>
+    </div>`;
   }
 
   if(activeFilter){html+=`<div class="filter-bar"><span class="filter-tag">${statusIcon(activeFilter)} ${statusLabel(activeFilter)}</span><span class="filter-clear" onclick="setFilter(null)">✕ Zurücksetzen</span></div>`}
   html+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="section-title">${filtered.length} Projekte${activeFilter?' · '+statusLabel(activeFilter):''}</div></div>`;
-  if(!filtered.length) html+=`<div style="text-align:center;padding:3rem 0;color:var(--text3);font-size:14px">Keine Projekte</div>`;
+  if(!filtered.length)html+=`<div style="text-align:center;padding:3rem 0;color:var(--text3);font-size:14px">Keine Projekte</div>`;
 
   for(const p of filtered){
     const expanded=expandedIds.has(p.id);
@@ -352,31 +379,37 @@ function renderProjects(){
     const isRunning=!!activeSessionIds[p.id];
     const totalMs=getTotalTime(p.id);
     const days=daysUntil(p.due_date);
+    const chkPct=getChecklistPct(p);
+    const totalRev=getTotalRevenue(p.id);
+    const totalViews=getTotalViews(p.id);
 
     html+=`<div class="proj-card"><div class="proj-header" onclick="toggleExpand('${p.id}')">
       <div class="proj-icon">${statusIcon(p.status)}</div>
       <div class="proj-name">${p.name}</div>
       <div class="proj-meta">
         <span class="badge badge-${p.status}">${statusLabel(p.status)}</span>
-        ${days!==null?(days<0?`<span class="badge badge-overdue">⚠ ${Math.abs(days)}d überfällig</span>`:(days<=7?`<span class="badge badge-soon">📅 ${days}d`:'')):''}
+        ${days!==null&&days<0?`<span class="badge badge-overdue">⚠ ${Math.abs(days)}d überfällig</span>`:''}
+        ${days!==null&&days>=0&&days<=7?`<span class="badge badge-soon">📅 ${days}d</span>`:''}
         ${isRunning?`<span class="timer-active"><span class="timer-dot"></span><span id="live-${p.id}">${fmtDuration(Date.now()-activeStartTimes[p.id])}</span></span>`:(totalMs>0?`<span class="badge badge-time">⏱ ${fmtDurationShort(totalMs)}</span>`:'')}
-        ${projShorts.length?`<span style="font-size:12px;color:var(--text3)">${projShorts.length} Short${projShorts.length>1?'s':''}</span>`:''}
-        <span style="font-size:12px;color:var(--text3)">${doneTodos}/${projTodos.length} ✓</span>
+        ${totalViews>0?`<span style="font-size:12px;color:var(--text3)">👁 ${fmt(totalViews)}</span>`:''}
+        ${totalRev>0?`<span style="font-size:12px;color:var(--green)">💰 ${fmtEuro(totalRev)}</span>`:''}
+        ${chkPct>0?`<span style="font-size:12px;color:var(--text3)">☑ ${chkPct}%</span>`:''}
       </div>
       <div class="chevron${expanded?' open':''}">▾</div>
     </div>`;
 
     if(expanded){
       const projSessions=sessions.filter(s=>s.project_id===p.id);
+      const cl=getChecklist(p);
       html+=`<div class="proj-body open">`;
 
       // TIME
       html+=`<div class="time-section"><div class="time-header">
-        <div><div class="time-total" id="total-${p.id}">${fmtDurationShort(totalMs)||'0m'}</div><div class="time-sub">Gesamtzeit · ${projSessions.length} Session${projSessions.length!==1?'s':''}</div></div>
+        <div><div class="time-total">${fmtDurationShort(totalMs)||'0m'}</div><div class="time-sub">${projSessions.length} Session${projSessions.length!==1?'s':''}</div></div>
         ${isRunning?`<button class="btn-stop" onclick="stopTimer('${p.id}')">⏹ Stoppen</button>`:`<button class="btn-green" onclick="startTimer('${p.id}')">▶ Starten</button>`}
       </div>`;
       if(projSessions.length){
-        html+=`<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">`;
+        html+=`<div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">`;
         projSessions.slice(0,3).forEach(s=>{
           const dur=s.ended_at?new Date(s.ended_at)-new Date(s.started_at):Date.now()-new Date(s.started_at);
           const date=new Date(s.started_at).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
@@ -387,11 +420,27 @@ function renderProjects(){
       }
       html+=`</div>`;
 
+      // EXPORT CHECKLIST
+      html+=`<div class="subsection"><div class="subsection-header">
+        <div class="subsection-label">☑ Export-Checkliste <span style="font-weight:400">${chkPct}%</span></div>
+        <span style="font-size:12px;color:var(--text3)">${CHECKLIST_STEPS.filter(s=>cl[s.key]).length}/${CHECKLIST_STEPS.length}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${chkPct}%"></div></div>
+      <div class="checklist-grid">`;
+      CHECKLIST_STEPS.forEach(step=>{
+        const done=!!cl[step.key];
+        html+=`<div class="check-step${done?' done':''}" onclick="toggleChecklist('${p.id}','${step.key}',${!done})">
+          <div class="check-step-icon">${done?'✓':''}</div>
+          <div class="check-step-label">${step.label}</div>
+        </div>`;
+      });
+      html+=`</div></div>`;
+
       // FILE + STATUS + DUE
       html+=`<div class="file-row">
         <span style="font-size:14px">📁</span>
-        <input class="input-field input-mono" style="flex:1;min-width:120px" placeholder="datei.blend" value="${p.blender_file||''}" onchange="updateBlenderFile('${p.id}',this.value)" />
-        <input class="input-field" type="date" value="${p.due_date||''}" title="Deadline" onchange="updateDueDate('${p.id}',this.value)" style="width:140px" />
+        <input class="input-field input-mono" style="flex:1;min-width:120px" placeholder="datei.blend" value="${p.blender_file||''}" onchange="updateBlenderFile('${p.id}',this.value)"/>
+        <input class="input-field" type="date" value="${p.due_date||''}" title="Deadline" onchange="updateDueDate('${p.id}',this.value)" style="width:140px"/>
         <select class="select-field" onchange="updateStatus('${p.id}',this.value)">
           <option value="idee"${p.status==='idee'?' selected':''}>💡 Idee</option>
           <option value="bearbeitung"${p.status==='bearbeitung'?' selected':''}>🔵 In Arbeit</option>
@@ -400,6 +449,39 @@ function renderProjects(){
         <button class="btn-danger" onclick="deleteProject('${p.id}')">🗑</button>
       </div>`;
 
+      // SHORTS + PLATFORMS
+      html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">▶ Shorts</div><button class="btn" onclick="openShortModal('${p.id}')">+ Short</button></div>`;
+      if(!projShorts.length)html+=`<div class="empty">Noch keine Shorts</div>`;
+      projShorts.forEach(s=>{
+        const tags=Array.isArray(s.tags)?s.tags:[];
+        const platforms=shortPlatforms.filter(pl=>pl.short_id===s.id);
+        const totalV=platforms.reduce((a,pl)=>a+parseInt(pl.views||0),0);
+        const totalR=platforms.reduce((a,pl)=>a+parseFloat(pl.revenue||0),0);
+        html+=`<div class="short-card">
+          <div class="short-card-header">
+            <div style="width:28px;height:28px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">▶</div>
+            <div class="short-card-title">${s.title}</div>
+            ${totalV>0?`<span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text3)">👁 ${fmt(totalV)}</span>`:''}
+            ${totalR>0?`<span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green)">💰 ${fmtEuro(totalR)}</span>`:''}
+            <button class="btn" style="font-size:11px;padding:4px 10px" onclick="openPlatformModal('${s.id}')">+ Plattform</button>
+            <button class="btn-danger" onclick="deleteShort('${s.id}')" style="font-size:12px;padding:4px 8px">✕</button>
+          </div>
+          ${tags.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:${platforms.length?'0':'0'}px">${tags.map(t=>`<span style="font-size:11px;background:var(--bg4);color:var(--text3);padding:1px 7px;border-radius:20px;border:1px solid var(--border)">#${t}</span>`).join('')}</div>`:''}
+          ${platforms.map(pl=>{
+            const pi=PLATFORM_INFO[pl.platform]||{icon:'🔗',label:pl.platform,color:'var(--text2)',cls:''};
+            return`<div class="platform-row">
+              <div class="platform-icon ${pi.cls}">${pi.icon}</div>
+              <span style="font-size:12px;color:${pi.color};min-width:70px">${pi.label}</span>
+              <span class="platform-views">👁 ${fmt(parseInt(pl.views||0))}</span>
+              <span class="platform-revenue">${parseFloat(pl.revenue||0)>0?'💰 '+fmtEuro(pl.revenue):''}</span>
+              ${pl.link?`<a class="platform-link" href="${pl.link}" target="_blank">🔗 Öffnen</a>`:'<span class="platform-link"></span>'}
+              <button class="btn-danger" onclick="deletePlatform('${pl.id}')" style="font-size:11px;padding:2px 6px">✕</button>
+            </div>`;
+          }).join('')}
+        </div>`;
+      });
+      html+=`</div>`;
+
       // NOTIZEN
       html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">📝 Notizen</div><span style="font-size:11px;color:var(--text3)" id="note-saved-${p.id}"></span></div>
         <textarea class="notes-area" id="note-area-${p.id}" placeholder="Ideen, Referenzen, Anmerkungen..." oninput="debounceSaveNote('${p.id}',this.value)">${projNotes?projNotes.content:''}</textarea>
@@ -407,97 +489,98 @@ function renderProjects(){
 
       // INSPIRATIONS
       html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">💡 Inspirations-Board</div><button class="btn" onclick="openInspoModal('${p.id}')">+ Link</button></div>`;
-      if(!projInspos.length) html+=`<div class="empty">Noch keine Inspirationen gesammelt</div>`;
+      if(!projInspos.length)html+=`<div class="empty">Noch keine Inspirationen</div>`;
       projInspos.forEach(i=>{
-        html+=`<div class="inspo-item"><div class="inspo-icon">${typeIcon(i.type)}</div>
+        html+=`<div class="inspo-item"><div style="width:28px;height:28px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">${typeIcon(i.type)}</div>
           <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500">${i.title}</div>
-          <a class="inspo-link" href="${i.url}" target="_blank">${i.url}</a></div>
+          <a style="font-size:12px;color:var(--accent2);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block" href="${i.url}" target="_blank">${i.url}</a></div>
           <button class="btn-danger" onclick="deleteInspo('${i.id}')" style="font-size:12px;padding:4px 8px">✕</button>
-        </div>`;
-      });
-      html+=`</div>`;
-
-      // SHORTS
-      html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">▶ Shorts</div><button class="btn" onclick="openShortModal('${p.id}')">+ Short</button></div>`;
-      if(!projShorts.length) html+=`<div class="empty">Noch keine Shorts</div>`;
-      projShorts.forEach(s=>{
-        const tags=Array.isArray(s.tags)?s.tags:[];
-        html+=`<div class="short-item"><div class="short-play">▶</div>
-          <div class="short-info" style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:13px;font-weight:500;flex:1">${s.title}</span>
-              ${s.link?`<a href="${s.link}" target="_blank" style="font-size:11px;color:var(--accent2);text-decoration:none;white-space:nowrap">🔗 Öffnen</a>`:''}
-            </div>
-            <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">${tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>
-          </div>
-          <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text3);white-space:nowrap">👁 ${fmt(s.views)}</div>
-          <button class="btn-danger" onclick="deleteShort('${s.id}')" style="font-size:12px;padding:4px 8px">✕</button>
         </div>`;
       });
       html+=`</div>`;
 
       // TODOS
       const pct=projTodos.length?Math.round(doneTodos/projTodos.length*100):0;
-      html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">✓ Todo-Liste <span style="color:var(--text3);font-weight:400">${pct}%</span></div><span style="font-size:12px;color:var(--text3)">${doneTodos}/${projTodos.length}</span></div>
+      html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">✓ Todo-Liste <span style="font-weight:400">${pct}%</span></div><span style="font-size:12px;color:var(--text3)">${doneTodos}/${projTodos.length}</span></div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>`;
-      if(!projTodos.length) html+=`<div class="empty">Noch keine Tasks</div>`;
+      if(!projTodos.length)html+=`<div class="empty">Noch keine Tasks</div>`;
       projTodos.forEach(t=>{
         html+=`<div class="todo-item"><div class="todo-check${t.done?' done':''}" onclick="toggleTodo('${t.id}','${p.id}',${!t.done})">${t.done?'✓':''}</div><div class="todo-text${t.done?' done':''}">${t.text}</div><button class="todo-del btn-danger" onclick="deleteTodo('${t.id}')" style="font-size:12px;padding:4px 8px">✕</button></div>`;
       });
       html+=`<div class="add-row"><input placeholder="Neuen Task eingeben..." id="todo-input-${p.id}" value="${newTodoInputs[p.id]||''}" oninput="newTodoInputs['${p.id}']=this.value" onkeydown="if(event.key==='Enter')addTodo('${p.id}')"/><button class="btn-accent" onclick="addTodo('${p.id}')">+ Task</button></div>`;
-      html+=`</div>`;
-      html+=`</div>`;
+      html+=`</div></div>`;
     }
     html+=`</div>`;
   }
   html+=`</div>`;
   pg.innerHTML=html;
   Object.keys(activeSessionIds).forEach(pid=>{
-    if(activeTimers[pid]) clearInterval(activeTimers[pid]);
-    activeTimers[pid]=setInterval(()=>{const el=document.getElementById('live-'+pid);if(el&&activeStartTimes[pid]) el.textContent=fmtDuration(Date.now()-activeStartTimes[pid])},1000);
+    if(activeTimers[pid])clearInterval(activeTimers[pid]);
+    activeTimers[pid]=setInterval(()=>{const el=document.getElementById('live-'+pid);if(el&&activeStartTimes[pid])el.textContent=fmtDuration(Date.now()-activeStartTimes[pid])},1000);
   });
 }
 
 function renderKalender(){
   const pg=document.getElementById('page-kalender');
+  const now=new Date();
+  const selMonth=window.calMonth!==undefined?window.calMonth:now.getMonth();
+  const selYear=window.calYear!==undefined?window.calYear:now.getFullYear();
+  window.calMonth=selMonth;window.calYear=selYear;
+  const firstDay=new Date(selYear,selMonth,1);
+  const lastDay=new Date(selYear,selMonth+1,0);
+  const startDow=(firstDay.getDay()+6)%7;
+  const totalDays=lastDay.getDate();
+  const monthName=firstDay.toLocaleString('de-DE',{month:'long',year:'numeric'});
+  const deadlineMap={};
+  projects.filter(p=>p.due_date).forEach(p=>{if(!deadlineMap[p.due_date])deadlineMap[p.due_date]=[];deadlineMap[p.due_date].push(p)});
   const withDate=projects.filter(p=>p.due_date).sort((a,b)=>new Date(a.due_date)-new Date(b.due_date));
-  const noDate=projects.filter(p=>!p.due_date);
-  let html=`<div><div class="page-header"><div><div class="page-sub">Planung</div><div class="page-title">Deadlines & Kalender</div></div></div>`;
-
-  if(!withDate.length&&!noDate.length){html+=`<div style="text-align:center;padding:3rem 0;color:var(--text3)">Noch keine Projekte</div>`;html+=`</div>`;pg.innerHTML=html;return}
-
-  if(withDate.length){
-    html+=`<div style="margin-bottom:24px"><div class="section-title" style="margin-bottom:12px">Mit Deadline</div><div class="cal-grid">`;
-    withDate.forEach(p=>{
-      const days=daysUntil(p.due_date);
-      const d=new Date(p.due_date);
-      const dayNum=d.getDate();
-      const mon=d.toLocaleString('de-DE',{month:'short'}).toUpperCase();
-      const boxClass=days<0?'overdue':days<=7?'soon':'ok';
-      const daysText=days<0?`${Math.abs(days)}d überfällig`:days===0?'Heute!':days===1?'Morgen':`${days}d noch`;
-      const daysColor=days<0?'var(--red)':days<=7?'var(--amber)':'var(--green)';
-      html+=`<div class="cal-item" onclick="focusProject('${p.id}')">
-        <div class="cal-date-box ${boxClass}"><div class="cal-day" style="color:${daysColor}">${dayNum}</div><div class="cal-month" style="color:${daysColor}">${mon}</div></div>
-        <div class="cal-info">
-          <div class="cal-name">${p.name}</div>
-          <div class="cal-meta"><span class="badge badge-${p.status}">${statusLabel(p.status)}</span>${p.blender_file?`<span style="font-family:'Space Mono',monospace;font-size:11px">📁 ${p.blender_file}</span>`:''}</div>
-        </div>
-        <div class="cal-days-left" style="color:${daysColor}">${daysText}</div>
-      </div>`;
+  let html=`<div><div class="page-header"><div><div class="page-sub">Planung</div><div class="page-title">Kalender</div></div>${withDate.length?`<button class="btn" onclick="exportICS()">📥 Windows Kalender (.ics)</button>`:''}</div>
+  <div class="chart-card" style="padding:0;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)">
+      <button class="btn" onclick="window.calMonth=${selMonth===0?11:selMonth-1};window.calYear=${selMonth===0?selYear-1:selYear};renderKalender()">◀</button>
+      <div style="font-size:15px;font-weight:500">${monthName}</div>
+      <button class="btn" onclick="window.calMonth=${selMonth===11?0:selMonth+1};window.calYear=${selMonth===11?selYear+1:selYear};renderKalender()">▶</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)">
+      ${['Mo','Di','Mi','Do','Fr','Sa','So'].map(d=>`<div style="text-align:center;padding:8px 4px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">${d}</div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr)">`;
+  for(let i=0;i<startDow;i++)html+=`<div style="min-height:72px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg3);opacity:0.4"></div>`;
+  for(let day=1;day<=totalDays;day++){
+    const dateStr=`${selYear}-${String(selMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isToday=day===now.getDate()&&selMonth===now.getMonth()&&selYear===now.getFullYear();
+    const events=deadlineMap[dateStr]||[];
+    const col=(startDow+day-1)%7,isWeekend=col===5||col===6;
+    html+=`<div style="min-height:72px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px;${isWeekend?'background:rgba(255,255,255,0.01)':''}">
+      <div style="font-size:12px;font-weight:${isToday?'700':'400'};color:${isToday?'#fff':'var(--text3)'};width:22px;height:22px;border-radius:50%;background:${isToday?'var(--accent)':'transparent'};display:flex;align-items:center;justify-content:center;margin-bottom:4px">${day}</div>`;
+    events.forEach(p=>{
+      const d=daysUntil(p.due_date);
+      const bg=d<0?'var(--red2)':d<=3?'var(--amber2)':'var(--green2)';
+      const color=d<0?'var(--red)':d<=3?'var(--amber)':'var(--green)';
+      html+=`<div onclick="focusProject('${p.id}')" title="${p.name}" style="font-size:10px;background:${bg};color:${color};border-radius:4px;padding:2px 5px;margin-bottom:2px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">🎬 ${p.name}</div>`;
     });
-    html+=`</div></div>`;
+    html+=`</div>`;
   }
-
-  if(noDate.length){
-    html+=`<div><div class="section-title" style="margin-bottom:12px">Ohne Deadline (${noDate.length})</div><div class="cal-grid">`;
-    noDate.forEach(p=>{
-      html+=`<div class="cal-item" onclick="focusProject('${p.id}')">
-        <div class="cal-date-box none"><div style="font-size:18px">—</div></div>
-        <div class="cal-info"><div class="cal-name">${p.name}</div><div class="cal-meta"><span class="badge badge-${p.status}">${statusLabel(p.status)}</span></div></div>
-        <div style="font-size:12px;color:var(--text3)">Keine Deadline</div>
-      </div>`;
-    });
-    html+=`</div></div>`;
+  const rem=(7-(startDow+totalDays)%7)%7;
+  for(let i=0;i<rem;i++)html+=`<div style="min-height:72px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg3);opacity:0.4"></div>`;
+  html+=`</div></div>`;
+  if(withDate.length){
+    const upcoming=withDate.filter(p=>daysUntil(p.due_date)>=-7).slice(0,6);
+    if(upcoming.length){
+      html+=`<div style="margin-top:16px"><div class="section-title" style="margin-bottom:12px">Nächste Deadlines</div><div class="cal-grid">`;
+      upcoming.forEach(p=>{
+        const days=daysUntil(p.due_date);
+        const d=new Date(p.due_date);
+        const daysColor=days<0?'var(--red)':days<=7?'var(--amber)':'var(--green)';
+        const daysText=days<0?`${Math.abs(days)}d überfällig`:days===0?'Heute!':days===1?'Morgen':`${days}d noch`;
+        html+=`<div class="cal-item" onclick="focusProject('${p.id}')">
+          <div class="cal-date-box ${days<0?'overdue':days<=7?'soon':'ok'}"><div class="cal-day" style="color:${daysColor}">${d.getDate()}</div><div class="cal-month" style="color:${daysColor}">${d.toLocaleString('de-DE',{month:'short'}).toUpperCase()}</div></div>
+          <div class="cal-info"><div class="cal-name">${p.name}</div><div class="cal-meta"><span class="badge badge-${p.status}">${statusLabel(p.status)}</span></div></div>
+          <div style="font-size:12px;font-family:'Space Mono',monospace;color:${daysColor};white-space:nowrap">${daysText}</div>
+        </div>`;
+      });
+      html+=`</div></div>`;
+    }
   }
   html+=`</div>`;
   pg.innerHTML=html;
@@ -506,16 +589,38 @@ function renderKalender(){
 function renderStatistiken(){
   const pg=document.getElementById('page-statistiken');
   const totalTime=sessions.reduce((a,s)=>{const e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at))},0);
-  const totalViews=shorts.reduce((a,s)=>a+s.views,0);
+  const totalViews=shortPlatforms.reduce((a,p)=>a+parseInt(p.views||0),0);
+  const totalRevenue=shortPlatforms.reduce((a,p)=>a+parseFloat(p.revenue||0),0);
   const doneTodosAll=todos.filter(t=>t.done).length;
+
   let html=`<div><div class="page-header"><div><div class="page-sub">Auswertung</div><div class="page-title">Statistiken</div></div></div>`;
 
-  // Summary
   html+=`<div class="summary-grid">
     <div class="summary-card"><div class="summary-num" style="color:var(--accent)">${projects.length}</div><div class="summary-label">Projekte</div></div>
     <div class="summary-card"><div class="summary-num" style="color:var(--green)">${fmtDurationShort(totalTime)}</div><div class="summary-label">Arbeitszeit</div></div>
-    <div class="summary-card"><div class="summary-num" style="color:var(--blue)">${fmt(totalViews)}</div><div class="summary-label">Short-Views</div></div>
-    <div class="summary-card"><div class="summary-num" style="color:var(--amber)">${doneTodosAll}/${todos.length}</div><div class="summary-label">Tasks erledigt</div></div>
+    <div class="summary-card"><div class="summary-num" style="color:var(--blue)">${fmt(totalViews)}</div><div class="summary-label">Views gesamt</div></div>
+    <div class="summary-card"><div class="summary-num" style="color:var(--green)">€${totalRevenue.toFixed(2)}</div><div class="summary-label">Einnahmen</div></div>
+  </div>`;
+
+  // Einnahmen pro Projekt
+  const projRev=projects.map(p=>({name:p.name,rev:getTotalRevenue(p.id),views:getTotalViews(p.id)})).filter(x=>x.rev>0||x.views>0).sort((a,b)=>b.rev-a.rev);
+  if(projRev.length){
+    const maxRev=Math.max(...projRev.map(x=>x.rev),0.01);
+    html+=`<div class="chart-card"><div class="chart-title">💰 Einnahmen pro Projekt</div>`;
+    projRev.forEach(x=>{
+      html+=`<div class="stat-row"><div class="stat-row-label" title="${x.name}">${x.name}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(x.rev/maxRev*100)}%;background:var(--green)"></div></div><div class="stat-row-val">€${x.rev.toFixed(2)}</div></div>`;
+    });
+    html+=`</div>`;
+  }
+
+  // Views pro Plattform
+  const plViews={youtube:0,tiktok:0,instagram:0};
+  shortPlatforms.forEach(p=>{if(plViews[p.platform]!==undefined)plViews[p.platform]+=parseInt(p.views||0)});
+  const maxPV=Math.max(...Object.values(plViews),1);
+  html+=`<div class="chart-card"><div class="chart-title">▶ Views nach Plattform</div>
+    <div class="stat-row"><div class="stat-row-label">📺 YouTube</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(plViews.youtube/maxPV*100)}%;background:var(--red)"></div></div><div class="stat-row-val">👁 ${fmt(plViews.youtube)}</div></div>
+    <div class="stat-row"><div class="stat-row-label">🎵 TikTok</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(plViews.tiktok/maxPV*100)}%;background:var(--pink)"></div></div><div class="stat-row-val">👁 ${fmt(plViews.tiktok)}</div></div>
+    <div class="stat-row"><div class="stat-row-label">📸 Instagram</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(plViews.instagram/maxPV*100)}%;background:var(--amber)"></div></div><div class="stat-row-val">👁 ${fmt(plViews.instagram)}</div></div>
   </div>`;
 
   // Arbeitszeit pro Projekt
@@ -524,35 +629,22 @@ function renderStatistiken(){
     const maxMs=projTime[0].ms;
     html+=`<div class="chart-card"><div class="chart-title">⏱ Arbeitszeit pro Projekt</div>`;
     projTime.forEach(x=>{
-      const pct=Math.round(x.ms/maxMs*100);
-      html+=`<div class="stat-row"><div class="stat-row-label" title="${x.name}">${x.name}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${pct}%;background:var(--accent)"></div></div><div class="stat-row-val">${fmtDurationShort(x.ms)}</div></div>`;
+      html+=`<div class="stat-row"><div class="stat-row-label" title="${x.name}">${x.name}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(x.ms/maxMs*100)}%;background:var(--accent)"></div></div><div class="stat-row-val">${fmtDurationShort(x.ms)}</div></div>`;
     });
     html+=`</div>`;
   }
 
-  // Views pro Short
-  const sortedShorts=[...shorts].filter(s=>s.views>0).sort((a,b)=>b.views-a.views).slice(0,8);
-  if(sortedShorts.length){
-    const maxV=sortedShorts[0].views;
-    html+=`<div class="chart-card"><div class="chart-title">▶ Shorts nach Aufrufen</div>`;
-    sortedShorts.forEach(s=>{
-      const pct=Math.round(s.views/maxV*100);
-      html+=`<div class="stat-row"><div class="stat-row-label" title="${s.title}">${s.title}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${pct}%;background:var(--blue)"></div></div><div class="stat-row-val">👁 ${fmt(s.views)}</div></div>`;
+  // Checklisten-Fortschritt
+  const projCheck=projects.map(p=>({name:p.name,pct:getChecklistPct(p)})).filter(x=>x.pct>0).sort((a,b)=>b.pct-a.pct);
+  if(projCheck.length){
+    html+=`<div class="chart-card"><div class="chart-title">☑ Checklisten-Fortschritt</div>`;
+    projCheck.forEach(x=>{
+      html+=`<div class="stat-row"><div class="stat-row-label">${x.name}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${x.pct}%;background:var(--amber)"></div></div><div class="stat-row-val">${x.pct}%</div></div>`;
     });
     html+=`</div>`;
   }
 
-  // Status Verteilung
-  const fertig=projects.filter(p=>p.status==='fertig').length;
-  const bearbeitung=projects.filter(p=>p.status==='bearbeitung').length;
-  const idee=projects.filter(p=>p.status==='idee').length;
-  html+=`<div class="chart-card"><div class="chart-title">📊 Projekte nach Status</div>
-    <div class="stat-row"><div class="stat-row-label">✅ Fertig</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${projects.length?Math.round(fertig/projects.length*100):0}%;background:var(--green)"></div></div><div class="stat-row-val">${fertig}</div></div>
-    <div class="stat-row"><div class="stat-row-label">🔵 In Bearbeitung</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${projects.length?Math.round(bearbeitung/projects.length*100):0}%;background:var(--blue)"></div></div><div class="stat-row-val">${bearbeitung}</div></div>
-    <div class="stat-row"><div class="stat-row-label">💡 Ideen</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${projects.length?Math.round(idee/projects.length*100):0}%;background:var(--amber)"></div></div><div class="stat-row-val">${idee}</div></div>
-  </div>`;
-
-  if(!projTime.length&&!sortedShorts.length) html+=`<div style="text-align:center;padding:3rem;color:var(--text3)">Noch keine Daten vorhanden – starte Zeiterfassung und füge Shorts hinzu!</div>`;
+  if(!projTime.length&&!projRev.length)html+=`<div style="text-align:center;padding:3rem;color:var(--text3)">Noch keine Daten – starte Zeiterfassung und trag Views ein!</div>`;
   html+=`</div>`;
   pg.innerHTML=html;
 }
@@ -560,71 +652,87 @@ function renderStatistiken(){
 function renderEinstellungen(){
   const pg=document.getElementById('page-einstellungen');
   const folder=settings['blender_folder']||'';
-  pg.innerHTML=`<div>
-    <div class="page-header"><div><div class="page-sub">System</div><div class="page-title">Einstellungen</div></div></div>
+  pg.innerHTML=`<div><div class="page-header"><div><div class="page-sub">System</div><div class="page-title">Einstellungen</div></div></div>
     <div class="settings-card">
       <div class="settings-title">📁 Blender Projekt-Ordner</div>
-      <div class="settings-sub">Hinterlege den Pfad wo Blender deine .blend Dateien speichert. Das Addon nutzt diesen Pfad automatisch.</div>
-      <div style="display:flex;gap:10px">
-        <input class="input-field input-mono" style="flex:1" id="setting-folder" placeholder="C:/Users/Name/Blender/Projects" value="${folder}" />
-        <button class="btn-accent" onclick="saveSetting('blender_folder',document.getElementById('setting-folder').value)">Speichern</button>
-      </div>
+      <div class="settings-sub">Pfad wo Blender deine .blend Dateien speichert. Das Addon nutzt diesen Pfad automatisch.</div>
+      <div style="display:flex;gap:10px"><input class="input-field input-mono" style="flex:1" id="setting-folder" placeholder="C:/Users/Name/Blender/Projects" value="${folder}"/><button class="btn-accent" onclick="saveSetting('blender_folder',document.getElementById('setting-folder').value)">Speichern</button></div>
     </div>
     <div class="settings-card">
       <div class="settings-title">🔌 Blender Addon</div>
-      <div class="settings-sub">Installiere das Addon in Blender. Es erkennt automatisch wenn du eine .blend Datei speicherst.</div>
-      <div class="info-box">💡 Installieren: <strong>Edit → Preferences → Add-ons → Install</strong> → blender_dashboard_addon.zip auswählen → Häkchen setzen</div>
+      <div class="settings-sub">Erkennt automatisch wenn du eine .blend Datei speicherst und legt das Projekt im Dashboard an.</div>
+      <div class="info-box">💡 Installieren: <strong>Edit → Preferences → Add-ons → Install</strong> → blender_dashboard_addon.zip</div>
     </div>
     <div class="settings-card">
       <div class="settings-title">ℹ️ System Info</div>
       <div style="font-size:13px;color:var(--text3);line-height:2">
         <div>Projekte: <span style="color:var(--text)">${projects.length}</span></div>
         <div>Todos: <span style="color:var(--text)">${todos.length}</span> (${todos.filter(t=>t.done).length} erledigt)</div>
-        <div>Shorts: <span style="color:var(--text)">${shorts.length}</span> · ${fmt(shorts.reduce((a,s)=>a+s.views,0))} Views gesamt</div>
-        <div>Inspirationen: <span style="color:var(--text)">${inspirations.length}</span></div>
+        <div>Shorts: <span style="color:var(--text)">${shorts.length}</span></div>
+        <div>Plattform-Einträge: <span style="color:var(--text)">${shortPlatforms.length}</span></div>
+        <div>Gesamt-Views: <span style="color:var(--text)">${fmt(shortPlatforms.reduce((a,p)=>a+parseInt(p.views||0),0))}</span></div>
+        <div>Gesamt-Einnahmen: <span style="color:var(--green)">€${shortPlatforms.reduce((a,p)=>a+parseFloat(p.revenue||0),0).toFixed(2)}</span></div>
         <div>Gesamt-Arbeitszeit: <span style="color:var(--text)">${fmtDurationShort(sessions.reduce((a,s)=>{const e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at))},0))}</span></div>
       </div>
     </div>
   </div>`;
 }
 
+function exportICS(){
+  let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Blender Dashboard//DE\r\n";
+  projects.filter(p=>p.due_date).forEach(p=>{
+    const d=p.due_date.replace(/-/g,'');
+    ics+=`BEGIN:VEVENT\r\nUID:${p.id}@blender-dashboard\r\nDTSTART;VALUE=DATE:${d}\r\nDTEND;VALUE=DATE:${d}\r\nSUMMARY:🎬 ${p.name}\r\nDESCRIPTION:Status: ${statusLabel(p.status)}${p.blender_file?' | Datei: '+p.blender_file:''}\r\nEND:VEVENT\r\n`;
+  });
+  ics+="END:VCALENDAR";
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+  a.download='blender-projekte.ics';a.click();
+  showToast('Kalender exportiert ✓');
+}
+
 function focusProject(id){
   document.querySelector('.nav-tab').click();
-  setTimeout(()=>{expandedIds.add(id);activeFilter=null;renderProjects();const el=document.querySelector(`[data-proj="${id}"]`);if(el)el.scrollIntoView({behavior:'smooth'})},100);
+  setTimeout(()=>{expandedIds.add(id);activeFilter=null;renderProjects()},100);
 }
 
 // TIMER
 async function startTimer(projId){
-  if(activeSessionIds[projId]) return;
+  if(activeSessionIds[projId])return;
   const now=new Date().toISOString();
   const{data,error}=await db.from('time_sessions').insert({project_id:projId,started_at:now}).select().single();
   if(error){showToast('Fehler: '+error.message);return}
-  activeSessionIds[projId]=data.id; activeStartTimes[projId]=new Date(now);
+  activeSessionIds[projId]=data.id;activeStartTimes[projId]=new Date(now);
   await db.from('projects').update({last_worked:now}).eq('id',projId);
-  await loadAll(); renderProjects(); showToast('⏱ Zeiterfassung gestartet');
+  await loadAll();renderProjects();showToast('⏱ Zeiterfassung gestartet');
 }
 async function stopTimer(projId){
-  const sessionId=activeSessionIds[projId];
-  if(!sessionId) return;
+  const sessionId=activeSessionIds[projId];if(!sessionId)return;
   const now=new Date().toISOString();
   await db.from('time_sessions').update({ended_at:now}).eq('id',sessionId);
   if(activeTimers[projId]){clearInterval(activeTimers[projId]);delete activeTimers[projId]}
-  delete activeSessionIds[projId]; delete activeStartTimes[projId];
+  delete activeSessionIds[projId];delete activeStartTimes[projId];
   await db.from('projects').update({last_worked:now}).eq('id',projId);
-  await loadAll(); renderProjects(); showToast('⏹ Zeiterfassung gestoppt');
+  await loadAll();renderProjects();showToast('⏹ Gestoppt');
+}
+
+// CHECKLIST
+async function toggleChecklist(projId,key,val){
+  const p=projects.find(x=>x.id===projId);if(!p)return;
+  const cl={...(p.checklist||{}),[key]:val};
+  await db.from('projects').update({checklist:cl,last_worked:new Date().toISOString()}).eq('id',projId);
+  await loadAll();renderProjects();
 }
 
 // NOTES
 function debounceSaveNote(projId,content){
-  const el=document.getElementById('note-saved-'+projId);
-  if(el) el.textContent='...';
-  if(noteDebounce[projId]) clearTimeout(noteDebounce[projId]);
+  const el=document.getElementById('note-saved-'+projId);if(el)el.textContent='...';
+  if(noteDebounce[projId])clearTimeout(noteDebounce[projId]);
   noteDebounce[projId]=setTimeout(async()=>{
     const existing=notes.find(n=>n.project_id===projId);
-    if(existing) await db.from('notes').update({content,updated_at:new Date().toISOString()}).eq('id',existing.id);
+    if(existing)await db.from('notes').update({content,updated_at:new Date().toISOString()}).eq('id',existing.id);
     else await db.from('notes').insert({project_id:projId,content});
-    await loadAll();
-    const el2=document.getElementById('note-saved-'+projId);
+    await loadAll();const el2=document.getElementById('note-saved-'+projId);
     if(el2){el2.textContent='gespeichert ✓';setTimeout(()=>{if(el2)el2.textContent=''},2000)}
   },800);
 }
@@ -640,62 +748,63 @@ async function createProject(){
   const status=document.getElementById('np-status').value;
   const file=document.getElementById('np-file').value.trim();
   const due=document.getElementById('np-due').value||null;
-  if(!name){showToast('Bitte einen Namen eingeben');return}
-  await db.from('projects').insert({name,status,blender_file:file,due_date:due,last_worked:new Date().toISOString()});
+  if(!name){showToast('Bitte Namen eingeben');return}
+  await db.from('projects').insert({name,status,blender_file:file,due_date:due,last_worked:new Date().toISOString(),checklist:{}});
   closeModal('modal-project');
-  document.getElementById('np-name').value=''; document.getElementById('np-file').value=''; document.getElementById('np-due').value='';
-  await loadAll(); renderProjects(); showToast('Projekt erstellt ✓');
+  ['np-name','np-file','np-due'].forEach(id=>document.getElementById(id).value='');
+  await loadAll();renderProjects();showToast('Projekt erstellt ✓');
 }
 async function deleteProject(id){
-  if(!confirm('Projekt wirklich löschen?')) return;
+  if(!confirm('Projekt wirklich löschen?'))return;
   await db.from('projects').delete().eq('id',id);
-  expandedIds.delete(id); await loadAll(); renderProjects(); showToast('Projekt gelöscht');
+  expandedIds.delete(id);await loadAll();renderProjects();showToast('Projekt gelöscht');
 }
 async function updateStatus(id,status){await db.from('projects').update({status,last_worked:new Date().toISOString()}).eq('id',id);await loadAll();renderProjects()}
-async function updateBlenderFile(id,val){await db.from('projects').update({blender_file:val,last_worked:new Date().toISOString()}).eq('id',id);await loadAll();renderProjects();showToast('Dateiname gespeichert ✓')}
+async function updateBlenderFile(id,val){await db.from('projects').update({blender_file:val,last_worked:new Date().toISOString()}).eq('id',id);await loadAll();renderProjects();showToast('Gespeichert ✓')}
 async function updateDueDate(id,val){await db.from('projects').update({due_date:val||null}).eq('id',id);await loadAll();renderProjects();showToast('Deadline gespeichert ✓')}
 
 // TODOS
 async function addTodo(projId){
-  const text=(newTodoInputs[projId]||'').trim();
-  if(!text) return;
+  const text=(newTodoInputs[projId]||'').trim();if(!text)return;
   await db.from('todos').insert({project_id:projId,text,done:false});
   await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',projId);
-  newTodoInputs[projId]=''; await loadAll(); expandedIds.add(projId); renderProjects(); showToast('Task hinzugefügt ✓');
+  newTodoInputs[projId]='';await loadAll();expandedIds.add(projId);renderProjects();showToast('Task hinzugefügt ✓');
 }
-async function toggleTodo(todoId,projId,done){
-  await db.from('todos').update({done}).eq('id',todoId);
-  await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',projId);
-  await loadAll(); renderProjects();
-}
+async function toggleTodo(todoId,projId,done){await db.from('todos').update({done}).eq('id',todoId);await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',projId);await loadAll();renderProjects()}
 async function deleteTodo(id){await db.from('todos').delete().eq('id',id);await loadAll();renderProjects()}
 
 // SHORTS
-function openShortModal(projId){
-  document.getElementById('ns-projid').value=projId;
-  ['ns-title','ns-tags','ns-link'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('ns-views').value='';
-  openModal('modal-short');
-}
+function openShortModal(projId){document.getElementById('ns-projid').value=projId;['ns-title','ns-tags'].forEach(id=>document.getElementById(id).value='');openModal('modal-short')}
 async function createShort(){
   const projId=document.getElementById('ns-projid').value;
   const title=document.getElementById('ns-title').value.trim();
-  const views=parseInt(document.getElementById('ns-views').value)||0;
-  const link=document.getElementById('ns-link').value.trim();
   const tags=document.getElementById('ns-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-  if(!title){showToast('Bitte einen Titel eingeben');return}
-  await db.from('shorts').insert({project_id:projId,title,views,tags,link});
+  if(!title){showToast('Titel eingeben');return}
+  await db.from('shorts').insert({project_id:projId,title,views:0,tags,link:''});
   await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',projId);
-  closeModal('modal-short'); await loadAll(); renderProjects(); showToast('Short hinzugefügt ✓');
+  closeModal('modal-short');await loadAll();renderProjects();showToast('Short hinzugefügt ✓');
 }
 async function deleteShort(id){await db.from('shorts').delete().eq('id',id);await loadAll();renderProjects()}
 
-// INSPIRATIONS
-function openInspoModal(projId){
-  document.getElementById('ni-projid').value=projId;
-  ['ni-title','ni-url'].forEach(id=>document.getElementById(id).value='');
-  openModal('modal-inspo');
+// PLATFORMS
+function openPlatformModal(shortId){
+  document.getElementById('np2-shortid').value=shortId;
+  ['np2-views','np2-revenue','np2-link'].forEach(id=>document.getElementById(id).value='');
+  openModal('modal-platform');
 }
+async function createPlatform(){
+  const shortId=document.getElementById('np2-shortid').value;
+  const platform=document.getElementById('np2-platform').value;
+  const views=parseInt(document.getElementById('np2-views').value)||0;
+  const revenue=parseFloat(document.getElementById('np2-revenue').value)||0;
+  const link=document.getElementById('np2-link').value.trim();
+  await db.from('short_platforms').insert({short_id:shortId,platform,views,revenue,link});
+  closeModal('modal-platform');await loadAll();renderProjects();showToast('Plattform hinzugefügt ✓');
+}
+async function deletePlatform(id){await db.from('short_platforms').delete().eq('id',id);await loadAll();renderProjects()}
+
+// INSPIRATIONS
+function openInspoModal(projId){document.getElementById('ni-projid').value=projId;['ni-title','ni-url'].forEach(id=>document.getElementById(id).value='');openModal('modal-inspo')}
 async function createInspo(){
   const projId=document.getElementById('ni-projid').value;
   const title=document.getElementById('ni-title').value.trim();
@@ -703,7 +812,7 @@ async function createInspo(){
   const type=document.getElementById('ni-type').value;
   if(!title||!url){showToast('Titel und Link ausfüllen');return}
   await db.from('inspirations').insert({project_id:projId,title,url,type});
-  closeModal('modal-inspo'); await loadAll(); renderProjects(); showToast('Inspiration gespeichert ✓');
+  closeModal('modal-inspo');await loadAll();renderProjects();showToast('Inspiration gespeichert ✓');
 }
 async function deleteInspo(id){await db.from('inspirations').delete().eq('id',id);await loadAll();renderProjects()}
 
