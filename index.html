@@ -8,14 +8,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#18181f;--bg4:#1e1e28;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0f0f5;--text2:#8888a0;--text3:#555565;--accent:#6c63ff;--accent2:#9b95ff;--green:#3ecf8e;--green2:#0a2e1e;--blue:#3b82f6;--blue2:#0a1a2e;--amber:#f59e0b;--amber2:#2a1a00;--red:#ef4444;--red2:#2a0a0a;--pink:#ec4899;--pink2:#2a0a1a;--radius:10px;--radius-lg:14px}
+:root{--bg:#0a0a0f;--bg2:#111118;--bg3:#18181f;--bg4:#1e1e28;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0f0f5;--text2:#8888a0;--text3:#555565;--accent:#6c63ff;--accent2:#9b95ff;--green:#3ecf8e;--green2:#0a2e1e;--blue:#3b82f6;--blue2:#0a1a2e;--amber:#f59e0b;--amber2:#2a1a00;--red:#ef4444;--red2:#2a0a0a;--pink:#ec4899;--radius:10px;--radius-lg:14px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;min-height:100vh}
 .nav{display:flex;align-items:center;border-bottom:1px solid var(--border);padding:0 1.5rem;background:var(--bg2);position:sticky;top:0;z-index:50;overflow-x:auto}
 .nav-logo{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--text);padding:1rem 1.5rem 1rem 0;border-right:1px solid var(--border);margin-right:1rem;letter-spacing:-0.02em;white-space:nowrap;flex-shrink:0}
 .nav-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-.nav-tab{padding:1rem 1rem;font-size:13px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;display:flex;align-items:center;gap:6px;background:none;border-left:none;border-right:none;border-top:none;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
+.nav-tab{padding:1rem;font-size:13px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;background:none;border-left:none;border-right:none;border-top:none;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:5px}
 .nav-tab:hover{color:var(--text2)}
 .nav-tab.active{color:var(--text);border-bottom-color:var(--accent)}
 .page{max-width:900px;margin:0 auto;padding:2rem 1.25rem 4rem;display:none}
@@ -28,9 +28,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .btn-danger{color:var(--red);border-color:transparent;background:transparent;padding:6px 10px;border-radius:var(--radius);font-size:13px}
 .btn-danger:hover{background:rgba(239,68,68,0.1)}
 .btn-green{background:var(--green2);border:1px solid rgba(62,207,142,0.25);color:var(--green);padding:7px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
-.btn-green:hover{background:rgba(62,207,142,0.15)}
 .btn-stop{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:var(--red);padding:7px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
-.btn-stop:hover{background:rgba(239,68,68,0.2)}
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
 .stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity 0.2s}
@@ -44,314 +42,307 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .stat-card.bearbeitung .stat-num{color:var(--blue)}
 .stat-card.idee .stat-num{color:var(--amber)}
 .stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
-.last-worked{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;display:flex;align-items:center;gap:14px;margin-bottom:1.5rem}
+.lw-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;display:flex;align-items:center;gap:14px;margin-bottom:1.5rem}
 .proj-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;overflow:hidden;transition:border-color 0.15s}
 .proj-card:hover{border-color:var(--border2)}
 .proj-header{padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px}
 .proj-header:hover{background:var(--bg3)}
 .proj-icon{width:32px;height:32px;background:var(--bg4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
 .proj-name{font-size:14px;font-weight:500;flex:1}
-.proj-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.chevron{font-size:14px;color:var(--text3);transition:transform 0.2s}
-.chevron.open{transform:rotate(180deg)}
 .badge{font-size:11px;font-weight:500;padding:2px 9px;border-radius:20px;white-space:nowrap}
 .badge-fertig{background:var(--green2);color:var(--green);border:1px solid rgba(62,207,142,0.2)}
 .badge-bearbeitung{background:var(--blue2);color:var(--blue);border:1px solid rgba(59,130,246,0.2)}
 .badge-idee{background:var(--amber2);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
-.badge-time{background:var(--bg4);color:var(--text3);border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:11px}
 .badge-overdue{background:var(--red2);color:var(--red);border:1px solid rgba(239,68,68,0.2)}
 .badge-soon{background:var(--amber2);color:var(--amber);border:1px solid rgba(245,158,11,0.2)}
-.timer-active{display:inline-flex;align-items:center;gap:5px;background:rgba(62,207,142,0.1);border:1px solid rgba(62,207,142,0.25);color:var(--green);padding:3px 9px;border-radius:20px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700}
-.timer-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1s ease-in-out infinite}
+.badge-time{background:var(--bg4);color:var(--text3);border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:11px}
+.timer-live{display:inline-flex;align-items:center;gap:5px;background:rgba(62,207,142,0.1);border:1px solid rgba(62,207,142,0.25);color:var(--green);padding:3px 9px;border-radius:20px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1s ease-in-out infinite}
+.chevron{font-size:14px;color:var(--text3);transition:transform 0.2s}
+.chevron.open{transform:rotate(180deg)}
 .proj-body{padding:16px;border-top:1px solid var(--border);display:none}
 .proj-body.open{display:block}
-.time-section{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px}
-.time-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.time-total{font-family:'Space Mono',monospace;font-size:22px;font-weight:700}
-.time-sub{font-size:11px;color:var(--text3);margin-top:2px}
-.session-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;color:var(--text3);border-bottom:1px solid var(--border)}
-.session-row:last-child{border-bottom:none}
-.subsection{margin-bottom:18px}
-.subsection-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.subsection-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
-.file-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.input-field{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:var(--radius);font-size:13px;outline:none;transition:border-color 0.15s;font-family:'DM Sans',sans-serif}
-.input-field:focus{border-color:var(--accent)}
-.input-field::placeholder{color:var(--text3)}
-.input-mono{font-family:'Space Mono',monospace;font-size:12px}
-.select-field{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:7px 10px;border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer}
-.todo-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
-.todo-item:last-child{border-bottom:none}
-.todo-check{width:18px;height:18px;border:1px solid var(--border2);border-radius:5px;background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-size:11px;color:transparent}
-.todo-check.done{background:var(--green);border-color:var(--green);color:#000}
-.todo-text{font-size:13px;flex:1}
-.todo-text.done{text-decoration:line-through;color:var(--text3)}
-.todo-del{opacity:0;background:transparent;color:var(--text3);font-size:14px;padding:2px 6px;border-radius:4px}
-.todo-item:hover .todo-del{opacity:1}
-.todo-del:hover{color:var(--red)}
-.progress-bar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:10px}
-.progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.3s}
-.add-row{display:flex;gap:8px;margin-top:10px}
+.time-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px}
+.sub{margin-bottom:16px}
+.sub-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sub-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
+.ifield{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:var(--radius);font-size:13px;outline:none;font-family:'DM Sans',sans-serif}
+.ifield:focus{border-color:var(--accent)}
+.ifield::placeholder{color:var(--text3)}
+.ifield-mono{font-family:'Space Mono',monospace;font-size:12px}
+.sfield{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:7px 10px;border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer}
+.pbar{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:8px}
+.pbar-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.3s}
+.todo-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.todo-row:last-child{border-bottom:none}
+.todo-cb{width:18px;height:18px;border:1px solid var(--border2);border-radius:5px;background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:all 0.15s}
+.todo-cb.done{background:var(--green);border-color:var(--green);color:#000}
+.todo-txt{font-size:13px;flex:1}
+.todo-txt.done{text-decoration:line-through;color:var(--text3)}
+.del-btn{opacity:0;background:transparent;color:var(--text3);font-size:13px;padding:2px 6px;border-radius:4px}
+.todo-row:hover .del-btn{opacity:1}
+.del-btn:hover{color:var(--red)}
+.add-row{display:flex;gap:8px;margin-top:8px}
 .add-row input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;outline:none}
 .add-row input:focus{border-color:var(--accent)}
 .add-row input::placeholder{color:var(--text3)}
-.notes-area{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:90px;line-height:1.6;transition:border-color 0.15s}
-.notes-area:focus{border-color:var(--accent)}
-.notes-area::placeholder{color:var(--text3)}
-.inspo-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-
-/* SHORT CARDS */
-.short-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px}
-.short-card-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.short-card-title{font-size:13px;font-weight:500;flex:1}
-.short-card-total{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3)}
-.platform-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--border)}
-.platform-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.platform-yt{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.2)}
-.platform-tiktok{background:rgba(236,72,153,0.15);border:1px solid rgba(236,72,153,0.2)}
-.platform-ig{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.2)}
-.platform-views{font-family:'Space Mono',monospace;font-size:12px;color:var(--text2);min-width:60px}
-.platform-revenue{font-family:'Space Mono',monospace;font-size:12px;color:var(--green);min-width:60px}
-.platform-link{font-size:11px;color:var(--accent2);text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.platform-link:hover{text-decoration:underline}
-
-/* CHECKLIST */
+.short-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:6px}
+.short-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.pl-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--border)}
+.notes-ta{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:80px;line-height:1.6}
+.notes-ta:focus{border-color:var(--accent)}
+.notes-ta::placeholder{color:var(--text3)}
+.inspo-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:5px}
 .checklist-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.check-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all 0.15s}
-.check-step:hover{border-color:var(--border2)}
-.check-step.done{background:var(--green2);border-color:rgba(62,207,142,0.2)}
-.check-step-icon{width:18px;height:18px;border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0;transition:all 0.15s}
-.check-step.done .check-step-icon{background:var(--green);border-color:var(--green);color:#000}
-.check-step-label{font-size:12px;color:var(--text2)}
-.check-step.done .check-step-label{color:var(--green)}
-
-/* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
+.cl-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all 0.15s}
+.cl-step.done{background:var(--green2);border-color:rgba(62,207,142,0.2)}
+.cl-box{width:18px;height:18px;border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0;transition:all 0.15s}
+.cl-step.done .cl-box{background:var(--green);border-color:var(--green);color:#000}
+.cl-lbl{font-size:12px;color:var(--text2)}
+.cl-step.done .cl-lbl{color:var(--green)}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.ref-thumb{position:relative;aspect-ratio:16/10;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--bg3)}
+.ref-thumb img{width:100%;height:100%;object-fit:cover}
+.ref-thumb-lbl{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.65);padding:3px 6px;font-size:10px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ref-thumb-del{position:absolute;top:4px;right:4px;width:18px;height:18px;background:rgba(0,0,0,0.7);border-radius:50%;color:#fff;font-size:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:24px;width:400px;max-width:calc(100vw - 2rem)}
-.modal-title{font-size:16px;font-weight:600;margin-bottom:20px}
-.form-group{margin-bottom:14px}
-.form-label{font-size:12px;color:var(--text3);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.05em}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
-
-/* SETTINGS */
-.settings-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:16px}
-.settings-title{font-size:15px;font-weight:600;margin-bottom:4px}
-.settings-sub{font-size:13px;color:var(--text3);margin-bottom:18px;line-height:1.6}
-.info-box{background:var(--blue2);border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius);padding:12px 14px;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px}
-
-/* STATS */
-.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
-.chart-title{font-size:14px;font-weight:500;margin-bottom:16px;color:var(--text2)}
-.stat-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
-.stat-row:last-child{border-bottom:none}
-.stat-row-label{font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.stat-row-bar{flex:2;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
-.stat-row-fill{height:100%;border-radius:3px}
-.stat-row-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3);min-width:70px;text-align:right}
-.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.summary-card{background:var(--bg3);border-radius:var(--radius);padding:14px;text-align:center}
-.summary-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;margin-bottom:4px}
-.summary-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
-
-/* CALENDAR */
-.cal-grid{display:grid;gap:8px}
-.cal-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color 0.15s}
-.cal-item:hover{border-color:var(--border2)}
-.cal-date-box{width:52px;height:52px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;font-family:'Space Mono',monospace}
-.cal-date-box.overdue{background:var(--red2);border:1px solid rgba(239,68,68,0.2)}
-.cal-date-box.soon{background:var(--amber2);border:1px solid rgba(245,158,11,0.2)}
-.cal-date-box.ok{background:var(--green2);border:1px solid rgba(62,207,142,0.2)}
-.cal-date-box.none{background:var(--bg3);border:1px solid var(--border)}
-.cal-day{font-size:20px;font-weight:700;line-height:1}
-.cal-month{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
-.cal-info{flex:1;min-width:0}
-.cal-name{font-size:14px;font-weight:500;margin-bottom:4px}
-.cal-meta{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:8px}
-
-/* TOAST + MISC */
+.modal-title{font-size:16px;font-weight:600;margin-bottom:18px}
+.fgroup{margin-bottom:12px}
+.flbl{font-size:12px;color:var(--text3);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.05em}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:14px}
+.sc-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.sc-sub{font-size:13px;color:var(--text3);margin-bottom:14px;line-height:1.6}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:14px}
+.chart-title{font-size:13px;color:var(--text2);margin-bottom:14px;font-weight:500}
+.srow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.srow:last-child{border-bottom:none}
+.srow-lbl{font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srow-bar{flex:2;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.srow-fill{height:100%;border-radius:3px}
+.srow-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3);min-width:70px;text-align:right}
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.sum-card{background:var(--bg3);border-radius:var(--radius);padding:14px;text-align:center}
+.sum-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;margin-bottom:4px}
+.sum-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+.cal-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;transition:border-color 0.15s}
+.cal-card:hover{border-color:var(--border2)}
+.cal-date{width:52px;height:52px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;font-family:'Space Mono',monospace}
+.cal-date.overdue{background:var(--red2);border:1px solid rgba(239,68,68,0.2)}
+.cal-date.soon{background:var(--amber2);border:1px solid rgba(245,158,11,0.2)}
+.cal-date.ok{background:var(--green2);border:1px solid rgba(62,207,142,0.2)}
+.cal-date.none{background:var(--bg3);border:1px solid var(--border)}
+.info-box{background:var(--blue2);border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.ph-title{font-size:20px;font-weight:600}
+.ph-sub{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+.empty{font-size:13px;color:var(--text3);padding:8px 0}
+.sec-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:10px 18px;border-radius:var(--radius);font-size:13px;opacity:0;transform:translateY(8px);transition:all 0.2s;z-index:300;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
-.loading{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:16px}
 .spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.empty{font-size:13px;color:var(--text3);padding:10px 0}
-.page-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
-.page-title{font-size:20px;font-weight:600}
-.page-sub{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
-.filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.filter-tag{font-size:12px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:4px 12px;border-radius:20px}
-.filter-clear{color:var(--text3);font-size:12px;cursor:pointer}
-.filter-clear:hover{color:var(--text2)}
-.section-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
-
-/* REFERENCE SEARCH PANEL */
+.loading{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:16px}
+/* REF PANEL */
 .ref-panel{position:fixed;inset:0;background:var(--bg);z-index:400;display:none;flex-direction:column}
 .ref-panel.open{display:flex}
-.ref-top{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
-.ref-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;margin-right:8px;white-space:nowrap}
-.ref-search-input{flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 14px;border-radius:var(--radius);font-size:14px;font-family:'DM Sans',sans-serif;outline:none}
-.ref-search-input:focus{border-color:var(--accent)}
-.ref-search-input::placeholder{color:var(--text3)}
+.ref-top{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .ref-body{display:flex;flex:1;overflow:hidden}
-.ref-results-area{flex:1;overflow-y:auto;padding:20px}
-.ref-sidebar{width:260px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
-.ref-img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
-.ref-img-item{border-radius:var(--radius);overflow:hidden;cursor:pointer;position:relative;border:2px solid transparent;transition:border-color 0.15s;background:var(--bg3);aspect-ratio:16/10}
-.ref-img-item:hover{border-color:var(--border2)}
-.ref-img-item.selected{border-color:var(--accent)}
-.ref-img-item img{width:100%;height:100%;object-fit:cover;display:block}
-.ref-img-item .ref-img-check{position:absolute;top:6px;right:6px;width:22px;height:22px;background:var(--accent);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700}
-.ref-img-item.selected .ref-img-check{display:flex}
-.ref-img-title{font-size:11px;color:var(--text3);padding:5px 8px;background:rgba(0,0,0,0.6);position:absolute;bottom:0;left:0;right:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ref-selected-thumb{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:4px}
-.ref-selected-list{display:flex;flex-direction:column;gap:6px;flex:1;overflow-y:auto}
-.ref-selected-item{position:relative}
-.ref-selected-item .ref-remove{position:absolute;top:4px;right:4px;width:18px;height:18px;background:rgba(0,0,0,0.7);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;color:#fff;border:none}
-.ref-empty{color:var(--text3);font-size:13px;text-align:center;padding:2rem 0}
-.ref-ai-status{font-size:12px;color:var(--text3);padding:6px 0;display:flex;align-items:center;gap:6px}
-.ref-spinner{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+.ref-results{flex:1;overflow-y:auto;padding:20px}
+.ref-sidebar{width:260px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.img-item{border-radius:var(--radius);overflow:hidden;cursor:pointer;position:relative;border:2px solid transparent;background:var(--bg3);aspect-ratio:16/10}
+.img-item:hover{border-color:var(--border2)}
+.img-item.sel{border-color:var(--accent)}
+.img-item img{width:100%;height:100%;object-fit:cover;display:block}
+.img-chk{position:absolute;top:6px;right:6px;width:22px;height:22px;background:var(--accent);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700}
+.img-item.sel .img-chk{display:flex}
+.img-lbl{font-size:10px;color:var(--text3);padding:4px 7px;background:rgba(0,0,0,0.6);position:absolute;bottom:0;left:0;right:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sel-thumb{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:3px}
 </style>
 </head>
 <body>
+
 <nav class="nav">
   <div class="nav-logo"><span class="nav-dot"></span>blender_projects</div>
-  <button class="nav-tab active" onclick="switchTab('projekte',this)">📁 Projekte</button>
-  <button class="nav-tab" onclick="switchTab('kalender',this)">📅 Kalender</button>
-  <button class="nav-tab" onclick="switchTab('statistiken',this)">📊 Statistiken</button>
-  <button class="nav-tab" onclick="switchTab('einstellungen',this)">⚙️ Einstellungen</button>
+  <button class="nav-tab active" id="ntab-projekte" onclick="switchTab('projekte',this)">📁 Projekte</button>
+  <button class="nav-tab" id="ntab-kalender" onclick="switchTab('kalender',this)">📅 Kalender</button>
+  <button class="nav-tab" id="ntab-statistiken" onclick="switchTab('statistiken',this)">📊 Statistiken</button>
+  <button class="nav-tab" id="ntab-einstellungen" onclick="switchTab('einstellungen',this)">⚙️ Einstellungen</button>
   <button class="nav-tab" style="margin-left:auto;color:var(--accent2)" onclick="openRefPanel()">🔍 KI Referenzsuche</button>
 </nav>
+
 <div class="page active" id="page-projekte"></div>
 <div class="page" id="page-kalender"></div>
 <div class="page" id="page-statistiken"></div>
 <div class="page" id="page-einstellungen"></div>
 <div class="toast" id="toast"></div>
 
-<!-- Modal: Neues Projekt -->
-<div class="modal-overlay" id="modal-project">
-  <div class="modal">
-    <div class="modal-title">Neues Projekt</div>
-    <div class="form-group"><label class="form-label">Projektname</label><input class="input-field" style="width:100%" id="np-name" placeholder="z.B. Kokiri Forest – OoT"/></div>
-    <div class="form-group"><label class="form-label">Status</label>
-      <select class="select-field" style="width:100%" id="np-status"><option value="idee">💡 Idee</option><option value="bearbeitung" selected>🔵 In Bearbeitung</option><option value="fertig">✅ Fertig</option></select>
-    </div>
-    <div class="form-group"><label class="form-label">Blender Dateiname (optional)</label><input class="input-field input-mono" style="width:100%" id="np-file" placeholder="projekt_v1.blend"/></div>
-    <div class="form-group"><label class="form-label">Deadline (optional)</label><input class="input-field" style="width:100%" id="np-due" type="date"/></div>
-    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-project')">Abbrechen</button><button class="btn-accent" onclick="createProject()">Erstellen</button></div>
-  </div>
-</div>
+<!-- Modals -->
+<div class="modal-bg" id="m-proj"><div class="modal">
+  <div class="modal-title">Neues Projekt</div>
+  <div class="fgroup"><label class="flbl">Name</label><input class="ifield" style="width:100%" id="np-name" placeholder="z.B. Raccoon City – RE2"/></div>
+  <div class="fgroup"><label class="flbl">Status</label><select class="sfield" style="width:100%" id="np-status"><option value="idee">💡 Idee</option><option value="bearbeitung" selected>🔵 In Bearbeitung</option><option value="fertig">✅ Fertig</option></select></div>
+  <div class="fgroup"><label class="flbl">Blender Datei (optional)</label><input class="ifield ifield-mono" style="width:100%" id="np-file" placeholder="projekt.blend1"/></div>
+  <div class="fgroup"><label class="flbl">Deadline (optional)</label><input class="ifield" style="width:100%" id="np-due" type="date"/></div>
+  <div class="modal-foot"><button class="btn" onclick="closeModal('m-proj')">Abbrechen</button><button class="btn-accent" onclick="createProject()">Erstellen</button></div>
+</div></div>
 
-<!-- Modal: Short -->
-<div class="modal-overlay" id="modal-short">
-  <div class="modal">
-    <div class="modal-title">Short hinzufügen</div>
-    <input type="hidden" id="ns-projid"/>
-    <div class="form-group"><label class="form-label">Titel</label><input class="input-field" style="width:100%" id="ns-title" placeholder="Short-Titel"/></div>
-    <div class="form-group"><label class="form-label">Tags (kommagetrennt)</label><input class="input-field" style="width:100%" id="ns-tags" placeholder="Blender, Retro, GameScene"/></div>
-    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-short')">Abbrechen</button><button class="btn-accent" onclick="createShort()">Hinzufügen</button></div>
-  </div>
-</div>
+<div class="modal-bg" id="m-short"><div class="modal">
+  <div class="modal-title">Short hinzufügen</div>
+  <input type="hidden" id="ns-pid"/>
+  <div class="fgroup"><label class="flbl">Titel</label><input class="ifield" style="width:100%" id="ns-title" placeholder="Titel"/></div>
+  <div class="fgroup"><label class="flbl">Tags (kommagetrennt)</label><input class="ifield" style="width:100%" id="ns-tags" placeholder="Blender, Retro, Game"/></div>
+  <div class="modal-foot"><button class="btn" onclick="closeModal('m-short')">Abbrechen</button><button class="btn-accent" onclick="createShort()">Hinzufügen</button></div>
+</div></div>
 
-<!-- Modal: Plattform -->
-<div class="modal-overlay" id="modal-platform">
-  <div class="modal">
-    <div class="modal-title">Plattform hinzufügen</div>
-    <input type="hidden" id="np2-shortid"/>
-    <div class="form-group"><label class="form-label">Plattform</label>
-      <select class="select-field" style="width:100%" id="np2-platform">
-        <option value="youtube">📺 YouTube</option>
-        <option value="tiktok">🎵 TikTok</option>
-        <option value="instagram">📸 Instagram Reels</option>
-        <option value="facebook">📘 Facebook Reels</option>
-        <option value="snapchat">👻 Snapchat</option>
-        <option value="twitter">🐦 X / Twitter</option>
-        <option value="pinterest">📌 Pinterest</option>
-        <option value="reddit">🤖 Reddit</option>
-        <option value="twitch">🎮 Twitch Clips</option>
-        <option value="kick">🟢 Kick</option>
-        <option value="rumble">📹 Rumble</option>
-        <option value="linkedin">💼 LinkedIn</option>
-      </select>
-    </div>
-    <div class="form-group"><label class="form-label">Aufrufe</label><input class="input-field" style="width:100%" id="np2-views" type="number" placeholder="0"/></div>
-    <div class="form-group"><label class="form-label">Einnahmen (€)</label><input class="input-field" style="width:100%" id="np2-revenue" type="number" step="0.01" placeholder="0.00"/></div>
-    <div class="form-group"><label class="form-label">Link</label><input class="input-field" style="width:100%" id="np2-link" placeholder="https://..."/></div>
-    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-platform')">Abbrechen</button><button class="btn-accent" onclick="createPlatform()">Hinzufügen</button></div>
-  </div>
-</div>
+<div class="modal-bg" id="m-plat"><div class="modal">
+  <div class="modal-title">Plattform hinzufügen</div>
+  <input type="hidden" id="npl-sid"/>
+  <div class="fgroup"><label class="flbl">Plattform</label><select class="sfield" style="width:100%" id="npl-plat">
+    <option value="youtube">📺 YouTube</option>
+    <option value="tiktok">🎵 TikTok</option>
+    <option value="instagram">📸 Instagram Reels</option>
+    <option value="facebook">📘 Facebook Reels</option>
+    <option value="snapchat">👻 Snapchat</option>
+    <option value="twitter">🐦 X / Twitter</option>
+    <option value="pinterest">📌 Pinterest</option>
+    <option value="reddit">🤖 Reddit</option>
+    <option value="twitch">🎮 Twitch Clips</option>
+    <option value="kick">🟢 Kick</option>
+    <option value="rumble">📹 Rumble</option>
+    <option value="linkedin">💼 LinkedIn</option>
+  </select></div>
+  <div class="fgroup"><label class="flbl">Aufrufe</label><input class="ifield" style="width:100%" id="npl-views" type="number" placeholder="0"/></div>
+  <div class="fgroup"><label class="flbl">Einnahmen (€)</label><input class="ifield" style="width:100%" id="npl-rev" type="number" step="0.01" placeholder="0.00"/></div>
+  <div class="fgroup"><label class="flbl">Link</label><input class="ifield" style="width:100%" id="npl-link" placeholder="https://..."/></div>
+  <div class="modal-foot"><button class="btn" onclick="closeModal('m-plat')">Abbrechen</button><button class="btn-accent" onclick="createPlatform()">Hinzufügen</button></div>
+</div></div>
 
-<!-- Modal: Inspiration -->
-<div class="modal-overlay" id="modal-inspo">
-  <div class="modal">
-    <div class="modal-title">Inspiration hinzufügen</div>
-    <input type="hidden" id="ni-projid"/>
-    <div class="form-group"><label class="form-label">Titel</label><input class="input-field" style="width:100%" id="ni-title" placeholder="z.B. RE2 Remake Artwork"/></div>
-    <div class="form-group"><label class="form-label">Link (URL)</label><input class="input-field" style="width:100%" id="ni-url" placeholder="https://..."/></div>
-    <div class="form-group"><label class="form-label">Typ</label>
-      <select class="select-field" style="width:100%" id="ni-type"><option value="link">🔗 Link</option><option value="video">▶ Video</option><option value="image">🖼 Bild</option><option value="ref">📌 Referenz</option></select>
+<div class="modal-bg" id="m-inspo"><div class="modal">
+  <div class="modal-title">Inspiration hinzufügen</div>
+  <input type="hidden" id="ni-pid"/>
+  <div class="fgroup"><label class="flbl">Titel</label><input class="ifield" style="width:100%" id="ni-title" placeholder="z.B. RE2 Concept Art"/></div>
+  <div class="fgroup"><label class="flbl">Link</label><input class="ifield" style="width:100%" id="ni-url" placeholder="https://..."/></div>
+  <div class="fgroup"><label class="flbl">Typ</label><select class="sfield" style="width:100%" id="ni-type"><option value="link">🔗 Link</option><option value="video">▶ Video</option><option value="image">🖼 Bild</option><option value="ref">📌 Referenz</option></select></div>
+  <div class="modal-foot"><button class="btn" onclick="closeModal('m-inspo')">Abbrechen</button><button class="btn-accent" onclick="createInspo()">Hinzufügen</button></div>
+</div></div>
+
+<!-- Reference Panel -->
+<div class="ref-panel" id="ref-panel">
+  <div class="ref-top">
+    <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0">🔍 KI Referenzsuche</div>
+    <input class="ifield" style="flex:1" id="ref-q" placeholder="z.B. Raccoon City RE2 concept art..." onkeydown="if(event.key==='Enter')doRefSearch()"/>
+    <button class="btn-accent" id="ref-btn" onclick="doRefSearch()">Suchen</button>
+    <button class="btn" onclick="closeRefPanel()">✕ Schließen</button>
+  </div>
+  <div class="ref-body">
+    <div class="ref-results" id="ref-results"><div style="color:var(--text3);font-size:13px;text-align:center;padding:3rem">Suchbegriff eingeben und Enter drücken</div></div>
+    <div class="ref-sidebar">
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">Ausgewählt</div>
+      <div id="ref-sel-list"><div style="color:var(--text3);font-size:13px;padding:8px 0">Noch nichts ausgewählt</div></div>
+      <div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">An Projekt heften</div>
+        <select class="sfield" style="width:100%;margin-bottom:8px" id="ref-proj-sel"><option value="">– Projekt wählen –</option></select>
+        <button class="btn-accent" style="width:100%;justify-content:center" onclick="saveRefs()">📌 Heften</button>
+      </div>
     </div>
-    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-inspo')">Abbrechen</button><button class="btn-accent" onclick="createInspo()">Hinzufügen</button></div>
   </div>
 </div>
 
 <script>
-let db=null;
-let projects=[],todos=[],shorts=[],sessions=[],settings={},notes=[],inspirations=[],shortPlatforms=[],projectRefs=[];
-let activeFilter=null,expandedIds=new Set(),newTodoInputs={};
-let activeTimers={},activeSessionIds={},activeStartTimes={};
-let noteDebounce={};
+// ── DATA ──────────────────────────────────────────────────
+var db = null;
+var D = { projects:[], todos:[], shorts:[], sessions:[], settings:{}, notes:[], inspirations:[], shortPlatforms:[], projectRefs:[] };
+var UI = { filter:null, expanded:new Set(), todoInputs:{}, activeTimers:{}, activeSessions:{}, activeStarts:{}, noteDebounce:{} };
+var selectedRefs = [];
+var currentRefImgs = [];
 
-const CHECKLIST_STEPS=[
-  {key:'render',label:'🎬 Render fertig'},
-  {key:'short_cut',label:'✂️ Short geschnitten'},
-  {key:'long_cut',label:'🎞️ Long Version fertig'},
-  {key:'thumbnail',label:'🖼️ Thumbnail erstellt'},
-  {key:'posted_yt',label:'📺 YouTube gepostet'},
-  {key:'posted_tiktok',label:'🎵 TikTok gepostet'},
-  {key:'posted_ig',label:'📸 Instagram gepostet'},
-];
-
-const PLATFORM_INFO={
-  youtube:   {icon:'📺',label:'YouTube',        color:'#ff4444',bg:'rgba(255,68,68,0.12)',  border:'rgba(255,68,68,0.25)'},
-  tiktok:    {icon:'🎵',label:'TikTok',         color:'#ee1d52',bg:'rgba(238,29,82,0.12)',  border:'rgba(238,29,82,0.25)'},
-  instagram: {icon:'📸',label:'Instagram Reels',color:'#f59e0b',bg:'rgba(245,158,11,0.12)',border:'rgba(245,158,11,0.25)'},
-  facebook:  {icon:'📘',label:'Facebook Reels', color:'#3b82f6',bg:'rgba(59,130,246,0.12)', border:'rgba(59,130,246,0.25)'},
-  snapchat:  {icon:'👻',label:'Snapchat',        color:'#fde047',bg:'rgba(253,224,71,0.12)', border:'rgba(253,224,71,0.25)'},
-  twitter:   {icon:'🐦',label:'X / Twitter',    color:'#9ca3af',bg:'rgba(156,163,175,0.12)',border:'rgba(156,163,175,0.25)'},
-  pinterest: {icon:'📌',label:'Pinterest',       color:'#e60023',bg:'rgba(230,0,35,0.12)',   border:'rgba(230,0,35,0.25)'},
-  reddit:    {icon:'🤖',label:'Reddit',          color:'#ff4500',bg:'rgba(255,69,0,0.12)',   border:'rgba(255,69,0,0.25)'},
-  twitch:    {icon:'🎮',label:'Twitch Clips',   color:'#a855f7',bg:'rgba(168,85,247,0.12)', border:'rgba(168,85,247,0.25)'},
-  kick:      {icon:'🟢',label:'Kick',            color:'#53fc18',bg:'rgba(83,252,24,0.12)',  border:'rgba(83,252,24,0.25)'},
-  rumble:    {icon:'📹',label:'Rumble',          color:'#85c742',bg:'rgba(133,199,66,0.12)', border:'rgba(133,199,66,0.25)'},
-  linkedin:  {icon:'💼',label:'LinkedIn',        color:'#0ea5e9',bg:'rgba(14,165,233,0.12)', border:'rgba(14,165,233,0.25)'},
+// ── PLATFORM MAP ──────────────────────────────────────────
+var PLAT = {
+  youtube:  {icon:'📺', label:'YouTube',         color:'#ff4444'},
+  tiktok:   {icon:'🎵', label:'TikTok',          color:'#ee1d52'},
+  instagram:{icon:'📸', label:'Instagram Reels', color:'#f59e0b'},
+  facebook: {icon:'📘', label:'Facebook Reels',  color:'#3b82f6'},
+  snapchat: {icon:'👻', label:'Snapchat',         color:'#fde047'},
+  twitter:  {icon:'🐦', label:'X / Twitter',     color:'#9ca3af'},
+  pinterest:{icon:'📌', label:'Pinterest',        color:'#e60023'},
+  reddit:   {icon:'🤖', label:'Reddit',           color:'#ff4500'},
+  twitch:   {icon:'🎮', label:'Twitch Clips',    color:'#a855f7'},
+  kick:     {icon:'🟢', label:'Kick',             color:'#53fc18'},
+  rumble:   {icon:'📹', label:'Rumble',           color:'#85c742'},
+  linkedin: {icon:'💼', label:'LinkedIn',         color:'#0ea5e9'}
 };
 
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
-function openModal(id){document.getElementById(id).classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open')}));
+var CL_STEPS = [
+  {k:'render',    l:'🎬 Render fertig'},
+  {k:'short_cut', l:'✂️ Short geschnitten'},
+  {k:'long_cut',  l:'🎞️ Long Version'},
+  {k:'thumbnail', l:'🖼️ Thumbnail'},
+  {k:'yt',        l:'📺 YouTube gepostet'},
+  {k:'tiktok',    l:'🎵 TikTok gepostet'},
+  {k:'ig',        l:'📸 Instagram gepostet'}
+];
 
-function switchTab(name,el){
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');document.getElementById('page-'+name).classList.add('active');
-  if(name==='kalender')renderKalender();
-  if(name==='statistiken')renderStatistiken();
-  if(name==='einstellungen')renderEinstellungen();
+// ── HELPERS ───────────────────────────────────────────────
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function statusLabel(s) { return s==='fertig'?'Fertig':s==='bearbeitung'?'In Bearbeitung':'Idee'; }
+function statusIcon(s)  { return s==='fertig'?'✅':s==='bearbeitung'?'🔵':'💡'; }
+function fmt(n)         { return n>=1000?(n/1000).toFixed(1)+'k':String(n||0); }
+function fmtEuro(n)     { return '€'+parseFloat(n||0).toFixed(2); }
+function fmtMs(ms)      { if(!ms||ms<0) return '0m'; var m=Math.floor(ms/60000),h=Math.floor(m/60); return h>0?h+'h '+(m%60)+'m':m+'m'; }
+function fmtHMS(ms)     { if(!ms||ms<0) return '00:00:00'; var s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60); return pad(h)+':'+pad(m%60)+':'+pad(s%60); }
+function pad(n)         { return String(n).padStart(2,'0'); }
+function daysUntil(d)   { if(!d) return null; return Math.ceil((new Date(d)-new Date(new Date().toDateString()))/(864e5)); }
+function totalTime(pid) { var t=0; D.sessions.filter(function(s){return s.project_id===pid;}).forEach(function(s){var e=s.ended_at?new Date(s.ended_at):new Date();t+=e-new Date(s.started_at);}); return t; }
+function totalRevenue(pid){ var r=0; D.shorts.filter(function(s){return s.project_id===pid;}).forEach(function(s){D.shortPlatforms.filter(function(p){return p.short_id===s.id;}).forEach(function(p){r+=parseFloat(p.revenue||0);});}); return r; }
+function totalViews(pid)  { var v=0; D.shorts.filter(function(s){return s.project_id===pid;}).forEach(function(s){D.shortPlatforms.filter(function(p){return p.short_id===s.id;}).forEach(function(p){v+=parseInt(p.views||0);});}); return v; }
+function clPct(p)       { var cl=p.checklist||{}; return Math.round(CL_STEPS.filter(function(s){return cl[s.k];}).length/CL_STEPS.length*100); }
+function timeAgo(iso)   { if(!iso) return ''; var h=Math.floor((Date.now()-new Date(iso))/ 3600000); if(h<1) return 'Gerade eben'; if(h<24) return 'Vor '+h+'h'; return 'Vor '+Math.floor(h/24)+'d'; }
+function lastWorked()   { return D.projects.filter(function(p){return p.last_worked;}).sort(function(a,b){return new Date(b.last_worked)-new Date(a.last_worked);})[0]; }
+
+// ── MODAL CLOSE ON BG CLICK ───────────────────────────────
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.classList && e.target.classList.contains('modal-bg')) {
+    e.target.classList.remove('open');
+  }
+});
+
+// ── INIT ──────────────────────────────────────────────────
+function isConfigured() {
+  return typeof SUPABASE_URL !== 'undefined' && SUPABASE_URL !== 'DEINE_SUPABASE_URL_HIER' &&
+         typeof SUPABASE_KEY !== 'undefined' && SUPABASE_KEY !== 'DEIN_SUPABASE_ANON_KEY_HIER';
 }
 
-function isConfigured(){return typeof SUPABASE_URL!=='undefined'&&SUPABASE_URL!=='DEINE_SUPABASE_URL_HIER'&&typeof SUPABASE_KEY!=='undefined'&&SUPABASE_KEY!=='DEIN_SUPABASE_ANON_KEY_HIER'}
-
-async function init(){
-  if(!isConfigured()){document.getElementById('page-projekte').innerHTML=`<div style="max-width:460px;margin:4rem auto;padding:1.25rem"><div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;margin-bottom:8px">// Setup erforderlich</div><div style="font-size:13px;color:var(--text3);line-height:1.7">Trag deine Supabase Zugangsdaten in config.js ein.</div></div>`;return}
-  document.getElementById('page-projekte').innerHTML=`<div class="loading"><div class="spinner"></div></div>`;
-  try{db=createClient(SUPABASE_URL,SUPABASE_KEY);await loadAll();renderProjects()}
-  catch(e){document.getElementById('page-projekte').innerHTML=`<div class="loading"><div style="color:var(--red)">Fehler: ${e.message}</div></div>`}
+function init() {
+  if (!isConfigured()) {
+    document.getElementById('page-projekte').innerHTML = '<div style="max-width:460px;margin:4rem auto;padding:1.25rem"><div style="font-family:Space Mono,monospace;font-size:18px;font-weight:700;margin-bottom:8px">// Setup erforderlich</div><div style="font-size:13px;color:var(--text3)">Trag deine Supabase Zugangsdaten in config.js ein.</div></div>';
+    return;
+  }
+  document.getElementById('page-projekte').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  try {
+    var sc = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    db = sc;
+    loadAll().then(function() {
+      renderProjects();
+      if (D.settings['yt_api_key']) setTimeout(function(){ syncYT(true); }, 2000);
+    });
+  } catch(e) {
+    document.getElementById('page-projekte').innerHTML = '<div class="loading"><div style="color:var(--red)">Fehler: '+e.message+'</div></div>';
+  }
 }
 
-async function loadAll(){
-  const[p,t,s,se,st,n,ins,sp,pr]=await Promise.all([
+async function loadAll() {
+  var res = await Promise.all([
     db.from('projects').select('*').order('created_at',{ascending:false}),
     db.from('todos').select('*').order('created_at',{ascending:true}),
     db.from('shorts').select('*').order('created_at',{ascending:false}),
@@ -362,833 +353,576 @@ async function loadAll(){
     db.from('short_platforms').select('*').order('created_at',{ascending:false}),
     db.from('project_references').select('*').order('created_at',{ascending:false}),
   ]);
-  projects=p.data||[];todos=t.data||[];shorts=s.data||[];sessions=se.data||[];
-  notes=n.data||[];inspirations=ins.data||[];shortPlatforms=sp.data||[];projectRefs=pr?pr.data||[]:[];
-  if(st.data)st.data.forEach(s=>settings[s.key]=s.value);
-  sessions.filter(s=>!s.ended_at).forEach(s=>{if(!activeSessionIds[s.project_id]){activeSessionIds[s.project_id]=s.id;activeStartTimes[s.project_id]=new Date(s.started_at)}});
+  D.projects = res[0].data||[]; D.todos = res[1].data||[]; D.shorts = res[2].data||[];
+  D.sessions = res[3].data||[]; D.notes = res[5].data||[]; D.inspirations = res[6].data||[];
+  D.shortPlatforms = res[7].data||[]; D.projectRefs = res[8].data||[];
+  D.settings = {};
+  if (res[4].data) res[4].data.forEach(function(s){ D.settings[s.key]=s.value; });
+  D.sessions.filter(function(s){return !s.ended_at;}).forEach(function(s){
+    if (!UI.activeSessions[s.project_id]) {
+      UI.activeSessions[s.project_id] = s.id;
+      UI.activeStarts[s.project_id] = new Date(s.started_at);
+    }
+  });
 }
 
-function getLastWorked(){return[...projects].filter(p=>p.last_worked).sort((a,b)=>new Date(b.last_worked)-new Date(a.last_worked))[0]}
-function timeAgo(iso){if(!iso)return'';const d=Date.now()-new Date(iso).getTime(),h=Math.floor(d/3600000);if(h<1)return'Gerade eben';if(h<24)return`Vor ${h}h`;return`Vor ${Math.floor(h/24)}d`}
-function fmtDuration(ms){if(!ms||ms<0)return'00:00:00';const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60);return`${String(h).padStart(2,'0')}:${String(m%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
-function fmtDurationShort(ms){if(!ms||ms<0)return'0m';const m=Math.floor(ms/60000),h=Math.floor(m/60);if(h>0)return`${h}h ${m%60}m`;return`${m}m`}
-function getTotalTime(projId){let t=0;sessions.filter(s=>s.project_id===projId).forEach(s=>{const e=s.ended_at?new Date(s.ended_at):new Date();t+=e-new Date(s.started_at)});return t}
-function statusLabel(s){return s==='fertig'?'Fertig':s==='bearbeitung'?'In Bearbeitung':'Idee'}
-function statusIcon(s){return s==='fertig'?'✅':s==='bearbeitung'?'🔵':'💡'}
-function fmt(n){return n>=1000?(n/1000).toFixed(1)+'k':String(n)}
-function fmtEuro(n){return'€'+parseFloat(n||0).toFixed(2)}
-function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d)-new Date(new Date().toDateString()))/(864e5))}
-function typeIcon(t){return t==='video'?'▶':t==='image'?'🖼':t==='ref'?'📌':'🔗'}
-function getChecklist(p){return p.checklist||{}}
-function getChecklistPct(p){const cl=getChecklist(p);const done=CHECKLIST_STEPS.filter(s=>cl[s.key]).length;return Math.round(done/CHECKLIST_STEPS.length*100)}
-function getTotalRevenue(projId){let r=0;shorts.filter(s=>s.project_id===projId).forEach(s=>{shortPlatforms.filter(pl=>pl.short_id===s.id).forEach(pl=>{r+=parseFloat(pl.revenue||0)})});return r}
-function getTotalViews(projId){let v=0;shorts.filter(s=>s.project_id===projId).forEach(s=>{shortPlatforms.filter(pl=>pl.short_id===s.id).forEach(pl=>{v+=parseInt(pl.views||0)})});return v}
+// ── TAB SWITCHING ─────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.nav-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('page-'+name).classList.add('active');
+  if (name === 'kalender')     renderKalender();
+  if (name === 'statistiken')  renderStatistiken();
+  if (name === 'einstellungen') renderEinstellungen();
+}
 
-function renderProjects(){
-  const pg=document.getElementById('page-projekte');
-  const fertig=projects.filter(p=>p.status==='fertig').length;
-  const bearbeitung=projects.filter(p=>p.status==='bearbeitung').length;
-  const idee=projects.filter(p=>p.status==='idee').length;
-  const last=getLastWorked();
-  const filtered=activeFilter?projects.filter(p=>p.status===activeFilter):projects;
-  let html=`<div>`;
+// ── PROJECTS PAGE ─────────────────────────────────────────
+function renderProjects() {
+  var pg = document.getElementById('page-projekte');
+  var fertig = D.projects.filter(function(p){return p.status==='fertig';}).length;
+  var bear   = D.projects.filter(function(p){return p.status==='bearbeitung';}).length;
+  var idee   = D.projects.filter(function(p){return p.status==='idee';}).length;
+  var lw     = lastWorked();
+  var list   = UI.filter ? D.projects.filter(function(p){return p.status===UI.filter;}) : D.projects;
+  var html   = '';
 
-  html+=`<div class="page-header"><div><div class="page-sub">Übersicht</div><div class="page-title">${projects.length} Projekte</div></div><button class="btn-accent" onclick="openModal('modal-project')">+ Neues Projekt</button></div>`;
+  html += '<div class="ph"><div><div class="ph-sub">Übersicht</div><div class="ph-title">'+D.projects.length+' Projekte</div></div><button class="btn-accent" onclick="openModal(\'m-proj\')">+ Neues Projekt</button></div>';
+  html += '<div class="stats-grid">';
+  html += '<div class="stat-card fertig'+(UI.filter==='fertig'?' active':'')+'" onclick="setFilter(\'fertig\')"><div style="font-size:20px;margin-bottom:8px">✅</div><div class="stat-num">'+fertig+'</div><div class="stat-label">Fertig</div></div>';
+  html += '<div class="stat-card bearbeitung'+(UI.filter==='bearbeitung'?' active':'')+'" onclick="setFilter(\'bearbeitung\')"><div style="font-size:20px;margin-bottom:8px">🔵</div><div class="stat-num">'+bear+'</div><div class="stat-label">In Arbeit</div></div>';
+  html += '<div class="stat-card idee'+(UI.filter==='idee'?' active':'')+'" onclick="setFilter(\'idee\')"><div style="font-size:20px;margin-bottom:8px">💡</div><div class="stat-num">'+idee+'</div><div class="stat-label">Ideen</div></div>';
+  html += '</div>';
 
-  html+=`<div class="stats-grid">
-    <div class="stat-card fertig${activeFilter==='fertig'?' active':''}" onclick="setFilter('fertig')"><div style="font-size:20px;margin-bottom:8px">✅</div><div class="stat-num">${fertig}</div><div class="stat-label">Fertig</div></div>
-    <div class="stat-card bearbeitung${activeFilter==='bearbeitung'?' active':''}" onclick="setFilter('bearbeitung')"><div style="font-size:20px;margin-bottom:8px">🔵</div><div class="stat-num">${bearbeitung}</div><div class="stat-label">In Arbeit</div></div>
-    <div class="stat-card idee${activeFilter==='idee'?' active':''}" onclick="setFilter('idee')"><div style="font-size:20px;margin-bottom:8px">💡</div><div class="stat-num">${idee}</div><div class="stat-label">Ideen</div></div>
-  </div>`;
-
-  if(last){
-    const lt=todos.filter(t=>t.project_id===last.id),ld=lt.filter(t=>t.done).length,pct=lt.length?Math.round(ld/lt.length*100):0;
-    const rev=getTotalRevenue(last.id),views=getTotalViews(last.id);
-    html+=`<div class="last-worked"><div style="width:38px;height:38px;background:var(--bg4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎬</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Zuletzt bearbeitet</div>
-        <div style="font-size:15px;font-weight:500">${last.name}</div>
-        <div style="margin-top:6px"><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-        <div style="font-size:11px;color:var(--text3)">${ld}/${lt.length} Tasks · ⏱ ${fmtDurationShort(getTotalTime(last.id))}${views>0?` · 👁 ${fmt(views)}`:''}${rev>0?` · 💰 ${fmtEuro(rev)}`:''}</div></div>
-      </div>
-      <div style="font-size:12px;color:var(--text3);margin-left:auto;white-space:nowrap">${timeAgo(last.last_worked)}</div>
-    </div>`;
+  if (lw) {
+    var lt = D.todos.filter(function(t){return t.project_id===lw.id;});
+    var ld = lt.filter(function(t){return t.done;}).length;
+    var pct = lt.length ? Math.round(ld/lt.length*100) : 0;
+    html += '<div class="lw-box"><div style="width:38px;height:38px;background:var(--bg4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎬</div><div style="flex:1;min-width:0"><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Zuletzt bearbeitet</div><div style="font-size:15px;font-weight:500">'+lw.name+'</div>'+(lw.blender_file?'<div style="font-size:12px;color:var(--text3);font-family:Space Mono,monospace;margin-top:2px">📁 '+lw.blender_file+'</div>':'')+'<div style="margin-top:6px"><div class="pbar"><div class="pbar-fill" style="width:'+pct+'%"></div></div><div style="font-size:11px;color:var(--text3)">'+ld+'/'+lt.length+' Tasks · ⏱ '+fmtMs(totalTime(lw.id))+'</div></div></div><div style="font-size:12px;color:var(--text3);margin-left:auto;white-space:nowrap">'+timeAgo(lw.last_worked)+'</div></div>';
   }
 
-  if(activeFilter){html+=`<div class="filter-bar"><span class="filter-tag">${statusIcon(activeFilter)} ${statusLabel(activeFilter)}</span><span class="filter-clear" onclick="setFilter(null)">✕ Zurücksetzen</span></div>`}
-  html+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="section-title">${filtered.length} Projekte${activeFilter?' · '+statusLabel(activeFilter):''}</div></div>`;
-  if(!filtered.length)html+=`<div style="text-align:center;padding:3rem 0;color:var(--text3);font-size:14px">Keine Projekte</div>`;
+  if (UI.filter) html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:12px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:4px 12px;border-radius:20px">'+statusIcon(UI.filter)+' '+statusLabel(UI.filter)+'</span><span style="font-size:12px;color:var(--text3);cursor:pointer" onclick="setFilter(null)">✕ Zurücksetzen</span></div>';
 
-  for(const p of filtered){
-    const expanded=expandedIds.has(p.id);
-    const projTodos=todos.filter(t=>t.project_id===p.id);
-    const projShorts=shorts.filter(s=>s.project_id===p.id);
-    const projNotes=notes.find(n=>n.project_id===p.id);
-    const projInspos=inspirations.filter(i=>i.project_id===p.id);
-    const doneTodos=projTodos.filter(t=>t.done).length;
-    const isRunning=!!activeSessionIds[p.id];
-    const totalMs=getTotalTime(p.id);
-    const days=daysUntil(p.due_date);
-    const chkPct=getChecklistPct(p);
-    const totalRev=getTotalRevenue(p.id);
-    const totalViews=getTotalViews(p.id);
+  if (!list.length) html += '<div style="text-align:center;padding:3rem 0;color:var(--text3);font-size:14px">Keine Projekte</div>';
 
-    html+=`<div class="proj-card"><div class="proj-header" onclick="toggleExpand('${p.id}')">
-      <div class="proj-icon">${statusIcon(p.status)}</div>
-      <div class="proj-name">${p.name}</div>
-      <div class="proj-meta">
-        <span class="badge badge-${p.status}">${statusLabel(p.status)}</span>
-        ${days!==null&&days<0?`<span class="badge badge-overdue">⚠ ${Math.abs(days)}d überfällig</span>`:''}
-        ${days!==null&&days>=0&&days<=7?`<span class="badge badge-soon">📅 ${days}d</span>`:''}
-        ${isRunning?`<span class="timer-active"><span class="timer-dot"></span><span id="live-${p.id}">${fmtDuration(Date.now()-activeStartTimes[p.id])}</span></span>`:(totalMs>0?`<span class="badge badge-time">⏱ ${fmtDurationShort(totalMs)}</span>`:'')}
-        ${totalViews>0?`<span style="font-size:12px;color:var(--text3)">👁 ${fmt(totalViews)}</span>`:''}
-        ${totalRev>0?`<span style="font-size:12px;color:var(--green)">💰 ${fmtEuro(totalRev)}</span>`:''}
-        ${chkPct>0?`<span style="font-size:12px;color:var(--text3)">☑ ${chkPct}%</span>`:''}
-      </div>
-      <div class="chevron${expanded?' open':''}">▾</div>
-    </div>`;
+  list.forEach(function(p) {
+    var exp = UI.expanded.has(p.id);
+    var ptodos = D.todos.filter(function(t){return t.project_id===p.id;});
+    var pshorts = D.shorts.filter(function(s){return s.project_id===p.id;});
+    var done = ptodos.filter(function(t){return t.done;}).length;
+    var running = !!UI.activeSessions[p.id];
+    var tms = totalTime(p.id);
+    var days = daysUntil(p.due_date);
+    var rev = totalRevenue(p.id);
+    var views = totalViews(p.id);
+    var cpct = clPct(p);
 
-    if(expanded){
-      const projSessions=sessions.filter(s=>s.project_id===p.id);
-      const cl=getChecklist(p);
-      html+=`<div class="proj-body open">`;
+    html += '<div class="proj-card"><div class="proj-header" onclick="toggleExp(\''+p.id+'\')">';
+    html += '<div class="proj-icon">'+statusIcon(p.status)+'</div>';
+    html += '<div class="proj-name">'+p.name+'</div>';
+    html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">';
+    html += '<span class="badge badge-'+p.status+'">'+statusLabel(p.status)+'</span>';
+    if (days !== null && days < 0) html += '<span class="badge badge-overdue">⚠ '+Math.abs(days)+'d überfällig</span>';
+    if (days !== null && days >= 0 && days <= 7) html += '<span class="badge badge-soon">📅 '+days+'d</span>';
+    if (running) html += '<span class="timer-live"><span class="tdot"></span><span id="lt-'+p.id+'">'+fmtHMS(Date.now()-UI.activeStarts[p.id])+'</span></span>';
+    else if (tms > 0) html += '<span class="badge badge-time">⏱ '+fmtMs(tms)+'</span>';
+    if (views > 0) html += '<span style="font-size:12px;color:var(--text3)">👁 '+fmt(views)+'</span>';
+    if (rev > 0) html += '<span style="font-size:12px;color:var(--green)">💰 '+fmtEuro(rev)+'</span>';
+    if (cpct > 0) html += '<span style="font-size:12px;color:var(--text3)">☑ '+cpct+'%</span>';
+    html += '<span style="font-size:12px;color:var(--text3)">'+done+'/'+ptodos.length+' ✓</span>';
+    html += '</div><div class="chevron'+(exp?' open':'')+'">▾</div></div>';
+
+    if (exp) {
+      var psess = D.sessions.filter(function(s){return s.project_id===p.id;});
+      var pnote = D.notes.find(function(n){return n.project_id===p.id;});
+      var pinspo = D.inspirations.filter(function(i){return i.project_id===p.id;});
+      var prefs = D.projectRefs.filter(function(r){return r.project_id===p.id;});
+      var cl = p.checklist || {};
+
+      html += '<div class="proj-body open">';
 
       // TIME
-      html+=`<div class="time-section"><div class="time-header">
-        <div><div class="time-total">${fmtDurationShort(totalMs)||'0m'}</div><div class="time-sub">${projSessions.length} Session${projSessions.length!==1?'s':''}</div></div>
-        ${isRunning?`<button class="btn-stop" onclick="stopTimer('${p.id}')">⏹ Stoppen</button>`:`<button class="btn-green" onclick="startTimer('${p.id}')">▶ Starten</button>`}
-      </div>`;
-      if(projSessions.length){
-        html+=`<div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">`;
-        projSessions.slice(0,3).forEach(s=>{
-          const dur=s.ended_at?new Date(s.ended_at)-new Date(s.started_at):Date.now()-new Date(s.started_at);
-          const date=new Date(s.started_at).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
-          const time=new Date(s.started_at).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-          html+=`<div class="session-row"><span style="font-family:'Space Mono',monospace;font-size:11px;flex:1">${date} ${time}</span><span style="font-family:'Space Mono',monospace;color:var(--text2)">${fmtDurationShort(dur)}</span>${!s.ended_at?'<span style="font-size:11px;color:var(--green)">● läuft</span>':''}</div>`;
+      html += '<div class="time-box"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div><div style="font-family:Space Mono,monospace;font-size:20px;font-weight:700">'+fmtMs(tms)+'</div><div style="font-size:11px;color:var(--text3)">'+psess.length+' Sessions</div></div>';
+      html += running ? '<button class="btn-stop" onclick="stopTimer(\''+p.id+'\')">⏹ Stoppen</button>' : '<button class="btn-green" onclick="startTimer(\''+p.id+'\')">▶ Starten</button>';
+      html += '</div>';
+      if (psess.length) {
+        html += '<div style="border-top:1px solid var(--border);padding-top:8px;margin-top:6px">';
+        psess.slice(0,3).forEach(function(s){
+          var dur = s.ended_at ? new Date(s.ended_at)-new Date(s.started_at) : Date.now()-new Date(s.started_at);
+          var dt = new Date(s.started_at);
+          html += '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text3)"><span style="font-family:Space Mono,monospace;font-size:11px;flex:1">'+dt.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+'</span><span style="font-family:Space Mono,monospace;color:var(--text2)">'+fmtMs(dur)+'</span>'+(s.ended_at?'':'<span style="font-size:11px;color:var(--green)">● läuft</span>')+'</div>';
         });
-        html+=`</div>`;
+        html += '</div>';
       }
-      html+=`</div>`;
+      html += '</div>';
 
-      // EXPORT CHECKLIST
-      html+=`<div class="subsection"><div class="subsection-header">
-        <div class="subsection-label">☑ Export-Checkliste <span style="font-weight:400">${chkPct}%</span></div>
-        <span style="font-size:12px;color:var(--text3)">${CHECKLIST_STEPS.filter(s=>cl[s.key]).length}/${CHECKLIST_STEPS.length}</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${chkPct}%"></div></div>
-      <div class="checklist-grid">`;
-      CHECKLIST_STEPS.forEach(step=>{
-        const done=!!cl[step.key];
-        html+=`<div class="check-step${done?' done':''}" onclick="toggleChecklist('${p.id}','${step.key}',${!done})">
-          <div class="check-step-icon">${done?'✓':''}</div>
-          <div class="check-step-label">${step.label}</div>
-        </div>`;
+      // CHECKLIST
+      var cdone = CL_STEPS.filter(function(s){return cl[s.k];}).length;
+      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">☑ Checkliste <span style="font-weight:400">'+cpct+'%</span></div><span style="font-size:12px;color:var(--text3)">'+cdone+'/'+CL_STEPS.length+'</span></div>';
+      html += '<div class="pbar"><div class="pbar-fill" style="width:'+cpct+'%"></div></div>';
+      html += '<div class="checklist-grid">';
+      CL_STEPS.forEach(function(step){
+        var d = !!cl[step.k];
+        html += '<div class="cl-step'+(d?' done':'')+'" onclick="toggleCL(\''+p.id+'\',\''+step.k+'\','+(d?'false':'true')+')"><div class="cl-box">'+(d?'✓':'')+'</div><div class="cl-lbl">'+step.l+'</div></div>';
       });
-      html+=`</div></div>`;
+      html += '</div></div>';
 
-      // FILE + STATUS + DUE
-      html+=`<div class="file-row">
-        <span style="font-size:14px">📁</span>
-        <input class="input-field input-mono" style="flex:1;min-width:120px" placeholder="datei.blend" value="${p.blender_file||''}" onchange="updateBlenderFile('${p.id}',this.value)"/>
-        <input class="input-field" type="date" value="${p.due_date||''}" title="Deadline" onchange="updateDueDate('${p.id}',this.value)" style="width:140px"/>
-        <select class="select-field" onchange="updateStatus('${p.id}',this.value)">
-          <option value="idee"${p.status==='idee'?' selected':''}>💡 Idee</option>
-          <option value="bearbeitung"${p.status==='bearbeitung'?' selected':''}>🔵 In Arbeit</option>
-          <option value="fertig"${p.status==='fertig'?' selected':''}>✅ Fertig</option>
-        </select>
-        <button class="btn-danger" onclick="deleteProject('${p.id}')">🗑</button>
-      </div>`;
+      // FILE + STATUS + DATE
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">';
+      html += '<span>📁</span><input class="ifield ifield-mono" style="flex:1;min-width:120px" placeholder="datei.blend1" value="'+(p.blender_file||'')+'" onchange="updFile(\''+p.id+'\',this.value)"/>';
+      html += '<input class="ifield" type="date" value="'+(p.due_date||'')+'" title="Deadline" onchange="updDue(\''+p.id+'\',this.value)" style="width:140px"/>';
+      html += '<select class="sfield" onchange="updStatus(\''+p.id+'\',this.value)"><option value="idee"'+(p.status==='idee'?' selected':'')+'>💡 Idee</option><option value="bearbeitung"'+(p.status==='bearbeitung'?' selected':'')+'>🔵 In Arbeit</option><option value="fertig"'+(p.status==='fertig'?' selected':'')+'>✅ Fertig</option></select>';
+      html += '<button class="btn-danger" onclick="delProject(\''+p.id+'\')">🗑</button></div>';
 
-      // SHORTS + PLATFORMS
-      html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">▶ Shorts</div><button class="btn" onclick="openShortModal('${p.id}')">+ Short</button></div>`;
-      if(!projShorts.length)html+=`<div class="empty">Noch keine Shorts</div>`;
-      projShorts.forEach(s=>{
-        const tags=Array.isArray(s.tags)?s.tags:[];
-        const platforms=shortPlatforms.filter(pl=>pl.short_id===s.id);
-        const totalV=platforms.reduce((a,pl)=>a+parseInt(pl.views||0),0);
-        const totalR=platforms.reduce((a,pl)=>a+parseFloat(pl.revenue||0),0);
-        html+=`<div class="short-card">
-          <div class="short-card-header">
-            <div style="width:28px;height:28px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">▶</div>
-            <div class="short-card-title">${s.title}</div>
-            ${totalV>0?`<span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text3)">👁 ${fmt(totalV)}</span>`:''}
-            ${totalR>0?`<span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green)">💰 ${fmtEuro(totalR)}</span>`:''}
-            <button class="btn" style="font-size:11px;padding:4px 10px" onclick="openPlatformModal('${s.id}')">+ Plattform</button>
-            <button class="btn-danger" onclick="deleteShort('${s.id}')" style="font-size:12px;padding:4px 8px">✕</button>
-          </div>
-          ${tags.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:${platforms.length?'0':'0'}px">${tags.map(t=>`<span style="font-size:11px;background:var(--bg4);color:var(--text3);padding:1px 7px;border-radius:20px;border:1px solid var(--border)">#${t}</span>`).join('')}</div>`:''}
-          ${platforms.map(pl=>{
-            const pi=PLATFORM_INFO[pl.platform]||{icon:'🔗',label:pl.platform,color:'var(--text2)',cls:''};
-            return`<div class="platform-row" style="border-top:1px solid var(--border);padding:6px 0;display:flex;align-items:center;gap:8px">
-              <div style="width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:${pi.bg||'var(--bg4)'};border:1px solid ${pi.border||'var(--border)'}">${pi.icon}</div>
-              <span style="font-size:12px;color:${pi.color};min-width:90px;font-weight:500">${pi.label}</span>
-              <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text2);min-width:60px">👁 ${fmt(parseInt(pl.views||0))}</span>
-              <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green);min-width:60px">${parseFloat(pl.revenue||0)>0?'💰 '+fmtEuro(pl.revenue):''}</span>
-              ${pl.link?`<a style="font-size:11px;color:var(--accent2);text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" href="${pl.link}" target="_blank">🔗 Link</a>`:'<span style="flex:1"></span>'}
-              <button class="btn-danger" onclick="deletePlatform('${pl.id}')" style="font-size:11px;padding:2px 6px">✕</button>
-            </div>`;
-          }).join('')}
-        </div>`;
+      // SHORTS
+      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">▶ Shorts</div><button class="btn" onclick="openShortModal(\''+p.id+'\')">+ Short</button></div>';
+      if (!pshorts.length) html += '<div class="empty">Noch keine Shorts</div>';
+      pshorts.forEach(function(s){
+        var tags = Array.isArray(s.tags) ? s.tags : [];
+        var platforms = D.shortPlatforms.filter(function(pl){return pl.short_id===s.id;});
+        var sv = platforms.reduce(function(a,pl){return a+parseInt(pl.views||0);},0);
+        var sr = platforms.reduce(function(a,pl){return a+parseFloat(pl.revenue||0);},0);
+        html += '<div class="short-card"><div class="short-hdr"><div style="width:28px;height:28px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">▶</div><div style="font-size:13px;font-weight:500;flex:1">'+s.title+'</div>';
+        if (sv>0) html += '<span style="font-family:Space Mono,monospace;font-size:12px;color:var(--text3)">👁 '+fmt(sv)+'</span>';
+        if (sr>0) html += '<span style="font-family:Space Mono,monospace;font-size:12px;color:var(--green)">💰 '+fmtEuro(sr)+'</span>';
+        html += '<button class="btn" style="font-size:11px;padding:4px 10px" onclick="openPlatModal(\''+s.id+'\')">+ Plattform</button>';
+        html += '<button class="btn-danger" style="font-size:12px;padding:4px 8px" onclick="delShort(\''+s.id+'\')">✕</button></div>';
+        if (tags.length) html += '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">'+tags.map(function(t){return '<span style="font-size:11px;background:var(--bg4);color:var(--text3);padding:1px 7px;border-radius:20px;border:1px solid var(--border)">#'+t+'</span>';}).join('')+'</div>';
+        platforms.forEach(function(pl){
+          var pi = PLAT[pl.platform] || {icon:'🔗',label:pl.platform,color:'var(--text2)'};
+          html += '<div class="pl-row"><span style="font-size:14px">'+pi.icon+'</span><span style="font-size:12px;color:'+pi.color+';min-width:100px;font-weight:500">'+pi.label+'</span><span style="font-family:Space Mono,monospace;font-size:12px;color:var(--text2);min-width:60px">👁 '+fmt(parseInt(pl.views||0))+'</span><span style="font-family:Space Mono,monospace;font-size:12px;color:var(--green);min-width:55px">'+(parseFloat(pl.revenue||0)>0?'💰 '+fmtEuro(pl.revenue):'')+'</span>'+(pl.link?'<a href="'+pl.link+'" target="_blank" style="font-size:11px;color:var(--accent2);text-decoration:none;flex:1">🔗 Link</a>':'<span style="flex:1"></span>')+'<button class="btn-danger" style="font-size:11px;padding:2px 6px" onclick="delPlatform(\''+pl.id+'\')">✕</button></div>';
+        });
+        html += '</div>';
       });
-      html+=`</div>`;
+      html += '</div>';
 
-      // NOTIZEN
-      html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">📝 Notizen</div><span style="font-size:11px;color:var(--text3)" id="note-saved-${p.id}"></span></div>
-        <textarea class="notes-area" id="note-area-${p.id}" placeholder="Ideen, Referenzen, Anmerkungen..." oninput="debounceSaveNote('${p.id}',this.value)">${projNotes?projNotes.content:''}</textarea>
-      </div>`;
+      // NOTES
+      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">📝 Notizen</div><span style="font-size:11px;color:var(--text3)" id="ns-'+p.id+'"></span></div>';
+      html += '<textarea class="notes-ta" id="na-'+p.id+'" placeholder="Ideen, Referenzen, Anmerkungen..." oninput="saveNote(\''+p.id+'\',this.value)">'+(pnote?pnote.content:'')+'</textarea></div>';
 
       // INSPIRATIONS
-      html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">💡 Inspirations-Board</div><button class="btn" onclick="openInspoModal('${p.id}')">+ Link</button></div>`;
-      if(!projInspos.length)html+=`<div class="empty">Noch keine Inspirationen</div>`;
-      projInspos.forEach(i=>{
-        html+=`<div class="inspo-item"><div style="width:28px;height:28px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">${typeIcon(i.type)}</div>
-          <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500">${i.title}</div>
-          <a style="font-size:12px;color:var(--accent2);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block" href="${i.url}" target="_blank">${i.url}</a></div>
-          <button class="btn-danger" onclick="deleteInspo('${i.id}')" style="font-size:12px;padding:4px 8px">✕</button>
-        </div>`;
+      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">💡 Inspirations-Board</div><button class="btn" onclick="openInspoModal(\''+p.id+'\')">+ Link</button></div>';
+      if (!pinspo.length) html += '<div class="empty">Noch keine Inspirationen</div>';
+      pinspo.forEach(function(i){
+        var icons = {video:'▶',image:'🖼',ref:'📌',link:'🔗'};
+        html += '<div class="inspo-row"><div style="width:26px;height:26px;background:var(--bg4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">'+(icons[i.type]||'🔗')+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500">'+i.title+'</div><a href="'+i.url+'" target="_blank" style="font-size:12px;color:var(--accent2);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block">'+i.url+'</a></div><button class="btn-danger" style="font-size:12px;padding:4px 8px" onclick="delInspo(\''+i.id+'\')">✕</button></div>';
       });
-      html+=`</div>`;
+      html += '</div>';
 
       // REFERENCE IMAGES
-      const projRefs=projectRefs.filter(r=>r.project_id===p.id);
-      if(projRefs.length){
-        html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">🖼 Referenzbilder (${projRefs.length})</div><button class="btn" style="font-size:11px;padding:4px 10px" onclick="openRefPanelForProject('${p.id}')">+ KI Suche</button></div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px">
-            ${projRefs.map(r=>`<div style="position:relative;aspect-ratio:16/10;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
-              <img src="${r.image_url}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.opacity=0.3"/>
-              <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.65);padding:3px 6px;font-size:10px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.title}</div>
-              <button onclick="deleteRef('${r.id}')" style="position:absolute;top:4px;right:4px;width:18px;height:18px;background:rgba(0,0,0,0.7);border-radius:50%;color:#fff;font-size:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
-            </div>`).join('')}
-          </div>
-        </div>`;
-      } else {
-        html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">🖼 Referenzbilder</div><button class="btn" style="font-size:11px;padding:4px 10px" onclick="openRefPanelForProject('${p.id}')">+ KI Suche</button></div>
-          <div class="empty">Noch keine Referenzbilder – nutze die KI-Suche</div>
-        </div>`;
-      }
+      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">🖼 Referenzbilder ('+(prefs.length)+')</div><button class="btn" style="font-size:11px;padding:4px 10px" onclick="openRefPanelFor(\''+p.id+'\')">+ KI Suche</button></div>';
+      if (!prefs.length) html += '<div class="empty">Noch keine Referenzbilder</div>';
+      else { html += '<div class="ref-grid">'; prefs.forEach(function(r){ html += '<div class="ref-thumb"><img src="'+r.image_url+'" onerror="this.parentElement.style.display=\'none\'"/><div class="ref-thumb-lbl">'+r.title+'</div><button class="ref-thumb-del" onclick="delRef(\''+r.id+'\')">✕</button></div>'; }); html += '</div>'; }
+      html += '</div>';
 
       // TODOS
-      const pct=projTodos.length?Math.round(doneTodos/projTodos.length*100):0;
-      html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">✓ Todo-Liste <span style="font-weight:400">${pct}%</span></div><span style="font-size:12px;color:var(--text3)">${doneTodos}/${projTodos.length}</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>`;
-      if(!projTodos.length)html+=`<div class="empty">Noch keine Tasks</div>`;
-      projTodos.forEach(t=>{
-        html+=`<div class="todo-item"><div class="todo-check${t.done?' done':''}" onclick="toggleTodo('${t.id}','${p.id}',${!t.done})">${t.done?'✓':''}</div><div class="todo-text${t.done?' done':''}">${t.text}</div><button class="todo-del btn-danger" onclick="deleteTodo('${t.id}')" style="font-size:12px;padding:4px 8px">✕</button></div>`;
+      var tpct = ptodos.length ? Math.round(done/ptodos.length*100) : 0;
+      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">✓ Todo-Liste <span style="font-weight:400">'+tpct+'%</span></div><span style="font-size:12px;color:var(--text3)">'+done+'/'+ptodos.length+'</span></div>';
+      html += '<div class="pbar"><div class="pbar-fill" style="width:'+tpct+'%"></div></div>';
+      if (!ptodos.length) html += '<div class="empty">Noch keine Tasks</div>';
+      ptodos.forEach(function(t){
+        var doneClass = t.done ? ' done' : '';
+        var checkMark = t.done ? '&#10003;' : '';
+        html += '<div class="todo-row">';
+        html += '<div class="todo-cb'+doneClass+'" data-tid="'+t.id+'" data-pid="'+p.id+'" onclick="cbClick(this)">'+checkMark+'</div>';
+        html += '<div class="todo-txt'+doneClass+'">'+t.text+'</div>';
+        html += '<button class="del-btn btn-danger" data-tid="'+t.id+'" onclick="tdClick(this)" style="font-size:12px;padding:4px 6px">&#10005;</button>';
+        html += '</div>';
       });
-      html+=`<div class="add-row"><input placeholder="Neuen Task eingeben..." id="todo-input-${p.id}" value="${newTodoInputs[p.id]||''}" oninput="newTodoInputs['${p.id}']=this.value" onkeydown="if(event.key==='Enter')addTodo('${p.id}')"/><button class="btn-accent" onclick="addTodo('${p.id}')">+ Task</button></div>`;
-      html+=`</div></div>`;
+      html += '<div class="add-row"><input placeholder="Neuen Task..." id="ti-'+p.id+'" data-pid="'+p.id+'" oninput="tiInput(this)" onkeydown="tiKey(event,this)"/><button class="btn-accent" data-pid="'+p.id+'" onclick="tiBtnClick(this)">+ Task</button></div>';
+      html += '</div></div>';
     }
-    html+=`</div>`;
-  }
-  html+=`</div>`;
-  pg.innerHTML=html;
-  Object.keys(activeSessionIds).forEach(pid=>{
-    if(activeTimers[pid])clearInterval(activeTimers[pid]);
-    activeTimers[pid]=setInterval(()=>{const el=document.getElementById('live-'+pid);if(el&&activeStartTimes[pid])el.textContent=fmtDuration(Date.now()-activeStartTimes[pid])},1000);
+    html += '</div>';
+  });
+
+  pg.innerHTML = html;
+
+  // Restart live timers
+  Object.keys(UI.activeSessions).forEach(function(pid){
+    if (UI.activeTimers[pid]) clearInterval(UI.activeTimers[pid]);
+    UI.activeTimers[pid] = setInterval(function(){
+      var el = document.getElementById('lt-'+pid);
+      if (el && UI.activeStarts[pid]) el.textContent = fmtHMS(Date.now()-UI.activeStarts[pid]);
+    }, 1000);
   });
 }
 
-function renderKalender(){
-  const pg=document.getElementById('page-kalender');
-  const now=new Date();
-  const selMonth=window.calMonth!==undefined?window.calMonth:now.getMonth();
-  const selYear=window.calYear!==undefined?window.calYear:now.getFullYear();
-  window.calMonth=selMonth;window.calYear=selYear;
-  const firstDay=new Date(selYear,selMonth,1);
-  const lastDay=new Date(selYear,selMonth+1,0);
-  const startDow=(firstDay.getDay()+6)%7;
-  const totalDays=lastDay.getDate();
-  const monthName=firstDay.toLocaleString('de-DE',{month:'long',year:'numeric'});
-  const deadlineMap={};
-  projects.filter(p=>p.due_date).forEach(p=>{if(!deadlineMap[p.due_date])deadlineMap[p.due_date]=[];deadlineMap[p.due_date].push(p)});
-  const withDate=projects.filter(p=>p.due_date).sort((a,b)=>new Date(a.due_date)-new Date(b.due_date));
-  let html=`<div><div class="page-header"><div><div class="page-sub">Planung</div><div class="page-title">Kalender</div></div>${withDate.length?`<button class="btn" onclick="exportICS()">📥 Windows Kalender (.ics)</button>`:''}</div>
-  <div class="chart-card" style="padding:0;overflow:hidden">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)">
-      <button class="btn" onclick="window.calMonth=${selMonth===0?11:selMonth-1};window.calYear=${selMonth===0?selYear-1:selYear};renderKalender()">◀</button>
-      <div style="font-size:15px;font-weight:500">${monthName}</div>
-      <button class="btn" onclick="window.calMonth=${selMonth===11?0:selMonth+1};window.calYear=${selMonth===11?selYear+1:selYear};renderKalender()">▶</button>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)">
-      ${['Mo','Di','Mi','Do','Fr','Sa','So'].map(d=>`<div style="text-align:center;padding:8px 4px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">${d}</div>`).join('')}
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr)">`;
-  for(let i=0;i<startDow;i++)html+=`<div style="min-height:72px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg3);opacity:0.4"></div>`;
-  for(let day=1;day<=totalDays;day++){
-    const dateStr=`${selYear}-${String(selMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const isToday=day===now.getDate()&&selMonth===now.getMonth()&&selYear===now.getFullYear();
-    const events=deadlineMap[dateStr]||[];
-    const col=(startDow+day-1)%7,isWeekend=col===5||col===6;
-    html+=`<div style="min-height:72px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px;${isWeekend?'background:rgba(255,255,255,0.01)':''}">
-      <div style="font-size:12px;font-weight:${isToday?'700':'400'};color:${isToday?'#fff':'var(--text3)'};width:22px;height:22px;border-radius:50%;background:${isToday?'var(--accent)':'transparent'};display:flex;align-items:center;justify-content:center;margin-bottom:4px">${day}</div>`;
-    events.forEach(p=>{
-      const d=daysUntil(p.due_date);
-      const bg=d<0?'var(--red2)':d<=3?'var(--amber2)':'var(--green2)';
-      const color=d<0?'var(--red)':d<=3?'var(--amber)':'var(--green)';
-      html+=`<div onclick="focusProject('${p.id}')" title="${p.name}" style="font-size:10px;background:${bg};color:${color};border-radius:4px;padding:2px 5px;margin-bottom:2px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">🎬 ${p.name}</div>`;
+// ── CALENDAR PAGE ─────────────────────────────────────────
+function renderKalender() {
+  var pg = document.getElementById('page-kalender');
+  var now = new Date();
+  var sm = (window._cm !== undefined) ? window._cm : now.getMonth();
+  var sy = (window._cy !== undefined) ? window._cy : now.getFullYear();
+  window._cm = sm; window._cy = sy;
+  var first = new Date(sy, sm, 1);
+  var last  = new Date(sy, sm+1, 0);
+  var sdow  = (first.getDay()+6)%7;
+  var total = last.getDate();
+  var mname = first.toLocaleString('de-DE',{month:'long',year:'numeric'});
+  var dmap  = {};
+  D.projects.filter(function(p){return p.due_date;}).forEach(function(p){ if(!dmap[p.due_date])dmap[p.due_date]=[]; dmap[p.due_date].push(p); });
+  var wdate = D.projects.filter(function(p){return p.due_date;}).sort(function(a,b){return new Date(a.due_date)-new Date(b.due_date);});
+
+  var html = '<div class="ph"><div><div class="ph-sub">Planung</div><div class="ph-title">Kalender</div></div>'+(wdate.length?'<button class="btn" onclick="exportICS()">📥 .ics Export</button>':'')+'</div>';
+  html += '<div class="chart-card" style="padding:0;overflow:hidden">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">';
+  html += '<button class="btn" onclick="window._cm='+(sm===0?11:sm-1)+';window._cy='+(sm===0?sy-1:sy)+';renderKalender()">◀</button>';
+  html += '<div style="font-size:15px;font-weight:500">'+mname+'</div>';
+  html += '<button class="btn" onclick="window._cm='+(sm===11?0:sm+1)+';window._cy='+(sm===11?sy+1:sy)+';renderKalender()">▶</button></div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)">';
+  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(function(d){ html += '<div style="text-align:center;padding:8px 4px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">'+d+'</div>'; });
+  html += '</div><div style="display:grid;grid-template-columns:repeat(7,1fr)">';
+  for (var i=0;i<sdow;i++) html += '<div style="min-height:68px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg3);opacity:.4"></div>';
+  for (var day=1;day<=total;day++) {
+    var ds = sy+'-'+pad(sm+1)+'-'+pad(day);
+    var isToday = day===now.getDate() && sm===now.getMonth() && sy===now.getFullYear();
+    var evs = dmap[ds]||[];
+    var col = (sdow+day-1)%7, wknd = col===5||col===6;
+    html += '<div style="min-height:68px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:5px;'+(wknd?'background:rgba(255,255,255,.01)':'')+'">';
+    html += '<div style="font-size:12px;font-weight:'+(isToday?'700':'400')+';color:'+(isToday?'#fff':'var(--text3)')+';width:22px;height:22px;border-radius:50%;background:'+(isToday?'var(--accent)':'transparent')+';display:flex;align-items:center;justify-content:center;margin-bottom:3px">'+day+'</div>';
+    evs.forEach(function(p){
+      var d2=daysUntil(p.due_date),bg=d2<0?'var(--red2)':d2<=3?'var(--amber2)':'var(--green2)',col2=d2<0?'var(--red)':d2<=3?'var(--amber)':'var(--green)';
+      html += '<div onclick="focusProj(\''+p.id+'\')" title="'+p.name+'" style="font-size:10px;background:'+bg+';color:'+col2+';border-radius:4px;padding:2px 5px;margin-bottom:2px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">🎬 '+p.name+'</div>';
     });
-    html+=`</div>`;
+    html += '</div>';
   }
-  const rem=(7-(startDow+totalDays)%7)%7;
-  for(let i=0;i<rem;i++)html+=`<div style="min-height:72px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg3);opacity:0.4"></div>`;
-  html+=`</div></div>`;
-  if(withDate.length){
-    const upcoming=withDate.filter(p=>daysUntil(p.due_date)>=-7).slice(0,6);
-    if(upcoming.length){
-      html+=`<div style="margin-top:16px"><div class="section-title" style="margin-bottom:12px">Nächste Deadlines</div><div class="cal-grid">`;
-      upcoming.forEach(p=>{
-        const days=daysUntil(p.due_date);
-        const d=new Date(p.due_date);
-        const daysColor=days<0?'var(--red)':days<=7?'var(--amber)':'var(--green)';
-        const daysText=days<0?`${Math.abs(days)}d überfällig`:days===0?'Heute!':days===1?'Morgen':`${days}d noch`;
-        html+=`<div class="cal-item" onclick="focusProject('${p.id}')">
-          <div class="cal-date-box ${days<0?'overdue':days<=7?'soon':'ok'}"><div class="cal-day" style="color:${daysColor}">${d.getDate()}</div><div class="cal-month" style="color:${daysColor}">${d.toLocaleString('de-DE',{month:'short'}).toUpperCase()}</div></div>
-          <div class="cal-info"><div class="cal-name">${p.name}</div><div class="cal-meta"><span class="badge badge-${p.status}">${statusLabel(p.status)}</span></div></div>
-          <div style="font-size:12px;font-family:'Space Mono',monospace;color:${daysColor};white-space:nowrap">${daysText}</div>
-        </div>`;
-      });
-      html+=`</div></div>`;
-    }
+  var rem = (7-(sdow+total)%7)%7;
+  for (var j=0;j<rem;j++) html += '<div style="min-height:68px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg3);opacity:.4"></div>';
+  html += '</div></div>';
+
+  var upcoming = wdate.filter(function(p){var d=daysUntil(p.due_date);return d!==null&&d>=-7;}).slice(0,6);
+  if (upcoming.length) {
+    html += '<div style="margin-top:14px"><div class="sec-title" style="margin-bottom:10px">Nächste Deadlines</div>';
+    upcoming.forEach(function(p){
+      var days=daysUntil(p.due_date), d=new Date(p.due_date);
+      var dc=days<0?'var(--red)':days<=7?'var(--amber)':'var(--green)';
+      var dt=days<0?Math.abs(days)+'d überfällig':days===0?'Heute!':days===1?'Morgen':days+'d noch';
+      var bc=days<0?'overdue':days<=7?'soon':'ok';
+      html += '<div class="cal-card" onclick="focusProj(\''+p.id+'\')">';
+      html += '<div class="cal-date '+bc+'"><div style="font-size:19px;font-weight:700;color:'+dc+'">'+d.getDate()+'</div><div style="font-size:10px;text-transform:uppercase;color:'+dc+'">'+d.toLocaleString('de-DE',{month:'short'}).toUpperCase()+'</div></div>';
+      html += '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">'+p.name+'</div><div style="margin-top:4px"><span class="badge badge-'+p.status+'">'+statusLabel(p.status)+'</span></div></div>';
+      html += '<div style="font-size:12px;font-family:Space Mono,monospace;color:'+dc+';white-space:nowrap">'+dt+'</div></div>';
+    });
+    html += '</div>';
   }
-  html+=`</div>`;
-  pg.innerHTML=html;
+
+  pg.innerHTML = html;
 }
 
-function renderStatistiken(){
-  const pg=document.getElementById('page-statistiken');
-  const totalTime=sessions.reduce((a,s)=>{const e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at))},0);
-  const totalViews=shortPlatforms.reduce((a,p)=>a+parseInt(p.views||0),0);
-  const totalRevenue=shortPlatforms.reduce((a,p)=>a+parseFloat(p.revenue||0),0);
-  const doneTodosAll=todos.filter(t=>t.done).length;
-
-  let html=`<div><div class="page-header"><div><div class="page-sub">Auswertung</div><div class="page-title">Statistiken</div></div></div>`;
-
-  html+=`<div class="summary-grid">
-    <div class="summary-card"><div class="summary-num" style="color:var(--accent)">${projects.length}</div><div class="summary-label">Projekte</div></div>
-    <div class="summary-card"><div class="summary-num" style="color:var(--green)">${fmtDurationShort(totalTime)}</div><div class="summary-label">Arbeitszeit</div></div>
-    <div class="summary-card"><div class="summary-num" style="color:var(--blue)">${fmt(totalViews)}</div><div class="summary-label">Views gesamt</div></div>
-    <div class="summary-card"><div class="summary-num" style="color:var(--green)">€${totalRevenue.toFixed(2)}</div><div class="summary-label">Einnahmen</div></div>
-  </div>`;
-
-  // Einnahmen pro Projekt
-  const projRev=projects.map(p=>({name:p.name,rev:getTotalRevenue(p.id),views:getTotalViews(p.id)})).filter(x=>x.rev>0||x.views>0).sort((a,b)=>b.rev-a.rev);
-  if(projRev.length){
-    const maxRev=Math.max(...projRev.map(x=>x.rev),0.01);
-    html+=`<div class="chart-card"><div class="chart-title">💰 Einnahmen pro Projekt</div>`;
-    projRev.forEach(x=>{
-      html+=`<div class="stat-row"><div class="stat-row-label" title="${x.name}">${x.name}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(x.rev/maxRev*100)}%;background:var(--green)"></div></div><div class="stat-row-val">€${x.rev.toFixed(2)}</div></div>`;
-    });
-    html+=`</div>`;
-  }
-
-  // Views pro Plattform
-  // Views per platform (all platforms)
-  const plViewsMap={};
-  shortPlatforms.forEach(p=>{if(!plViewsMap[p.platform])plViewsMap[p.platform]=0;plViewsMap[p.platform]+=parseInt(p.views||0)});
-  const activePlatforms=Object.entries(plViewsMap).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
-  if(activePlatforms.length){
-    const maxPV=Math.max(...activePlatforms.map(([,v])=>v),1);
-    html+=`<div class="chart-card"><div class="chart-title">▶ Views nach Plattform</div>`;
-    activePlatforms.forEach(([platform,views])=>{
-      const pi=PLATFORM_INFO[platform]||{icon:'🔗',label:platform,color:'var(--text2)'};
-      html+=`<div class="stat-row"><div class="stat-row-label">${pi.icon} ${pi.label}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(views/maxPV*100)}%;background:${pi.color}"></div></div><div class="stat-row-val">👁 ${fmt(views)}</div></div>`;
-    });
-    html+=`</div>`;
-  }
-
-  // Arbeitszeit pro Projekt
-  const projTime=projects.map(p=>({name:p.name,ms:getTotalTime(p.id)})).filter(x=>x.ms>0).sort((a,b)=>b.ms-a.ms);
-  if(projTime.length){
-    const maxMs=projTime[0].ms;
-    html+=`<div class="chart-card"><div class="chart-title">⏱ Arbeitszeit pro Projekt</div>`;
-    projTime.forEach(x=>{
-      html+=`<div class="stat-row"><div class="stat-row-label" title="${x.name}">${x.name}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(x.ms/maxMs*100)}%;background:var(--accent)"></div></div><div class="stat-row-val">${fmtDurationShort(x.ms)}</div></div>`;
-    });
-    html+=`</div>`;
-  }
-
-  // Checklisten-Fortschritt
-  const projCheck=projects.map(p=>({name:p.name,pct:getChecklistPct(p)})).filter(x=>x.pct>0).sort((a,b)=>b.pct-a.pct);
-  if(projCheck.length){
-    html+=`<div class="chart-card"><div class="chart-title">☑ Checklisten-Fortschritt</div>`;
-    projCheck.forEach(x=>{
-      html+=`<div class="stat-row"><div class="stat-row-label">${x.name}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${x.pct}%;background:var(--amber)"></div></div><div class="stat-row-val">${x.pct}%</div></div>`;
-    });
-    html+=`</div>`;
-  }
-
-  if(!projTime.length&&!projRev.length)html+=`<div style="text-align:center;padding:3rem;color:var(--text3)">Noch keine Daten – starte Zeiterfassung und trag Views ein!</div>`;
-  html+=`</div>`;
-  pg.innerHTML=html;
-}
-
-function renderEinstellungen(){
-  const pg=document.getElementById('page-einstellungen');
-  const folder=settings['blender_folder']||'';
-  pg.innerHTML=`<div><div class="page-header"><div><div class="page-sub">System</div><div class="page-title">Einstellungen</div></div></div>
-    <div class="settings-card">
-      <div class="settings-title">📁 Blender Dateien importieren</div>
-      <div class="settings-sub">Trag deine Blender-Dateinamen ein – einer pro Zeile oder kommagetrennt. Unterstützt .blend und .blend1. Bereits vorhandene Projekte werden nicht doppelt erstellt.</div>
-      <textarea class="notes-area" id="setting-blend-files" placeholder="kokiri_forest_v2.blend1
-raccoon_city_main.blend1
-midgar_scene.blend1
-..." style="height:120px;font-family:'Space Mono',monospace;font-size:12px;margin-bottom:10px">${settings['blend_files_raw']||''}</textarea>
-      <div style="display:flex;gap:10px">
-        <button class="btn-accent" onclick="importBlendFiles()" style="flex:1;justify-content:center">📥 Projekte importieren</button>
-        <button class="btn" onclick="document.getElementById('setting-blend-files').value=''" title="Leeren">✕</button>
-      </div>
-      <div style="margin-top:10px;background:var(--bg3);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text3);line-height:1.7">
-        💡 <strong style="color:var(--text2)">Tipp:</strong> Öffne deinen Blender-Ordner im Explorer, markiere alle Dateien, kopiere die Namen (Shift+Rechtsklick → Pfad kopieren oder einfach die Namen abtippen). Funktioniert in jedem Browser.
-      </div>
-    </div>
-    <div class="settings-card">
-      <div class="settings-title">📺 YouTube Auto-Sync</div>
-      <div class="settings-sub">Trag deinen YouTube Data API v3 Key ein. Die Views werden dann automatisch beim Öffnen des Dashboards aktualisiert.<br><span style="font-size:12px">Kostenlos holen: <strong>console.cloud.google.com</strong> → Neues Projekt → YouTube Data API v3 → API Key erstellen → Fertig</span></div>
-      <div style="display:flex;gap:10px;margin-bottom:10px">
-        <input class="input-field input-mono" style="flex:1;font-size:12px" id="setting-yt-key" placeholder="AIzaSy..." value="${settings['yt_api_key']||''}"/>
-        <button class="btn-accent" onclick="saveSetting('yt_api_key',document.getElementById('setting-yt-key').value).then(()=>showToast('API Key gespeichert ✓'))">Speichern</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <button class="btn-green" onclick="syncYouTube(false)" style="flex:1;justify-content:center">🔄 Jetzt synchronisieren</button>
-        <div style="font-size:12px;color:var(--text3)">${settings['yt_last_sync']?'Zuletzt: '+new Date(settings['yt_last_sync']).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'Noch nie synced'}</div>
-      </div>
-      <div style="margin-top:12px;background:var(--bg3);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text3);line-height:1.7">
-        💡 <strong style="color:var(--text2)">So funktioniert es:</strong> Füge bei jedem Short eine Plattform "YouTube" mit dem Video-Link hinzu → das System erkennt die Video-ID automatisch und holt sich die aktuellen Views direkt von YouTube.
-      </div>
-    </div>
-    <div class="settings-card">
-      <div class="settings-title">🔌 Blender Addon</div>
-      <div class="settings-sub">Erkennt automatisch wenn du eine .blend Datei speicherst und legt das Projekt im Dashboard an.</div>
-      <div class="info-box">💡 Installieren: <strong>Edit → Preferences → Add-ons → Install</strong> → blender_dashboard_addon.zip</div>
-    </div>
-    <div class="settings-card">
-      <div class="settings-title">ℹ️ System Info</div>
-      <div style="font-size:13px;color:var(--text3);line-height:2">
-        <div>Projekte: <span style="color:var(--text)">${projects.length}</span></div>
-        <div>Todos: <span style="color:var(--text)">${todos.length}</span> (${todos.filter(t=>t.done).length} erledigt)</div>
-        <div>Shorts: <span style="color:var(--text)">${shorts.length}</span></div>
-        <div>Plattform-Einträge: <span style="color:var(--text)">${shortPlatforms.length}</span></div>
-        <div>Gesamt-Views: <span style="color:var(--text)">${fmt(shortPlatforms.reduce((a,p)=>a+parseInt(p.views||0),0))}</span></div>
-        <div>Gesamt-Einnahmen: <span style="color:var(--green)">€${shortPlatforms.reduce((a,p)=>a+parseFloat(p.revenue||0),0).toFixed(2)}</span></div>
-        <div>Gesamt-Arbeitszeit: <span style="color:var(--text)">${fmtDurationShort(sessions.reduce((a,s)=>{const e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at))},0))}</span></div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function exportICS(){
-  let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Blender Dashboard//DE\r\n";
-  projects.filter(p=>p.due_date).forEach(p=>{
-    const d=p.due_date.replace(/-/g,'');
-    ics+=`BEGIN:VEVENT\r\nUID:${p.id}@blender-dashboard\r\nDTSTART;VALUE=DATE:${d}\r\nDTEND;VALUE=DATE:${d}\r\nSUMMARY:🎬 ${p.name}\r\nDESCRIPTION:Status: ${statusLabel(p.status)}${p.blender_file?' | Datei: '+p.blender_file:''}\r\nEND:VEVENT\r\n`;
+function exportICS() {
+  var ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Blender Dashboard//DE\r\n";
+  D.projects.filter(function(p){return p.due_date;}).forEach(function(p){
+    var d = p.due_date.replace(/-/g,'');
+    ics += "BEGIN:VEVENT\r\nUID:"+p.id+"@blender\r\nDTSTART;VALUE=DATE:"+d+"\r\nDTEND;VALUE=DATE:"+d+"\r\nSUMMARY:🎬 "+p.name+"\r\nEND:VEVENT\r\n";
   });
-  ics+="END:VCALENDAR";
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
-  a.download='blender-projekte.ics';a.click();
-  showToast('Kalender exportiert ✓');
+  ics += "END:VCALENDAR";
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+  a.download = 'blender-deadlines.ics'; a.click();
+  toast('Kalender exportiert ✓');
 }
 
-function focusProject(id){
-  document.querySelector('.nav-tab').click();
-  setTimeout(()=>{expandedIds.add(id);activeFilter=null;renderProjects()},100);
+// ── STATS PAGE ────────────────────────────────────────────
+function renderStatistiken() {
+  var pg = document.getElementById('page-statistiken');
+  var totTime = D.sessions.reduce(function(a,s){var e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at));},0);
+  var totViews = D.shortPlatforms.reduce(function(a,p){return a+parseInt(p.views||0);},0);
+  var totRev = D.shortPlatforms.reduce(function(a,p){return a+parseFloat(p.revenue||0);},0);
+  var html = '<div>';
+  html += '<div class="ph"><div><div class="ph-sub">Auswertung</div><div class="ph-title">Statistiken</div></div>';
+  if (D.settings['yt_api_key'] && D.shortPlatforms.filter(function(p){return p.platform==='youtube'&&p.link;}).length) html += '<button class="btn-green" onclick="syncYT(false)">🔄 YouTube Sync</button>';
+  html += '</div>';
+  html += '<div class="sum-grid"><div class="sum-card"><div class="sum-num" style="color:var(--accent)">'+D.projects.length+'</div><div class="sum-lbl">Projekte</div></div><div class="sum-card"><div class="sum-num" style="color:var(--green)">'+fmtMs(totTime)+'</div><div class="sum-lbl">Arbeitszeit</div></div><div class="sum-card"><div class="sum-num" style="color:var(--blue)">'+fmt(totViews)+'</div><div class="sum-lbl">Views</div></div><div class="sum-card"><div class="sum-num" style="color:var(--green)">€'+totRev.toFixed(2)+'</div><div class="sum-lbl">Einnahmen</div></div></div>';
+
+  var pRevs = D.projects.map(function(p){return{name:p.name,r:totalRevenue(p.id)};}).filter(function(x){return x.r>0;}).sort(function(a,b){return b.r-a.r;});
+  if (pRevs.length) {
+    var mx = pRevs[0].r;
+    html += '<div class="chart-card"><div class="chart-title">💰 Einnahmen pro Projekt</div>';
+    pRevs.forEach(function(x){ html += '<div class="srow"><div class="srow-lbl">'+x.name+'</div><div class="srow-bar"><div class="srow-fill" style="width:'+Math.round(x.r/mx*100)+'%;background:var(--green)"></div></div><div class="srow-val">€'+x.r.toFixed(2)+'</div></div>'; });
+    html += '</div>';
+  }
+
+  var platV = {};
+  D.shortPlatforms.forEach(function(p){ if(!platV[p.platform])platV[p.platform]=0; platV[p.platform]+=parseInt(p.views||0); });
+  var pents = Object.entries(platV).filter(function(x){return x[1]>0;}).sort(function(a,b){return b[1]-a[1];});
+  if (pents.length) {
+    var mv = pents[0][1];
+    html += '<div class="chart-card"><div class="chart-title">▶ Views nach Plattform</div>';
+    pents.forEach(function(e){ var pi=PLAT[e[0]]||{icon:'🔗',label:e[0],color:'var(--text2)'}; html += '<div class="srow"><div class="srow-lbl">'+pi.icon+' '+pi.label+'</div><div class="srow-bar"><div class="srow-fill" style="width:'+Math.round(e[1]/mv*100)+'%;background:'+pi.color+'"></div></div><div class="srow-val">👁 '+fmt(e[1])+'</div></div>'; });
+    html += '</div>';
+  }
+
+  var pTimes = D.projects.map(function(p){return{name:p.name,ms:totalTime(p.id)};}).filter(function(x){return x.ms>0;}).sort(function(a,b){return b.ms-a.ms;});
+  if (pTimes.length) {
+    var mt = pTimes[0].ms;
+    html += '<div class="chart-card"><div class="chart-title">⏱ Arbeitszeit pro Projekt</div>';
+    pTimes.forEach(function(x){ html += '<div class="srow"><div class="srow-lbl">'+x.name+'</div><div class="srow-bar"><div class="srow-fill" style="width:'+Math.round(x.ms/mt*100)+'%;background:var(--accent)"></div></div><div class="srow-val">'+fmtMs(x.ms)+'</div></div>'; });
+    html += '</div>';
+  }
+
+  if (!pRevs.length && !pents.length && !pTimes.length) html += '<div style="text-align:center;padding:3rem;color:var(--text3)">Noch keine Daten – starte Zeiterfassung und trag Views ein!</div>';
+  html += '</div>';
+  pg.innerHTML = html;
 }
 
-// TIMER
-async function startTimer(projId){
-  if(activeSessionIds[projId])return;
-  const now=new Date().toISOString();
-  const{data,error}=await db.from('time_sessions').insert({project_id:projId,started_at:now}).select().single();
-  if(error){showToast('Fehler: '+error.message);return}
-  activeSessionIds[projId]=data.id;activeStartTimes[projId]=new Date(now);
-  await db.from('projects').update({last_worked:now}).eq('id',projId);
-  await loadAll();renderProjects();showToast('⏱ Zeiterfassung gestartet');
-}
-async function stopTimer(projId){
-  const sessionId=activeSessionIds[projId];if(!sessionId)return;
-  const now=new Date().toISOString();
-  await db.from('time_sessions').update({ended_at:now}).eq('id',sessionId);
-  if(activeTimers[projId]){clearInterval(activeTimers[projId]);delete activeTimers[projId]}
-  delete activeSessionIds[projId];delete activeStartTimes[projId];
-  await db.from('projects').update({last_worked:now}).eq('id',projId);
-  await loadAll();renderProjects();showToast('⏹ Gestoppt');
+// ── SETTINGS PAGE ─────────────────────────────────────────
+function renderEinstellungen() {
+  var pg = document.getElementById('page-einstellungen');
+  var folder = D.settings['blender_folder']||'';
+  var ytKey = D.settings['yt_api_key']||'';
+  var lastSync = D.settings['yt_last_sync'];
+  pg.innerHTML = '<div><div class="ph"><div><div class="ph-sub">System</div><div class="ph-title">Einstellungen</div></div></div>'
+    +'<div class="sc"><div class="sc-title">📺 YouTube Auto-Sync</div><div class="sc-sub">Trag deinen YouTube Data API v3 Key ein. Views werden automatisch beim Öffnen aktualisiert.<br><span style="font-size:12px">Kostenlos holen: <strong>console.cloud.google.com</strong> → Neues Projekt → YouTube Data API v3 → API-Schlüssel</span></div>'
+    +'<div style="display:flex;gap:10px;margin-bottom:10px"><input class="ifield ifield-mono" style="flex:1;font-size:12px" id="s-yt" placeholder="AIzaSy..." value="'+ytKey+'"/><button class="btn-accent" onclick="saveSetting(\'yt_api_key\',document.getElementById(\'s-yt\').value).then(function(){toast(\'API Key gespeichert ✓\');})">Speichern</button></div>'
+    +'<div style="display:flex;align-items:center;gap:10px"><button class="btn-green" onclick="syncYT(false)" style="flex:1;justify-content:center">🔄 Jetzt synchronisieren</button><div style="font-size:12px;color:var(--text3)">'+(lastSync?'Zuletzt: '+new Date(lastSync).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'Noch nie')+'</div></div></div>'
+    +'<div class="sc"><div class="sc-title">📁 Blender Ordner-Pfad</div><div class="sc-sub">Pfad zu deinem Blender-Ordner. Wird vom Bulk-Import Script genutzt.</div><div style="display:flex;gap:10px"><input class="ifield ifield-mono" style="flex:1" id="s-folder" placeholder="C:/Users/.../Blender" value="'+folder+'"/><button class="btn-accent" onclick="saveSetting(\'blender_folder\',document.getElementById(\'s-folder\').value).then(function(){toast(\'Gespeichert ✓\');})">Speichern</button></div></div>'
+    +'<div class="sc"><div class="sc-title">🔌 Blender Addon</div><div class="sc-sub">Speichern in Blender → Projekt automatisch im Dashboard. .blend und .blend1 werden erkannt.</div><div class="info-box">💡 Installieren: <strong>Edit → Preferences → Add-ons → Install</strong> → blender_dashboard_addon.zip</div></div>'
+    +'<div class="sc"><div class="sc-title">ℹ️ System Info</div><div style="font-size:13px;color:var(--text3);line-height:2"><div>Projekte: <span style="color:var(--text)">'+D.projects.length+'</span></div><div>Todos: <span style="color:var(--text)">'+D.todos.length+'</span> ('+D.todos.filter(function(t){return t.done;}).length+' erledigt)</div><div>Shorts: <span style="color:var(--text)">'+D.shorts.length+'</span></div><div>Plattform-Einträge: <span style="color:var(--text)">'+D.shortPlatforms.length+'</span></div><div>Gesamt-Views: <span style="color:var(--text)">'+fmt(D.shortPlatforms.reduce(function(a,p){return a+parseInt(p.views||0);},0))+'</span></div><div>Gesamt-Einnahmen: <span style="color:var(--green)">€'+D.shortPlatforms.reduce(function(a,p){return a+parseFloat(p.revenue||0);},0).toFixed(2)+'</span></div><div>Arbeitszeit: <span style="color:var(--text)">'+fmtMs(D.sessions.reduce(function(a,s){var e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at));},0))+'</span></div></div></div></div>';
 }
 
-// CHECKLIST
-async function toggleChecklist(projId,key,val){
-  const p=projects.find(x=>x.id===projId);if(!p)return;
-  const cl={...(p.checklist||{}),[key]:val};
-  await db.from('projects').update({checklist:cl,last_worked:new Date().toISOString()}).eq('id',projId);
-  await loadAll();renderProjects();
+// ── ACTIONS ───────────────────────────────────────────────
+function setFilter(f){ UI.filter = UI.filter===f?null:f; renderProjects(); }
+function toggleExp(id){ if(UI.expanded.has(id))UI.expanded.delete(id);else UI.expanded.add(id); renderProjects(); }
+function focusProj(id){ switchTab('projekte',document.getElementById('ntab-projekte')); setTimeout(function(){UI.filter=null;UI.expanded.add(id);renderProjects();},50); }
+
+async function saveSetting(k,v){ await db.from('settings').upsert({key:k,value:v}); D.settings[k]=v; }
+
+async function startTimer(pid){
+  if(UI.activeSessions[pid]) return;
+  var now = new Date().toISOString();
+  var r = await db.from('time_sessions').insert({project_id:pid,started_at:now}).select().single();
+  if(r.error){toast('Fehler: '+r.error.message);return;}
+  UI.activeSessions[pid]=r.data.id; UI.activeStarts[pid]=new Date(now);
+  await db.from('projects').update({last_worked:now}).eq('id',pid);
+  await loadAll(); renderProjects(); toast('⏱ Gestartet');
+}
+async function stopTimer(pid){
+  var sid = UI.activeSessions[pid]; if(!sid) return;
+  var now = new Date().toISOString();
+  await db.from('time_sessions').update({ended_at:now}).eq('id',sid);
+  if(UI.activeTimers[pid]){clearInterval(UI.activeTimers[pid]);delete UI.activeTimers[pid];}
+  delete UI.activeSessions[pid]; delete UI.activeStarts[pid];
+  await db.from('projects').update({last_worked:now}).eq('id',pid);
+  await loadAll(); renderProjects(); toast('⏹ Gestoppt');
 }
 
-// NOTES
-function debounceSaveNote(projId,content){
-  const el=document.getElementById('note-saved-'+projId);if(el)el.textContent='...';
-  if(noteDebounce[projId])clearTimeout(noteDebounce[projId]);
-  noteDebounce[projId]=setTimeout(async()=>{
-    const existing=notes.find(n=>n.project_id===projId);
-    if(existing)await db.from('notes').update({content,updated_at:new Date().toISOString()}).eq('id',existing.id);
-    else await db.from('notes').insert({project_id:projId,content});
-    await loadAll();const el2=document.getElementById('note-saved-'+projId);
-    if(el2){el2.textContent='gespeichert ✓';setTimeout(()=>{if(el2)el2.textContent=''},2000)}
+async function toggleCL(pid,key,val){
+  var p = D.projects.find(function(x){return x.id===pid;});
+  if(!p) return;
+  var cl = Object.assign({},p.checklist||{});
+  cl[key] = val==='true'||val===true;
+  await db.from('projects').update({checklist:cl,last_worked:new Date().toISOString()}).eq('id',pid);
+  await loadAll(); renderProjects();
+}
+
+function saveNote(pid,content){
+  var el = document.getElementById('ns-'+pid);
+  if(el) el.textContent='...';
+  if(UI.noteDebounce[pid]) clearTimeout(UI.noteDebounce[pid]);
+  UI.noteDebounce[pid] = setTimeout(async function(){
+    var ex = D.notes.find(function(n){return n.project_id===pid;});
+    if(ex) await db.from('notes').update({content:content,updated_at:new Date().toISOString()}).eq('id',ex.id);
+    else await db.from('notes').insert({project_id:pid,content:content});
+    await loadAll();
+    var el2 = document.getElementById('ns-'+pid);
+    if(el2){el2.textContent='gespeichert ✓'; setTimeout(function(){if(el2)el2.textContent='';},2000);}
   },800);
 }
 
-// SETTINGS
-async function saveSetting(key,value){await db.from('settings').upsert({key,value});settings[key]=value;showToast('Gespeichert ✓')}
-
-// PROJECTS
-function setFilter(f){activeFilter=activeFilter===f?null:f;renderProjects()}
-function toggleExpand(id){if(expandedIds.has(id))expandedIds.delete(id);else expandedIds.add(id);renderProjects()}
 async function createProject(){
-  const name=document.getElementById('np-name').value.trim();
-  const status=document.getElementById('np-status').value;
-  const file=document.getElementById('np-file').value.trim();
-  const due=document.getElementById('np-due').value||null;
-  if(!name){showToast('Bitte Namen eingeben');return}
-  await db.from('projects').insert({name,status,blender_file:file,due_date:due,last_worked:new Date().toISOString(),checklist:{}});
-  closeModal('modal-project');
-  ['np-name','np-file','np-due'].forEach(id=>document.getElementById(id).value='');
-  await loadAll();renderProjects();showToast('Projekt erstellt ✓');
+  var name=document.getElementById('np-name').value.trim();
+  var status=document.getElementById('np-status').value;
+  var file=document.getElementById('np-file').value.trim();
+  var due=document.getElementById('np-due').value||null;
+  if(!name){toast('Bitte Namen eingeben');return;}
+  await db.from('projects').insert({name:name,status:status,blender_file:file,due_date:due,last_worked:new Date().toISOString(),checklist:{}});
+  closeModal('m-proj');
+  ['np-name','np-file','np-due'].forEach(function(id){document.getElementById(id).value='';});
+  await loadAll(); renderProjects(); toast('Projekt erstellt ✓');
 }
-async function deleteProject(id){
-  if(!confirm('Projekt wirklich löschen?'))return;
+async function delProject(id){
+  if(!confirm('Projekt wirklich löschen?')) return;
   await db.from('projects').delete().eq('id',id);
-  expandedIds.delete(id);await loadAll();renderProjects();showToast('Projekt gelöscht');
+  UI.expanded.delete(id); await loadAll(); renderProjects(); toast('Gelöscht');
 }
-async function updateStatus(id,status){await db.from('projects').update({status,last_worked:new Date().toISOString()}).eq('id',id);await loadAll();renderProjects()}
-async function updateBlenderFile(id,val){await db.from('projects').update({blender_file:val,last_worked:new Date().toISOString()}).eq('id',id);await loadAll();renderProjects();showToast('Gespeichert ✓')}
-async function updateDueDate(id,val){await db.from('projects').update({due_date:val||null}).eq('id',id);await loadAll();renderProjects();showToast('Deadline gespeichert ✓')}
+async function updStatus(id,s){ await db.from('projects').update({status:s,last_worked:new Date().toISOString()}).eq('id',id); await loadAll(); renderProjects(); }
+async function updFile(id,v){ await db.from('projects').update({blender_file:v,last_worked:new Date().toISOString()}).eq('id',id); await loadAll(); renderProjects(); toast('Gespeichert ✓'); }
+async function updDue(id,v){ await db.from('projects').update({due_date:v||null}).eq('id',id); await loadAll(); renderProjects(); toast('Deadline gespeichert ✓'); }
 
-// TODOS
-async function addTodo(projId){
-  const text=(newTodoInputs[projId]||'').trim();if(!text)return;
-  await db.from('todos').insert({project_id:projId,text,done:false});
-  await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',projId);
-  newTodoInputs[projId]='';await loadAll();expandedIds.add(projId);renderProjects();showToast('Task hinzugefügt ✓');
+async function addTodo(pid){
+  var text=(UI.todoInputs[pid]||'').trim(); if(!text) return;
+  await db.from('todos').insert({project_id:pid,text:text,done:false});
+  await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',pid);
+  UI.todoInputs[pid]=''; await loadAll(); UI.expanded.add(pid); renderProjects(); toast('Task hinzugefügt ✓');
 }
-async function toggleTodo(todoId,projId,done){await db.from('todos').update({done}).eq('id',todoId);await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',projId);await loadAll();renderProjects()}
-async function deleteTodo(id){await db.from('todos').delete().eq('id',id);await loadAll();renderProjects()}
+function cbClick(el){ var tid=el.dataset.tid, pid=el.dataset.pid, done=!el.classList.contains('done'); db.from('todos').update({done:done}).eq('id',tid).then(function(){db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',pid).then(function(){loadAll().then(renderProjects);});}); }
+function tdClick(el){ var tid=el.dataset.tid; db.from('todos').delete().eq('id',tid).then(function(){loadAll().then(renderProjects);}); }
+function tiInput(el){ UI.todoInputs[el.dataset.pid]=el.value; }
+function tiKey(e,el){ if(e.key==='Enter') tiBtnClick(el); }
+function tiBtnClick(el){ addTodo(el.dataset.pid); }
+async function toggleTodo(el,tid,pid){ var done=!el.classList.contains('done'); await db.from('todos').update({done:done}).eq('id',tid); await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',pid); await loadAll(); renderProjects(); }
+async function delTodo(id){ await db.from('todos').delete().eq('id',id); await loadAll(); renderProjects(); }
 
-// SHORTS
-function openShortModal(projId){document.getElementById('ns-projid').value=projId;['ns-title','ns-tags'].forEach(id=>document.getElementById(id).value='');openModal('modal-short')}
+function openShortModal(pid){document.getElementById('ns-pid').value=pid;['ns-title','ns-tags'].forEach(function(id){document.getElementById(id).value='';});openModal('m-short');}
 async function createShort(){
-  const projId=document.getElementById('ns-projid').value;
-  const title=document.getElementById('ns-title').value.trim();
-  const tags=document.getElementById('ns-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-  if(!title){showToast('Titel eingeben');return}
-  await db.from('shorts').insert({project_id:projId,title,views:0,tags,link:''});
-  await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',projId);
-  closeModal('modal-short');await loadAll();renderProjects();showToast('Short hinzugefügt ✓');
+  var pid=document.getElementById('ns-pid').value;
+  var title=document.getElementById('ns-title').value.trim();
+  var tags=document.getElementById('ns-tags').value.split(',').map(function(t){return t.trim();}).filter(Boolean);
+  if(!title){toast('Titel eingeben');return;}
+  await db.from('shorts').insert({project_id:pid,title:title,views:0,tags:tags,link:''});
+  await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',pid);
+  closeModal('m-short'); await loadAll(); renderProjects(); toast('Short hinzugefügt ✓');
 }
-async function deleteShort(id){await db.from('shorts').delete().eq('id',id);await loadAll();renderProjects()}
+async function delShort(id){ await db.from('shorts').delete().eq('id',id); await loadAll(); renderProjects(); }
 
-// PLATFORMS
-function openPlatformModal(shortId){
-  document.getElementById('np2-shortid').value=shortId;
-  ['np2-views','np2-revenue','np2-link'].forEach(id=>document.getElementById(id).value='');
-  openModal('modal-platform');
-}
+function openPlatModal(sid){document.getElementById('npl-sid').value=sid;['npl-views','npl-rev','npl-link'].forEach(function(id){document.getElementById(id).value='';});openModal('m-plat');}
 async function createPlatform(){
-  const shortId=document.getElementById('np2-shortid').value;
-  const platform=document.getElementById('np2-platform').value;
-  const views=parseInt(document.getElementById('np2-views').value)||0;
-  const revenue=parseFloat(document.getElementById('np2-revenue').value)||0;
-  const link=document.getElementById('np2-link').value.trim();
-  await db.from('short_platforms').insert({short_id:shortId,platform,views,revenue,link});
-  closeModal('modal-platform');await loadAll();renderProjects();showToast('Plattform hinzugefügt ✓');
+  var sid=document.getElementById('npl-sid').value;
+  var plat=document.getElementById('npl-plat').value;
+  var views=parseInt(document.getElementById('npl-views').value)||0;
+  var rev=parseFloat(document.getElementById('npl-rev').value)||0;
+  var link=document.getElementById('npl-link').value.trim();
+  await db.from('short_platforms').insert({short_id:sid,platform:plat,views:views,revenue:rev,link:link});
+  closeModal('m-plat'); await loadAll(); renderProjects(); toast('Plattform hinzugefügt ✓');
 }
-async function deletePlatform(id){await db.from('short_platforms').delete().eq('id',id);await loadAll();renderProjects()}
+async function delPlatform(id){ await db.from('short_platforms').delete().eq('id',id); await loadAll(); renderProjects(); }
 
-// INSPIRATIONS
-function openInspoModal(projId){document.getElementById('ni-projid').value=projId;['ni-title','ni-url'].forEach(id=>document.getElementById(id).value='');openModal('modal-inspo')}
+function openInspoModal(pid){document.getElementById('ni-pid').value=pid;['ni-title','ni-url'].forEach(function(id){document.getElementById(id).value='';});openModal('m-inspo');}
 async function createInspo(){
-  const projId=document.getElementById('ni-projid').value;
-  const title=document.getElementById('ni-title').value.trim();
-  const url=document.getElementById('ni-url').value.trim();
-  const type=document.getElementById('ni-type').value;
-  if(!title||!url){showToast('Titel und Link ausfüllen');return}
-  await db.from('inspirations').insert({project_id:projId,title,url,type});
-  closeModal('modal-inspo');await loadAll();renderProjects();showToast('Inspiration gespeichert ✓');
+  var pid=document.getElementById('ni-pid').value;
+  var title=document.getElementById('ni-title').value.trim();
+  var url=document.getElementById('ni-url').value.trim();
+  var type=document.getElementById('ni-type').value;
+  if(!title||!url){toast('Titel und Link ausfüllen');return;}
+  await db.from('inspirations').insert({project_id:pid,title:title,url:url,type:type});
+  closeModal('m-inspo'); await loadAll(); renderProjects(); toast('Inspiration gespeichert ✓');
 }
-async function deleteInspo(id){await db.from('inspirations').delete().eq('id',id);await loadAll();renderProjects()}
-async function deleteRef(id){await db.from('project_references').delete().eq('id',id);await loadAll();renderProjects()}
-function openRefPanelForProject(projId){openRefPanel();setTimeout(()=>{const sel=document.getElementById('ref-project-select');if(sel)sel.value=projId;},100)}
+async function delInspo(id){ await db.from('inspirations').delete().eq('id',id); await loadAll(); renderProjects(); }
+async function delRef(id){ await db.from('project_references').delete().eq('id',id); await loadAll(); renderProjects(); }
 
-// ============================================================
-// REFERENCE SEARCH
-// ============================================================
-let selectedRefs = [];
-
-function openRefPanel() {
-  const panel = document.getElementById('ref-panel');
-  panel.classList.add('open');
-  // Populate project select
-  const sel = document.getElementById('ref-project-select');
-  sel.innerHTML = '<option value="">– Projekt wählen –</option>' +
-    projects.map(p => `<option value="${p.id}">${statusIcon(p.status)} ${p.name}</option>`).join('');
-  document.getElementById('ref-input').focus();
+// ── YOUTUBE SYNC ──────────────────────────────────────────
+function extractYtId(url){
+  if(!url) return null;
+  var m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([^?&\s]+)/);
+  return m ? m[1] : null;
 }
 
-function closeRefPanel() {
-  document.getElementById('ref-panel').classList.remove('open');
-}
-
-async function runRefSearch() {
-  const query = document.getElementById('ref-input').value.trim();
-  if (!query) return;
-  const results = document.getElementById('ref-results');
-  const btn = document.getElementById('ref-btn');
-  btn.disabled = true;
-  btn.textContent = '...';
-  results.innerHTML = `<div class="ref-ai-status"><div class="ref-spinner"></div> KI sucht nach Referenzbildern für "${query}"...</div>`;
-
+async function syncYT(silent) {
+  var key = D.settings['yt_api_key'];
+  if(!key){if(!silent)toast('Bitte YouTube API Key in Einstellungen eintragen');return;}
+  var ytPl = D.shortPlatforms.filter(function(p){return p.platform==='youtube'&&p.link;});
+  if(!ytPl.length){if(!silent)toast('Keine YouTube-Links gefunden');return;}
+  if(!silent) toast('⏳ YouTube wird synchronisiert...');
+  var idMap = {};
+  ytPl.forEach(function(p){var id=extractYtId(p.link);if(id)idMap[id]=p.id;});
+  var ids = Object.keys(idMap);
+  if(!ids.length){if(!silent)toast('Keine Video-IDs gefunden');return;}
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        tools: [{ type: "web_search_20250305", name: "web_search" }],
-        messages: [{
-          role: "user",
-          content: `Search the web for high quality reference images for a 3D Blender recreation of: "${query}".
-Find 10-12 images: concept art, official artwork, screenshots, promotional images, fan art.
-Return ONLY a valid JSON array, no other text, no markdown. Each object: {"title":"...","image_url":"direct image URL ending in .jpg/.png/.webp/.jpeg","source_url":"page URL","source":"site name"}
-Only real direct image URLs. No placeholder text.`
-        }]
-      })
-    });
-
-    const data = await response.json();
-    const textBlocks = data.content.filter(b => b.type === 'text');
-    const fullText = textBlocks.map(b => b.text).join('');
-
-    // Extract JSON array from response
-    const jsonMatch = fullText.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) throw new Error('Keine Bilder gefunden');
-
-    const images = JSON.parse(jsonMatch[0]);
-    if (!images.length) throw new Error('Keine Bilder gefunden');
-
-    renderRefResults(images, query);
-  } catch(e) {
-    results.innerHTML = `<div class="ref-empty">Fehler: ${e.message}<br><br>Versuche es mit einem anderen Suchbegriff.</div>`;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Suchen';
-  }
-}
-
-function renderRefResults(images, query) {
-  const results = document.getElementById('ref-results');
-  let html = `<div style="font-size:12px;color:var(--text3);margin-bottom:12px">${images.length} Ergebnisse für <strong style="color:var(--text)">"${query}"</strong> – Bilder anklicken zum Auswählen</div>`;
-  html += '<div class="ref-img-grid">';
-  images.forEach((img, i) => {
-    const selected = selectedRefs.some(r => r.image_url === img.image_url);
-    html += `<div class="ref-img-item${selected?' selected':''}" onclick="toggleRefSelect(${i},${JSON.stringify(img).replace(/"/g,'&quot;')})" data-idx="${i}">
-      <img src="${img.image_url}" alt="${img.title}" onerror="this.parentElement.style.display='none'" loading="lazy"/>
-      <div class="ref-img-title">${img.title}</div>
-      <div class="ref-img-check">✓</div>
-    </div>`;
-  });
-  html += '</div>';
-  results.innerHTML = html;
-  // Store current results for toggle
-  window.currentRefResults = images;
-}
-
-function toggleRefSelect(idx, imgData) {
-  const existing = selectedRefs.findIndex(r => r.image_url === imgData.image_url);
-  if (existing >= 0) {
-    selectedRefs.splice(existing, 1);
-  } else {
-    selectedRefs.push(imgData);
-  }
-  // Re-render results grid selection state
-  if (window.currentRefResults) renderRefResults(window.currentRefResults, document.getElementById('ref-input').value);
-  renderSelectedRefs();
-}
-
-function renderSelectedRefs() {
-  const list = document.getElementById('ref-selected-list');
-  const empty = document.getElementById('ref-sel-empty');
-  if (!selectedRefs.length) {
-    list.innerHTML = '<div class="ref-empty" id="ref-sel-empty" style="padding:1rem 0">Noch keine Bilder ausgewählt</div>';
-    return;
-  }
-  list.innerHTML = selectedRefs.map((r, i) => `
-    <div class="ref-selected-item">
-      <img class="ref-selected-thumb" src="${r.image_url}" alt="${r.title}" onerror="this.style.display='none'"/>
-      <button class="ref-remove" onclick="removeRefSelect(${i})">✕</button>
-      <div style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.title}</div>
-    </div>`).join('');
-}
-
-function removeRefSelect(idx) {
-  selectedRefs.splice(idx, 1);
-  if (window.currentRefResults) renderRefResults(window.currentRefResults, document.getElementById('ref-input').value);
-  renderSelectedRefs();
-}
-
-async function saveRefToProject() {
-  const projId = document.getElementById('ref-project-select').value;
-  if (!projId) { showToast('Bitte ein Projekt wählen'); return; }
-  if (!selectedRefs.length) { showToast('Bitte Bilder auswählen'); return; }
-  const inserts = selectedRefs.map(r => ({ project_id: projId, title: r.title, image_url: r.image_url, source_url: r.source_url || '' }));
-  const { error } = await db.from('project_references').insert(inserts);
-  if (error) { showToast('Fehler: ' + error.message); return; }
-  await loadAll();
-  selectedRefs = [];
-  renderSelectedRefs();
-  showToast(`${inserts.length} Bild${inserts.length > 1 ? 'er' : ''} gespeichert ✓`);
-  const proj = projects.find(p => p.id === projId);
-  if (proj) showToast(`Zu "${proj.name}" hinzugefügt ✓`);
-}
-
-// ============================================================
-// YOUTUBE AUTO-SYNC
-// ============================================================
-function extractYouTubeId(url) {
-  if (!url) return null;
-  const patterns = [
-    /youtube\.com\/watch\?v=([^&\s]+)/,
-    /youtu\.be\/([^?\s]+)/,
-    /youtube\.com\/shorts\/([^?\s]+)/,
-    /youtube\.com\/embed\/([^?\s]+)/,
-  ];
-  for (const p of patterns) { const m = url.match(p); if (m) return m[1]; }
-  return null;
-}
-
-async function syncYouTube(silent=false) {
-  const apiKey = settings['yt_api_key'];
-  if (!apiKey) { if(!silent) showToast('Bitte erst YouTube API Key in Einstellungen eintragen'); return; }
-
-  const ytPlatforms = shortPlatforms.filter(p => p.platform === 'youtube' && p.link);
-  if (!ytPlatforms.length) { if(!silent) showToast('Keine YouTube-Links gefunden'); return; }
-
-  if (!silent) showToast('⏳ YouTube wird synchronisiert...');
-
-  // Extract video IDs
-  const idMap = {};
-  ytPlatforms.forEach(p => { const id = extractYouTubeId(p.link); if (id) idMap[id] = p.id; });
-  const videoIds = Object.keys(idMap);
-  if (!videoIds.length) { if(!silent) showToast('Keine Video-IDs gefunden – Links prüfen'); return; }
-
-  try {
-    // Batch in chunks of 50
-    const chunks = [];
-    for (let i = 0; i < videoIds.length; i += 50) chunks.push(videoIds.slice(i, i + 50));
-    let allStats = {};
-    for (const chunk of chunks) {
-      const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${chunk.join(',')}&key=${apiKey}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data.error) throw new Error(data.error.message);
-      if (data.items) data.items.forEach(item => { allStats[item.id] = { views: parseInt(item.statistics.viewCount||0), title: item.snippet.title }; });
-    }
-
-    let updated = 0;
-    for (const [videoId, platformId] of Object.entries(idMap)) {
-      if (allStats[videoId]) {
-        await db.from('short_platforms').update({ views: allStats[videoId].views }).eq('id', platformId);
-        updated++;
+    var url = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id='+ids.join(',')+'&key='+key;
+    var res = await fetch(url);
+    var data = await res.json();
+    if(data.error) throw new Error(data.error.message);
+    var updated = 0;
+    if(data.items) {
+      for(var i=0;i<data.items.length;i++){
+        var item = data.items[i];
+        var pid = idMap[item.id];
+        if(pid){ await db.from('short_platforms').update({views:parseInt(item.statistics.viewCount||0)}).eq('id',pid); updated++; }
       }
     }
-
     await saveSetting('yt_last_sync', new Date().toISOString());
-    await loadAll();
-    renderProjects();
-    // Update stats if open
-    const statsPage = document.getElementById('page-statistiken');
-    if (statsPage.classList.contains('active')) renderStatistiken();
-    if (!silent) showToast(`✅ ${updated} Videos synchronisiert`);
+    await loadAll(); renderProjects();
+    if(!silent) toast('✅ '+updated+' Videos synchronisiert');
   } catch(e) {
-    if (!silent) showToast('YouTube Fehler: ' + e.message);
-    console.error('YouTube sync error:', e);
+    if(!silent) toast('YouTube Fehler: '+e.message);
   }
 }
 
-// ============================================================
-
-// ============================================================
-// BLENDER FILE IMPORTER
-// ============================================================
-function makeProjectName(filename) {
-  let name = filename.replace(/\.blend\d*$/i, '');
-  name = name.replace(/[_\-]+/g, ' ');
-  name = name.replace(/\s+v\d+\s*$/i, '').replace(/\s+final\s*$/i, '').replace(/\s+/g, ' ').trim();
-  return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+// ── REFERENCE SEARCH ──────────────────────────────────────
+function openRefPanel(){
+  var sel = document.getElementById('ref-proj-sel');
+  sel.innerHTML = '<option value="">– Projekt wählen –</option>' + D.projects.map(function(p){return '<option value="'+p.id+'">'+statusIcon(p.status)+' '+p.name+'</option>';}).join('');
+  document.getElementById('ref-panel').classList.add('open');
+  document.getElementById('ref-q').focus();
 }
+function openRefPanelFor(pid){ openRefPanel(); setTimeout(function(){document.getElementById('ref-proj-sel').value=pid;},50); }
+function closeRefPanel(){ document.getElementById('ref-panel').classList.remove('open'); }
 
-async function importBlendFiles() {
-  const raw = document.getElementById('setting-blend-files').value.trim();
-  if (!raw) { showToast('Bitte Dateinamen eingeben'); return; }
-
-  // Parse: split by newline or comma, clean up
-  const files = raw.replace(/,/g,'\n').split('\n').map(f=>f.trim()).filter(f=>f.length>0);
-
-  // Accept .blend and .blend1/.blend2 etc.
-  const blendFiles = files.filter(f => /\.blend\d*$/i.test(f));
-
-  if (!blendFiles.length) { showToast('Keine gültigen .blend oder .blend1 Dateien gefunden'); return; }
-
-  let created = 0, skipped = 0;
-  for (const filename of blendFiles) {
-    const existing = projects.find(p => p.blender_file === filename);
-    if (existing) { skipped++; continue; }
-    const name = makeProjectName(filename);
-    await db.from('projects').insert({
-      name, blender_file: filename, status: 'bearbeitung',
-      last_worked: new Date().toISOString(), checklist: {}
+async function doRefSearch(){
+  var q = document.getElementById('ref-q').value.trim();
+  if(!q) return;
+  var btn = document.getElementById('ref-btn');
+  var res = document.getElementById('ref-results');
+  btn.disabled = true; btn.textContent = '...';
+  res.innerHTML = '<div style="color:var(--text3);font-size:13px;text-align:center;padding:3rem">🔍 Suche nach "'+q+'"...</div>';
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:'Search for high quality reference images for a 3D Blender recreation of: "'+q+'". Find 10 images: concept art, official artwork, screenshots. Return ONLY a valid JSON array, no markdown, no preamble. Each object: {"title":"...","image_url":"direct image URL ending in .jpg .png .webp or .jpeg","source_url":"page url"}'}]
+      })
     });
-    created++;
+    var data = await resp.json();
+    var txt = data.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
+    var m = txt.match(/\[[\s\S]*\]/);
+    if(!m) throw new Error('Keine Bilder gefunden');
+    var imgs = JSON.parse(m[0]);
+    currentRefImgs = imgs;
+    renderRefGrid(imgs, q);
+  } catch(e) {
+    res.innerHTML = '<div style="color:var(--text3);font-size:13px;text-align:center;padding:3rem">Fehler: '+e.message+'</div>';
   }
-
-  await saveSetting('blend_files_raw', raw);
-  await loadAll();
-  renderProjects();
-  renderEinstellungen();
-  showToast(`✅ ${blendFiles.length} Dateien · ${created} neue Projekte · ${skipped} bereits vorhanden`);
+  btn.disabled = false; btn.textContent = 'Suchen';
 }
 
-// ============================================================
+function renderRefGrid(imgs, q){
+  var html = '<div style="font-size:12px;color:var(--text3);margin-bottom:10px">'+imgs.length+' Ergebnisse für <strong style="color:var(--text)">"'+q+'"</strong> – Anklicken zum Auswählen</div><div class="img-grid">';
+  imgs.forEach(function(img,i){
+    var sel = selectedRefs.some(function(r){return r.image_url===img.image_url;});
+    html += '<div class="img-item'+(sel?' sel':'')+'" onclick="toggleRef('+i+')" data-i="'+i+'"><img src="'+img.image_url+'" onerror="this.parentElement.style.display=\'none\'" loading="lazy"/><div class="img-lbl">'+img.title+'</div><div class="img-chk">✓</div></div>';
+  });
+  html += '</div>';
+  document.getElementById('ref-results').innerHTML = html;
+}
 
-// ============================================================
+function toggleRef(i){
+  var img = currentRefImgs[i];
+  if(!img) return;
+  var idx = selectedRefs.findIndex(function(r){return r.image_url===img.image_url;});
+  if(idx>=0) selectedRefs.splice(idx,1); else selectedRefs.push(img);
+  if(currentRefImgs.length) renderRefGrid(currentRefImgs, document.getElementById('ref-q').value);
+  renderSelRefs();
+}
 
-init();
+function renderSelRefs(){
+  var list = document.getElementById('ref-sel-list');
+  if(!selectedRefs.length){list.innerHTML='<div style="color:var(--text3);font-size:13px;padding:8px 0">Noch nichts ausgewählt</div>';return;}
+  list.innerHTML = selectedRefs.map(function(r,i){
+    return '<div style="position:relative;margin-bottom:6px"><img class="sel-thumb" src="'+r.image_url+'" onerror="this.style.display=\'none\'"/><button style="position:absolute;top:4px;right:4px;width:18px;height:18px;background:rgba(0,0,0,.7);border-radius:50%;color:#fff;font-size:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="removeRef('+i+')">✕</button><div style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+r.title+'</div></div>';
+  }).join('');
+}
+
+function removeRef(i){ selectedRefs.splice(i,1); if(currentRefImgs.length) renderRefGrid(currentRefImgs, document.getElementById('ref-q').value); renderSelRefs(); }
+
+async function saveRefs(){
+  var pid = document.getElementById('ref-proj-sel').value;
+  if(!pid){toast('Bitte Projekt wählen');return;}
+  if(!selectedRefs.length){toast('Bitte Bilder auswählen');return;}
+  var inserts = selectedRefs.map(function(r){return{project_id:pid,title:r.title,image_url:r.image_url,source_url:r.source_url||''};});
+  var r = await db.from('project_references').insert(inserts);
+  if(r.error){toast('Fehler: '+r.error.message);return;}
+  selectedRefs = []; renderSelRefs();
+  await loadAll();
+  var proj = D.projects.find(function(p){return p.id===pid;});
+  toast((proj?'Zu "'+proj.name+'"':'')+(inserts.length)+' Bild'+(inserts.length>1?'er':'')+' gespeichert ✓');
+}
+
+// ── START ─────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function(){ init(); });
 </script>
-
-<!-- REFERENCE SEARCH PANEL -->
-<div class="ref-panel" id="ref-panel">
-  <div class="ref-top">
-    <div class="ref-title">🔍 KI Referenzsuche</div>
-    <input class="ref-search-input" id="ref-input" placeholder="z.B. Raccoon City RE2 concept art, Kokiri Forest Zelda, Midgar FF7..." onkeydown="if(event.key==='Enter')runRefSearch()"/>
-    <button class="btn-accent" onclick="runRefSearch()" id="ref-btn">Suchen</button>
-    <button class="btn" onclick="closeRefPanel()">✕ Schließen</button>
-  </div>
-  <div class="ref-body">
-    <div class="ref-results-area" id="ref-results">
-      <div class="ref-empty">Gib einen Suchbegriff ein und drück Enter oder klick auf Suchen.<br><br>Tipp: Sei spezifisch – z.B. <em>"Silent Hill 2 foggy street concept art"</em></div>
-    </div>
-    <div class="ref-sidebar">
-      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">Ausgewählte Bilder</div>
-      <div class="ref-selected-list" id="ref-selected-list">
-        <div class="ref-empty" id="ref-sel-empty" style="padding:1rem 0">Noch keine Bilder ausgewählt</div>
-      </div>
-      <div>
-        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Zu Projekt hinzufügen</div>
-        <select class="select-field" style="width:100%;margin-bottom:8px" id="ref-project-select">
-          <option value="">– Projekt wählen –</option>
-        </select>
-        <button class="btn-accent" style="width:100%;justify-content:center" onclick="saveRefToProject()">📌 An Projekt heften</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
