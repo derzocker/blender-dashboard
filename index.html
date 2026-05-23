@@ -175,6 +175,9 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
   <button class="nav-tab" id="ntab-statistiken" onclick="switchTab('statistiken',this)">📊 Statistiken</button>
   <button class="nav-tab" id="ntab-einstellungen" onclick="switchTab('einstellungen',this)">⚙️ Einstellungen</button>
   <button class="nav-tab" style="margin-left:auto;color:var(--accent2)" onclick="openRefPanel()">🔍 KI Referenzsuche</button>
+  <div id="nav-auth" style="display:flex;align-items:center;gap:8px;padding:0 8px;flex-shrink:0">
+    <button class="btn" style="font-size:12px;padding:5px 12px" id="nav-login-btn" onclick="loginWithGoogle()">🔑 Google Login</button>
+  </div>
 </nav>
 
 <div class="page active" id="page-projekte"></div>
@@ -355,17 +358,21 @@ function init() {
     return;
   }
   document.getElementById('page-projekte').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-  try {
-    var slib = window.supabase || window.Supabase || supabase;
-    var sc = slib.createClient(SUPABASE_URL, SUPABASE_KEY);
-    db = sc;
-    loadAll().then(function() {
-      renderProjects();
-      if (D.settings['yt_api_key']) setTimeout(function(){ syncYT(true); }, 2000);
-    });
-  } catch(e) {
-    document.getElementById('page-projekte').innerHTML = '<div class="loading"><div style="color:var(--red)">Fehler: '+e.message+'</div></div>';
-  }
+  return new Promise(function(resolve){
+    try {
+      var slib = window.supabase || window.Supabase || supabase;
+      var sc = slib.createClient(SUPABASE_URL, SUPABASE_KEY);
+      db = sc;
+      loadAll().then(function() {
+        renderProjects();
+        if (D.settings['yt_api_key']) setTimeout(function(){ syncYT(true); }, 2000);
+        resolve();
+      });
+    } catch(e) {
+      document.getElementById('page-projekte').innerHTML = '<div class="loading"><div style="color:var(--red)">Fehler: '+e.message+'</div></div>';
+      resolve();
+    }
+  });
 }
 
 async function loadAll() {
@@ -693,18 +700,126 @@ function renderStatistiken() {
 }
 
 // ── SETTINGS PAGE ─────────────────────────────────────────
-function renderEinstellungen() {
-  var pg = document.getElementById('page-einstellungen');
+function buildSettingsPage(pg) {
   var folder = D.settings['blender_folder']||'';
   var ytKey = D.settings['yt_api_key']||'';
   var lastSync = D.settings['yt_last_sync'];
-  pg.innerHTML = '<div><div class="ph"><div><div class="ph-sub">System</div><div class="ph-title">Einstellungen</div></div></div>'
-    +'<div class="sc"><div class="sc-title">📺 YouTube Auto-Sync</div><div class="sc-sub">Trag deinen YouTube Data API v3 Key ein. Views werden automatisch beim Öffnen aktualisiert.<br><span style="font-size:12px">Kostenlos holen: <strong>console.cloud.google.com</strong> → Neues Projekt → YouTube Data API v3 → API-Schlüssel</span></div>'
-    +'<div style="display:flex;gap:10px;margin-bottom:10px"><input class="ifield ifield-mono" style="flex:1;font-size:12px" id="s-yt" placeholder="AIzaSy..." value="'+ytKey+'"/><button class="btn-accent" onclick="saveSetting(\'yt_api_key\',document.getElementById(\'s-yt\').value).then(function(){toast(\'API Key gespeichert ✓\');})">Speichern</button></div>'
-    +'<div style="display:flex;align-items:center;gap:10px"><button class="btn-green" onclick="syncYT(false)" style="flex:1;justify-content:center">🔄 Jetzt synchronisieren</button><div style="font-size:12px;color:var(--text3)">'+(lastSync?'Zuletzt: '+new Date(lastSync).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'Noch nie')+'</div></div></div>'
-    +'<div class="sc"><div class="sc-title">📁 Blender Ordner-Pfad</div><div class="sc-sub">Pfad zu deinem Blender-Ordner. Wird vom Bulk-Import Script genutzt.</div><div style="display:flex;gap:10px"><input class="ifield ifield-mono" style="flex:1" id="s-folder" placeholder="C:/Users/.../Blender" value="'+folder+'"/><button class="btn-accent" onclick="saveSetting(\'blender_folder\',document.getElementById(\'s-folder\').value).then(function(){toast(\'Gespeichert ✓\');})">Speichern</button></div></div>'
-    +'<div class="sc"><div class="sc-title">🔌 Blender Addon</div><div class="sc-sub">Speichern in Blender → Projekt automatisch im Dashboard. .blend und .blend1 werden erkannt.</div><div class="info-box">💡 Installieren: <strong>Edit → Preferences → Add-ons → Install</strong> → blender_dashboard_addon.zip</div></div>'
-    +'<div class="sc"><div class="sc-title">ℹ️ System Info</div><div style="font-size:13px;color:var(--text3);line-height:2"><div>Projekte: <span style="color:var(--text)">'+D.projects.length+'</span></div><div>Todos: <span style="color:var(--text)">'+D.todos.length+'</span> ('+D.todos.filter(function(t){return t.done;}).length+' erledigt)</div><div>Shorts: <span style="color:var(--text)">'+D.shorts.length+'</span></div><div>Plattform-Einträge: <span style="color:var(--text)">'+D.shortPlatforms.length+'</span></div><div>Gesamt-Views: <span style="color:var(--text)">'+fmt(D.shortPlatforms.reduce(function(a,p){return a+parseInt(p.views||0);},0))+'</span></div><div>Gesamt-Einnahmen: <span style="color:var(--green)">€'+D.shortPlatforms.reduce(function(a,p){return a+parseFloat(p.revenue||0);},0).toFixed(2)+'</span></div><div>Arbeitszeit: <span style="color:var(--text)">'+fmtMs(D.sessions.reduce(function(a,s){var e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at));},0))+'</span></div></div></div></div>';
+  var gcseKey = D.settings['gcse_api_key']||'';
+  var gcseCx = D.settings['gcse_cx']||'';
+  var totViews = fmt(D.shortPlatforms.reduce(function(a,p){return a+parseInt(p.views||0);},0));
+  var totRev = D.shortPlatforms.reduce(function(a,p){return a+parseFloat(p.revenue||0);},0).toFixed(2);
+  var totTime = fmtMs(D.sessions.reduce(function(a,s){var e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at));},0));
+  var userName = currentUser ? (currentUser.user_metadata&&currentUser.user_metadata.full_name ? currentUser.user_metadata.full_name : currentUser.email) : '';
+  var lastSyncStr = lastSync ? new Date(lastSync).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : 'Noch nie';
+
+  var d = document.createElement('div');
+  d.innerHTML = [
+    '<div class="ph"><div><div class="ph-sub">System</div><div class="ph-title">Einstellungen</div></div></div>',
+
+    // YT Sync
+    '<div class="sc">',
+      '<div class="sc-title">📺 YouTube Auto-Sync</div>',
+      '<div class="sc-sub">YouTube Data API v3 Key – kostenlos unter console.cloud.google.com → APIs → YouTube Data API v3 → API Key</div>',
+      '<div style="display:flex;gap:10px;margin-bottom:10px">',
+        '<input class="ifield ifield-mono" style="flex:1;font-size:12px" id="s-yt" placeholder="AIzaSy..."/>',
+        '<button class="btn-accent" id="s-yt-save">Speichern</button>',
+      '</div>',
+      '<div style="display:flex;align-items:center;gap:10px">',
+        '<button class="btn-green" id="s-yt-sync" style="flex:1;justify-content:center">🔄 Jetzt synchronisieren</button>',
+        '<div style="font-size:12px;color:var(--text3)">Zuletzt: '+lastSyncStr+'</div>',
+      '</div>',
+    '</div>',
+
+    // Folder
+    '<div class="sc">',
+      '<div class="sc-title">📁 Blender Ordner-Pfad</div>',
+      '<div class="sc-sub">Pfad zu deinem Blender-Ordner für das Bulk-Import Script.</div>',
+      '<div style="display:flex;gap:10px">',
+        '<input class="ifield ifield-mono" style="flex:1" id="s-folder" placeholder="C:/Users/.../Blender"/>',
+        '<button class="btn-accent" id="s-folder-save">Speichern</button>',
+      '</div>',
+    '</div>',
+
+    // Google CSE
+    '<div class="sc">',
+      '<div class="sc-title">🔍 Referenzbilder (Google Custom Search)</div>',
+      '<div class="sc-sub">Für die Referenzbildsuche. Kostenlos: 100 Suchen/Tag<br>',
+        '1. <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent2)">console.cloud.google.com</a> → Custom Search API → API Key<br>',
+        '2. <a href="https://cse.google.com" target="_blank" style="color:var(--accent2)">cse.google.com</a> → Neue Suche → Ganzes Web → Bilder an → Search Engine ID kopieren',
+      '</div>',
+      '<div style="display:flex;gap:10px;margin-bottom:8px">',
+        '<input class="ifield ifield-mono" style="flex:1;font-size:12px" id="s-gcse-key" placeholder="API Key (AIzaSy...)"/>',
+      '</div>',
+      '<div style="display:flex;gap:10px">',
+        '<input class="ifield ifield-mono" style="flex:1;font-size:12px" id="s-gcse-cx" placeholder="Search Engine ID"/>',
+        '<button class="btn-accent" id="s-gcse-save">Speichern</button>',
+      '</div>',
+    '</div>',
+
+    // Google Login
+    '<div class="sc">',
+      '<div class="sc-title">🔑 Google Login & YouTube</div>',
+      '<div class="sc-sub">Mit Google einloggen um YouTube Kanal direkt zu verbinden.<br>',
+        '<span style="font-size:12px">Einmalig: Supabase → Authentication → Providers → Google → aktivieren</span>',
+      '</div>',
+      '<div id="s-auth-area"></div>',
+    '</div>',
+
+    // Blender Addon
+    '<div class="sc">',
+      '<div class="sc-title">🔌 Blender Addon</div>',
+      '<div class="sc-sub">Speichern in Blender → Projekt automatisch im Dashboard. .blend und .blend1 werden erkannt.</div>',
+      '<div class="info-box">💡 Installieren: Edit → Preferences → Add-ons → Install → blender_dashboard_addon.zip</div>',
+    '</div>',
+
+    // Info
+    '<div class="sc">',
+      '<div class="sc-title">ℹ️ System Info</div>',
+      '<div style="font-size:13px;color:var(--text3);line-height:2">',
+        '<div>Projekte: <span style="color:var(--text)">'+D.projects.length+'</span></div>',
+        '<div>Todos: <span style="color:var(--text)">'+D.todos.length+'</span> ('+D.todos.filter(function(t){return t.done;}).length+' erledigt)</div>',
+        '<div>Shorts: <span style="color:var(--text)">'+D.shorts.length+'</span></div>',
+        '<div>Views: <span style="color:var(--text)">'+totViews+'</span></div>',
+        '<div>Einnahmen: <span style="color:var(--green)">€'+totRev+'</span></div>',
+        '<div>Arbeitszeit: <span style="color:var(--text)">'+totTime+'</span></div>',
+      '</div>',
+    '</div>',
+  ].join('');
+
+  pg.innerHTML = '';
+  pg.appendChild(d);
+
+  // Set values
+  document.getElementById('s-yt').value = ytKey;
+  document.getElementById('s-folder').value = folder;
+  document.getElementById('s-gcse-key').value = gcseKey;
+  document.getElementById('s-gcse-cx').value = gcseCx;
+
+  // Auth area
+  var authArea = document.getElementById('s-auth-area');
+  if(currentUser){
+    authArea.innerHTML = '<div style="display:flex;align-items:center;gap:10px;background:var(--green2);border:1px solid rgba(62,207,142,0.2);border-radius:var(--radius);padding:10px 14px"><span>✅</span><span style="font-size:13px;color:var(--green)">'+userName+'</span><button class="btn" style="margin-left:auto;font-size:12px" onclick="logout()">Abmelden</button></div>';
+  } else {
+    authArea.innerHTML = '<button class="btn-accent" onclick="loginWithGoogle()" style="display:inline-flex;align-items:center;gap:8px"><span>🔑</span> Mit Google anmelden</button>';
+  }
+
+  // Event listeners
+  document.getElementById('s-yt-save').onclick = function(){
+    saveSetting('yt_api_key', document.getElementById('s-yt').value.trim()).then(function(){ toast('API Key gespeichert ✓'); });
+  };
+  document.getElementById('s-yt-sync').onclick = function(){ syncYT(false); };
+  document.getElementById('s-folder-save').onclick = function(){
+    saveSetting('blender_folder', document.getElementById('s-folder').value.trim()).then(function(){ toast('Gespeichert ✓'); });
+  };
+  document.getElementById('s-gcse-save').onclick = function(){
+    var k = document.getElementById('s-gcse-key').value.trim();
+    var cx = document.getElementById('s-gcse-cx').value.trim();
+    saveSetting('gcse_api_key', k).then(function(){ return saveSetting('gcse_cx', cx); }).then(function(){ toast('Gespeichert ✓'); });
+  };
+}
+
+function renderEinstellungen(){
+  buildSettingsPage(document.getElementById("page-einstellungen"));
 }
 
 // ── ACTIONS ───────────────────────────────────────────────
@@ -948,8 +1063,87 @@ async function saveRefs(){
   toast((proj?'Zu "'+proj.name+'"':'')+(inserts.length)+' Bild'+(inserts.length>1?'er':'')+' gespeichert ✓');
 }
 
+// ── GOOGLE AUTH ───────────────────────────────────────────
+var currentUser = null;
+
+async function loginWithGoogle(){
+  try {
+    var result = await db.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        scopes: 'https://www.googleapis.com/auth/youtube.readonly',
+        redirectTo: window.location.href,
+        queryParams: { access_type: 'offline', prompt: 'consent' }
+      }
+    });
+    if(result.error) toast('Login Fehler: '+result.error.message);
+  } catch(e) { toast('Fehler: '+e.message); }
+}
+
+async function logout(){
+  await db.auth.signOut();
+  currentUser = null;
+  updateAuthUI(null);
+  toast('Abgemeldet');
+}
+
+async function checkAuth(){
+  var sess = await db.auth.getSession();
+  if(sess.data && sess.data.session && sess.data.session.user){
+    currentUser = sess.data.session.user;
+    updateAuthUI(currentUser);
+    // Save youtube token if available
+    if(sess.data.session.provider_token){
+      await saveSetting('yt_oauth_token', sess.data.session.provider_token);
+    }
+  }
+  // Listen for auth changes
+  db.auth.onAuthStateChange(function(event, session){
+    if(session && session.user){
+      currentUser = session.user;
+      updateAuthUI(currentUser);
+      if(session.provider_token) saveSetting('yt_oauth_token', session.provider_token);
+    } else {
+      currentUser = null;
+      updateAuthUI(null);
+    }
+  });
+}
+
+function updateAuthUI(user){
+  var el=document.getElementById("nav-auth");
+  if(!el)return;
+  el.innerHTML="";
+  if(user){
+    var name=(user.user_metadata&&user.user_metadata.full_name)?user.user_metadata.full_name:(user.email||"");
+    var wrap=document.createElement("div");
+    wrap.style.cssText="display:flex;align-items:center;gap:8px";
+    if(user.user_metadata&&user.user_metadata.avatar_url){
+      var im=document.createElement("img");
+      im.src=user.user_metadata.avatar_url;
+      im.style.cssText="width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--border2)";
+      im.onerror=function(){this.style.display="none";};
+      wrap.appendChild(im);
+    }
+    var sp=document.createElement("span");
+    sp.style.cssText="font-size:12px;color:var(--text2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap";
+    sp.textContent=name;wrap.appendChild(sp);
+    var b=document.createElement("button");
+    b.className="btn";b.style.cssText="font-size:11px;padding:4px 10px";
+    b.textContent="Abmelden";b.onclick=logout;wrap.appendChild(b);
+    el.appendChild(wrap);
+  }else{
+    var b=document.createElement("button");
+    b.className="btn";b.style.cssText="font-size:12px;padding:5px 12px";
+    b.textContent="🔑 Google Login";b.onclick=loginWithGoogle;
+    el.appendChild(b);
+  }
+}
+
 // ── START ─────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', function(){ init(); });
+window.addEventListener('DOMContentLoaded', function(){
+  init().then(function(){ checkAuth(); });
+});
 </script>
 </body>
 </html>
