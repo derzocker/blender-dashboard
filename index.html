@@ -262,7 +262,16 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
       <select class="select-field" style="width:100%" id="np2-platform">
         <option value="youtube">📺 YouTube</option>
         <option value="tiktok">🎵 TikTok</option>
-        <option value="instagram">📸 Instagram</option>
+        <option value="instagram">📸 Instagram Reels</option>
+        <option value="facebook">📘 Facebook Reels</option>
+        <option value="snapchat">👻 Snapchat</option>
+        <option value="twitter">🐦 X / Twitter</option>
+        <option value="pinterest">📌 Pinterest</option>
+        <option value="reddit">🤖 Reddit</option>
+        <option value="twitch">🎮 Twitch Clips</option>
+        <option value="kick">🟢 Kick</option>
+        <option value="rumble">📹 Rumble</option>
+        <option value="linkedin">💼 LinkedIn</option>
       </select>
     </div>
     <div class="form-group"><label class="form-label">Aufrufe</label><input class="input-field" style="width:100%" id="np2-views" type="number" placeholder="0"/></div>
@@ -304,7 +313,20 @@ const CHECKLIST_STEPS=[
   {key:'posted_ig',label:'📸 Instagram gepostet'},
 ];
 
-const PLATFORM_INFO={youtube:{icon:'📺',label:'YouTube',color:'var(--red)',cls:'platform-yt'},tiktok:{icon:'🎵',label:'TikTok',color:'var(--pink)',cls:'platform-tiktok'},instagram:{icon:'📸',label:'Instagram',color:'var(--amber)',cls:'platform-ig'}};
+const PLATFORM_INFO={
+  youtube:   {icon:'📺',label:'YouTube',        color:'#ff4444',bg:'rgba(255,68,68,0.12)',  border:'rgba(255,68,68,0.25)'},
+  tiktok:    {icon:'🎵',label:'TikTok',         color:'#ee1d52',bg:'rgba(238,29,82,0.12)',  border:'rgba(238,29,82,0.25)'},
+  instagram: {icon:'📸',label:'Instagram Reels',color:'#f59e0b',bg:'rgba(245,158,11,0.12)',border:'rgba(245,158,11,0.25)'},
+  facebook:  {icon:'📘',label:'Facebook Reels', color:'#3b82f6',bg:'rgba(59,130,246,0.12)', border:'rgba(59,130,246,0.25)'},
+  snapchat:  {icon:'👻',label:'Snapchat',        color:'#fde047',bg:'rgba(253,224,71,0.12)', border:'rgba(253,224,71,0.25)'},
+  twitter:   {icon:'🐦',label:'X / Twitter',    color:'#9ca3af',bg:'rgba(156,163,175,0.12)',border:'rgba(156,163,175,0.25)'},
+  pinterest: {icon:'📌',label:'Pinterest',       color:'#e60023',bg:'rgba(230,0,35,0.12)',   border:'rgba(230,0,35,0.25)'},
+  reddit:    {icon:'🤖',label:'Reddit',          color:'#ff4500',bg:'rgba(255,69,0,0.12)',   border:'rgba(255,69,0,0.25)'},
+  twitch:    {icon:'🎮',label:'Twitch Clips',   color:'#a855f7',bg:'rgba(168,85,247,0.12)', border:'rgba(168,85,247,0.25)'},
+  kick:      {icon:'🟢',label:'Kick',            color:'#53fc18',bg:'rgba(83,252,24,0.12)',  border:'rgba(83,252,24,0.25)'},
+  rumble:    {icon:'📹',label:'Rumble',          color:'#85c742',bg:'rgba(133,199,66,0.12)', border:'rgba(133,199,66,0.25)'},
+  linkedin:  {icon:'💼',label:'LinkedIn',        color:'#0ea5e9',bg:'rgba(14,165,233,0.12)', border:'rgba(14,165,233,0.25)'},
+};
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 function openModal(id){document.getElementById(id).classList.add('open')}
@@ -498,12 +520,12 @@ function renderProjects(){
           ${tags.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:${platforms.length?'0':'0'}px">${tags.map(t=>`<span style="font-size:11px;background:var(--bg4);color:var(--text3);padding:1px 7px;border-radius:20px;border:1px solid var(--border)">#${t}</span>`).join('')}</div>`:''}
           ${platforms.map(pl=>{
             const pi=PLATFORM_INFO[pl.platform]||{icon:'🔗',label:pl.platform,color:'var(--text2)',cls:''};
-            return`<div class="platform-row">
-              <div class="platform-icon ${pi.cls}">${pi.icon}</div>
-              <span style="font-size:12px;color:${pi.color};min-width:70px">${pi.label}</span>
-              <span class="platform-views">👁 ${fmt(parseInt(pl.views||0))}</span>
-              <span class="platform-revenue">${parseFloat(pl.revenue||0)>0?'💰 '+fmtEuro(pl.revenue):''}</span>
-              ${pl.link?`<a class="platform-link" href="${pl.link}" target="_blank">🔗 Öffnen</a>`:'<span class="platform-link"></span>'}
+            return`<div class="platform-row" style="border-top:1px solid var(--border);padding:6px 0;display:flex;align-items:center;gap:8px">
+              <div style="width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:${pi.bg||'var(--bg4)'};border:1px solid ${pi.border||'var(--border)'}">${pi.icon}</div>
+              <span style="font-size:12px;color:${pi.color};min-width:90px;font-weight:500">${pi.label}</span>
+              <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text2);min-width:60px">👁 ${fmt(parseInt(pl.views||0))}</span>
+              <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--green);min-width:60px">${parseFloat(pl.revenue||0)>0?'💰 '+fmtEuro(pl.revenue):''}</span>
+              ${pl.link?`<a style="font-size:11px;color:var(--accent2);text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" href="${pl.link}" target="_blank">🔗 Link</a>`:'<span style="flex:1"></span>'}
               <button class="btn-danger" onclick="deletePlatform('${pl.id}')" style="font-size:11px;padding:2px 6px">✕</button>
             </div>`;
           }).join('')}
@@ -661,14 +683,19 @@ function renderStatistiken(){
   }
 
   // Views pro Plattform
-  const plViews={youtube:0,tiktok:0,instagram:0};
-  shortPlatforms.forEach(p=>{if(plViews[p.platform]!==undefined)plViews[p.platform]+=parseInt(p.views||0)});
-  const maxPV=Math.max(...Object.values(plViews),1);
-  html+=`<div class="chart-card"><div class="chart-title">▶ Views nach Plattform</div>
-    <div class="stat-row"><div class="stat-row-label">📺 YouTube</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(plViews.youtube/maxPV*100)}%;background:var(--red)"></div></div><div class="stat-row-val">👁 ${fmt(plViews.youtube)}</div></div>
-    <div class="stat-row"><div class="stat-row-label">🎵 TikTok</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(plViews.tiktok/maxPV*100)}%;background:var(--pink)"></div></div><div class="stat-row-val">👁 ${fmt(plViews.tiktok)}</div></div>
-    <div class="stat-row"><div class="stat-row-label">📸 Instagram</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(plViews.instagram/maxPV*100)}%;background:var(--amber)"></div></div><div class="stat-row-val">👁 ${fmt(plViews.instagram)}</div></div>
-  </div>`;
+  // Views per platform (all platforms)
+  const plViewsMap={};
+  shortPlatforms.forEach(p=>{if(!plViewsMap[p.platform])plViewsMap[p.platform]=0;plViewsMap[p.platform]+=parseInt(p.views||0)});
+  const activePlatforms=Object.entries(plViewsMap).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  if(activePlatforms.length){
+    const maxPV=Math.max(...activePlatforms.map(([,v])=>v),1);
+    html+=`<div class="chart-card"><div class="chart-title">▶ Views nach Plattform</div>`;
+    activePlatforms.forEach(([platform,views])=>{
+      const pi=PLATFORM_INFO[platform]||{icon:'🔗',label:platform,color:'var(--text2)'};
+      html+=`<div class="stat-row"><div class="stat-row-label">${pi.icon} ${pi.label}</div><div class="stat-row-bar"><div class="stat-row-fill" style="width:${Math.round(views/maxPV*100)}%;background:${pi.color}"></div></div><div class="stat-row-val">👁 ${fmt(views)}</div></div>`;
+    });
+    html+=`</div>`;
+  }
 
   // Arbeitszeit pro Projekt
   const projTime=projects.map(p=>({name:p.name,ms:getTotalTime(p.id)})).filter(x=>x.ms>0).sort((a,b)=>b.ms-a.ms);
@@ -702,8 +729,17 @@ function renderEinstellungen(){
   pg.innerHTML=`<div><div class="page-header"><div><div class="page-sub">System</div><div class="page-title">Einstellungen</div></div></div>
     <div class="settings-card">
       <div class="settings-title">📁 Blender Projekt-Ordner</div>
-      <div class="settings-sub">Pfad wo Blender deine .blend Dateien speichert. Das Addon nutzt diesen Pfad automatisch.</div>
-      <div style="display:flex;gap:10px"><input class="input-field input-mono" style="flex:1" id="setting-folder" placeholder="C:/Users/Name/Blender/Projects" value="${folder}"/><button class="btn-accent" onclick="saveSetting('blender_folder',document.getElementById('setting-folder').value)">Speichern</button></div>
+      <div class="settings-sub">Wähle deinen Blender-Ordner – das System liest alle .blend Dateien und legt fehlende Projekte automatisch an. Bereits vorhandene Projekte werden nicht doppelt erstellt.</div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <input class="input-field input-mono" style="flex:1" id="setting-folder" placeholder="Ordnername wird nach dem Scan angezeigt" value="${folder}" readonly/>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn-accent" onclick="scanBlenderFolder()" style="flex:1;justify-content:center">📂 Ordner scannen & Projekte importieren</button>
+        <button class="btn" onclick="document.getElementById('setting-folder').value='';saveSetting('blender_folder','')" title="Zurücksetzen">✕</button>
+      </div>
+      <div style="margin-top:10px;background:var(--bg3);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text3);line-height:1.7">
+        💡 <strong style="color:var(--text2)">Tipp:</strong> Funktioniert in Chrome & Edge. Der Browser fragt einmalig um Erlaubnis. Keine Dateien werden hochgeladen – nur die Dateinamen werden gelesen.
+      </div>
     </div>
     <div class="settings-card">
       <div class="settings-title">📺 YouTube Auto-Sync</div>
@@ -1073,6 +1109,58 @@ async function syncYouTube(silent=false) {
   } catch(e) {
     if (!silent) showToast('YouTube Fehler: ' + e.message);
     console.error('YouTube sync error:', e);
+  }
+}
+
+// ============================================================
+
+// ============================================================
+// BLENDER FOLDER SCANNER
+// ============================================================
+async function scanBlenderFolder() {
+  if (!('showDirectoryPicker' in window)) {
+    showToast('Dein Browser unterstützt das nicht – bitte Chrome oder Edge nutzen');
+    return;
+  }
+  try {
+    showToast('📂 Ordner wird geöffnet...');
+    const dirHandle = await window.showDirectoryPicker({ mode: 'read' });
+    const blendFiles = [];
+    for await (const entry of dirHandle.values()) {
+      if (entry.kind === 'file' && entry.name.endsWith('.blend') && !entry.name.startsWith('.') && !entry.name.includes('backup')) {
+        blendFiles.push(entry.name);
+      }
+    }
+
+    if (!blendFiles.length) { showToast('Keine .blend Dateien gefunden'); return; }
+
+    let created = 0, skipped = 0;
+    for (const filename of blendFiles) {
+      const existing = projects.find(p => p.blender_file === filename);
+      if (existing) { skipped++; continue; }
+
+      // Make readable name from filename
+      let name = filename.replace(/\.blend$/i, '');
+      name = name.replace(/[_\-]/g, ' ').replace(/\s+v\d+$/i, '').replace(/\s+final$/i, '').replace(/\s+/g, ' ').trim();
+      name = name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+      await db.from('projects').insert({
+        name, blender_file: filename, status: 'bearbeitung',
+        last_worked: new Date().toISOString(), checklist: {}
+      });
+      created++;
+    }
+
+    await loadAll();
+    renderProjects();
+    showToast(`✅ ${blendFiles.length} Dateien gefunden · ${created} neue Projekte · ${skipped} bereits vorhanden`);
+
+    // Save folder path name as info
+    await saveSetting('blender_folder', dirHandle.name);
+    renderEinstellungen();
+
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('Fehler: ' + e.message);
   }
 }
 
