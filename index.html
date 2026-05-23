@@ -174,10 +174,6 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
   <button class="nav-tab" id="ntab-kalender" onclick="switchTab('kalender',this)">📅 Kalender</button>
   <button class="nav-tab" id="ntab-statistiken" onclick="switchTab('statistiken',this)">📊 Statistiken</button>
   <button class="nav-tab" id="ntab-einstellungen" onclick="switchTab('einstellungen',this)">⚙️ Einstellungen</button>
-  <button class="nav-tab" style="margin-left:auto;color:var(--accent2)" onclick="openRefPanel()">🔍 KI Referenzsuche</button>
-  <div id="nav-auth" style="display:flex;align-items:center;gap:8px;padding:0 8px;flex-shrink:0">
-    <button class="btn" style="font-size:12px;padding:5px 12px" id="nav-login-btn" onclick="loginWithGoogle()">🔑 Google Login</button>
-  </div>
 </nav>
 
 <div class="page active" id="page-projekte"></div>
@@ -236,50 +232,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
   <div class="modal-foot"><button class="btn" onclick="closeModal('m-inspo')">Abbrechen</button><button class="btn-accent" onclick="createInspo()">Hinzufügen</button></div>
 </div></div>
 
-<!-- Reference Panel -->
-<div class="ref-panel" id="ref-panel">
-  <div class="ref-top">
-    <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;color:var(--text)">🔍 KI Referenzsuche</div>
-    <div style="flex:1;display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;gap:8px">
-        <input class="ifield" style="flex:1" id="ref-q" placeholder="z.B. Raccoon City, Kokiri Forest, Midgar..." onkeydown="if(event.key==='Enter')doRefSearch()"/>
-        <button class="btn-accent" id="ref-btn" onclick="doRefSearch()">🔍 Suchen</button>
-        <button class="btn" onclick="closeRefPanel()">✕</button>
-      </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-        <span style="font-size:11px;color:var(--text3)">Tags:</span>
-        <span class="ref-tag active" onclick="toggleRefTag(this,'concept art')">concept art</span>
-        <span class="ref-tag" onclick="toggleRefTag(this,'screenshot')">screenshot</span>
-        <span class="ref-tag" onclick="toggleRefTag(this,'fan art')">fan art</span>
-        <span class="ref-tag" onclick="toggleRefTag(this,'environment')">environment</span>
-        <span class="ref-tag" onclick="toggleRefTag(this,'3D render')">3D render</span>
-        <span class="ref-tag" onclick="toggleRefTag(this,'official artwork')">official artwork</span>
-        <span class="ref-tag" onclick="toggleRefTag(this,'HD')">HD</span>
-        <span class="ref-tag" onclick="toggleRefTag(this,'artstation')">artstation</span>
-        <span style="font-size:11px;color:var(--text3);margin-left:4px">Eigener Tag:</span>
-        <input class="ifield" id="ref-custom-tag" placeholder="z.B. dark, foggy..." style="width:130px;padding:4px 8px;font-size:12px" onkeydown="if(event.key==='Enter'){addCustomTag(this.value);this.value='';}"/>
-      </div>
-    </div>
-  </div>
-  <div class="ref-body">
-    <div class="ref-results" id="ref-results">
-      <div style="color:var(--text3);font-size:13px;text-align:center;padding:4rem 2rem">
-        <div style="font-size:32px;margin-bottom:12px">🎨</div>
-        Suchbegriff eingeben und Tags auswählen – die KI sucht im Internet nach passenden Referenzbildern
-      </div>
-    </div>
-    <div class="ref-sidebar">
-      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Ausgewählt (<span id="ref-sel-count">0</span>)</div>
-      <div id="ref-sel-list" style="flex:1;overflow-y:auto"></div>
-      <div style="flex-shrink:0;padding-top:10px;border-top:1px solid var(--border)">
-        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">An Projekt heften</div>
-        <select class="sfield" style="width:100%;margin-bottom:8px" id="ref-proj-sel"><option value="">– Projekt wählen –</option></select>
-        <button class="btn-accent" style="width:100%;justify-content:center" onclick="saveRefs()">📌 An Projekt heften</button>
-        <button class="btn" style="width:100%;justify-content:center;margin-top:6px" onclick="selectedRefs=[];renderSelRefs()">Auswahl leeren</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <script>
 // ── DATA ──────────────────────────────────────────────────
@@ -703,7 +656,6 @@ function buildSettingsPage(pg) {
   var totViews = fmt(D.shortPlatforms.reduce(function(a,p){return a+parseInt(p.views||0);},0));
   var totRev = D.shortPlatforms.reduce(function(a,p){return a+parseFloat(p.revenue||0);},0).toFixed(2);
   var totTime = fmtMs(D.sessions.reduce(function(a,s){var e=s.ended_at?new Date(s.ended_at):new Date();return a+(e-new Date(s.started_at));},0));
-  var userName = currentUser ? (currentUser.user_metadata&&currentUser.user_metadata.full_name ? currentUser.user_metadata.full_name : currentUser.email) : '';
   var lastSyncStr = lastSync ? new Date(lastSync).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : 'Noch nie';
 
   var d = document.createElement('div');
@@ -750,14 +702,7 @@ function buildSettingsPage(pg) {
       '</div>',
     '</div>',
 
-    // Google Login
-    '<div class="sc">',
-      '<div class="sc-title">🔑 Google Login & YouTube</div>',
-      '<div class="sc-sub">Mit Google einloggen um YouTube Kanal direkt zu verbinden.<br>',
-        '<span style="font-size:12px">Einmalig: Supabase → Authentication → Providers → Google → aktivieren</span>',
-      '</div>',
-      '<div id="s-auth-area"></div>',
-    '</div>',
+
 
     // Blender Addon
     '<div class="sc">',
@@ -789,13 +734,7 @@ function buildSettingsPage(pg) {
   document.getElementById('s-gcse-key').value = gcseKey;
   document.getElementById('s-gcse-cx').value = gcseCx;
 
-  // Auth area
-  var authArea = document.getElementById('s-auth-area');
-  if(currentUser){
-    authArea.innerHTML = '<div style="display:flex;align-items:center;gap:10px;background:var(--green2);border:1px solid rgba(62,207,142,0.2);border-radius:var(--radius);padding:10px 14px"><span>✅</span><span style="font-size:13px;color:var(--green)">'+userName+'</span><button class="btn" style="margin-left:auto;font-size:12px" onclick="logout()">Abmelden</button></div>';
-  } else {
-    authArea.innerHTML = '<button class="btn-accent" onclick="loginWithGoogle()" style="display:inline-flex;align-items:center;gap:8px"><span>🔑</span> Mit Google anmelden</button>';
-  }
+
 
   // Event listeners
   document.getElementById('s-yt-save').onclick = function(){
@@ -1097,86 +1036,9 @@ async function saveRefs(){
   toast((proj?'Zu "'+proj.name+'"':'')+(inserts.length)+' Bild'+(inserts.length>1?'er':'')+' gespeichert ✓');
 }
 
-// ── GOOGLE AUTH ───────────────────────────────────────────
-var currentUser = null;
-
-async function loginWithGoogle(){
-  try {
-    var result = await db.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        scopes: 'https://www.googleapis.com/auth/youtube.readonly',
-        redirectTo: window.location.href,
-        queryParams: { access_type: 'offline', prompt: 'consent' }
-      }
-    });
-    if(result.error) toast('Login Fehler: '+result.error.message);
-  } catch(e) { toast('Fehler: '+e.message); }
-}
-
-async function logout(){
-  await db.auth.signOut();
-  currentUser = null;
-  updateAuthUI(null);
-  toast('Abgemeldet');
-}
-
-async function checkAuth(){
-  var sess = await db.auth.getSession();
-  if(sess.data && sess.data.session && sess.data.session.user){
-    currentUser = sess.data.session.user;
-    updateAuthUI(currentUser);
-    // Save youtube token if available
-    if(sess.data.session.provider_token){
-      await saveSetting('yt_oauth_token', sess.data.session.provider_token);
-    }
-  }
-  // Listen for auth changes
-  db.auth.onAuthStateChange(function(event, session){
-    if(session && session.user){
-      currentUser = session.user;
-      updateAuthUI(currentUser);
-      if(session.provider_token) saveSetting('yt_oauth_token', session.provider_token);
-    } else {
-      currentUser = null;
-      updateAuthUI(null);
-    }
-  });
-}
-
-function updateAuthUI(user){
-  var el=document.getElementById("nav-auth");
-  if(!el)return;
-  el.innerHTML="";
-  if(user){
-    var name=(user.user_metadata&&user.user_metadata.full_name)?user.user_metadata.full_name:(user.email||"");
-    var wrap=document.createElement("div");
-    wrap.style.cssText="display:flex;align-items:center;gap:8px";
-    if(user.user_metadata&&user.user_metadata.avatar_url){
-      var im=document.createElement("img");
-      im.src=user.user_metadata.avatar_url;
-      im.style.cssText="width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--border2)";
-      im.onerror=function(){this.style.display="none";};
-      wrap.appendChild(im);
-    }
-    var sp=document.createElement("span");
-    sp.style.cssText="font-size:12px;color:var(--text2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap";
-    sp.textContent=name;wrap.appendChild(sp);
-    var b=document.createElement("button");
-    b.className="btn";b.style.cssText="font-size:11px;padding:4px 10px";
-    b.textContent="Abmelden";b.onclick=logout;wrap.appendChild(b);
-    el.appendChild(wrap);
-  }else{
-    var b=document.createElement("button");
-    b.className="btn";b.style.cssText="font-size:12px;padding:5px 12px";
-    b.textContent="🔑 Google Login";b.onclick=loginWithGoogle;
-    el.appendChild(b);
-  }
-}
-
 // ── START ─────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function(){
-  init().then(function(){ checkAuth(); });
+  init();
 });
 </script>
 </body>
