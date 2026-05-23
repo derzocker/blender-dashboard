@@ -981,6 +981,19 @@ async function syncYT(silent) {
 }
 
 // ── REFERENCE SEARCH ──────────────────────────────────────
+var activeTags = ['concept art'];
+
+function toggleRefTag(el,tag){
+  var i=activeTags.indexOf(tag);
+  if(i>=0){activeTags.splice(i,1);el.classList.remove('active');}
+  else{activeTags.push(tag);el.classList.add('active');}
+}
+
+function addCustomTag(val){
+  val=(val||'').trim();
+  if(val&&activeTags.indexOf(val)<0)activeTags.push(val);
+}
+
 function openRefPanel(){
   var sel = document.getElementById('ref-proj-sel');
   sel.innerHTML = '<option value="">– Projekt wählen –</option>' + D.projects.map(function(p){return '<option value="'+p.id+'">'+statusIcon(p.status)+' '+p.name+'</option>';}).join('');
@@ -992,33 +1005,45 @@ function closeRefPanel(){ document.getElementById('ref-panel').classList.remove(
 
 async function doRefSearch(){
   var q = document.getElementById('ref-q').value.trim();
-  if(!q) return;
+  if(!q){ toast('Bitte Suchbegriff eingeben'); return; }
+  var apiKey = D.settings['gcse_api_key'];
+  var cseId  = D.settings['gcse_cx'];
+  if(!apiKey || !cseId){
+    document.getElementById('ref-results').innerHTML = '<div style="color:var(--amber);font-size:13px;text-align:center;padding:3rem 2rem"><div style="font-size:28px;margin-bottom:10px">⚙️</div><strong>Google Custom Search noch nicht eingerichtet</strong><br><br>Geh zu <strong>⚙️ Einstellungen</strong> und trag API Key und Search Engine ID ein.</div>';
+    return;
+  }
   var btn = document.getElementById('ref-btn');
   var res = document.getElementById('ref-results');
-  btn.disabled = true; btn.textContent = '...';
-  res.innerHTML = '<div style="color:var(--text3);font-size:13px;text-align:center;padding:3rem">🔍 Suche nach "'+q+'"...</div>';
+  var customTag = document.getElementById('ref-custom-tag').value.trim();
+  if(customTag && activeTags.indexOf(customTag)<0) activeTags.push(customTag);
+  var fullQuery = q + (activeTags.length ? ' ' + activeTags.join(' ') : '');
+  btn.disabled = true; btn.innerHTML = '⏳';
+  res.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;gap:12px"><div class="spinner"></div><div style="color:var(--text3);font-size:13px">Suche: <strong style="color:var(--text2)">"'+fullQuery+'"</strong></div></div>';
   try {
-    var resp = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        tools:[{type:'web_search_20250305',name:'web_search'}],
-        messages:[{role:'user',content:'Search for high quality reference images for a 3D Blender recreation of: "'+q+'". Find 10 images: concept art, official artwork, screenshots. Return ONLY a valid JSON array, no markdown, no preamble. Each object: {"title":"...","image_url":"direct image URL ending in .jpg .png .webp or .jpeg","source_url":"page url"}'}]
-      })
-    });
+    var url = 'https://www.googleapis.com/customsearch/v1'
+      + '?key=' + encodeURIComponent(apiKey)
+      + '&cx='  + encodeURIComponent(cseId)
+      + '&q='   + encodeURIComponent(fullQuery)
+      + '&searchType=image&num=10&safe=active';
+    var resp = await fetch(url);
     var data = await resp.json();
-    var txt = data.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
-    var m = txt.match(/\[[\s\S]*\]/);
-    if(!m) throw new Error('Keine Bilder gefunden');
-    var imgs = JSON.parse(m[0]);
+    if(data.error) throw new Error(data.error.message);
+    if(!data.items||!data.items.length) throw new Error('Keine Bilder gefunden – anderen Begriff oder Tags versuchen.');
+    var imgs = data.items.map(function(item){
+      return {
+        title: item.title,
+        image_url: item.link,
+        source_url: (item.image&&item.image.contextLink) ? item.image.contextLink : item.displayLink,
+        site: item.displayLink,
+        thumb: (item.image&&item.image.thumbnailLink) ? item.image.thumbnailLink : item.link
+      };
+    });
     currentRefImgs = imgs;
-    renderRefGrid(imgs, q);
+    renderRefGrid(imgs, fullQuery);
   } catch(e) {
-    res.innerHTML = '<div style="color:var(--text3);font-size:13px;text-align:center;padding:3rem">Fehler: '+e.message+'</div>';
+    res.innerHTML = '<div style="color:var(--red);font-size:13px;text-align:center;padding:3rem"><div style="font-size:28px;margin-bottom:8px">⚠️</div>'+e.message+'</div>';
   }
-  btn.disabled = false; btn.textContent = 'Suchen';
+  btn.disabled = false; btn.innerHTML = '🔍 Suchen';
 }
 
 function renderRefGrid(imgs, q){
