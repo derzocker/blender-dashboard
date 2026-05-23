@@ -1006,38 +1006,54 @@ function closeRefPanel(){ document.getElementById('ref-panel').classList.remove(
 async function doRefSearch(){
   var q = document.getElementById('ref-q').value.trim();
   if(!q){ toast('Bitte Suchbegriff eingeben'); return; }
-  var apiKey = D.settings['gcse_api_key'];
-  var cseId  = D.settings['gcse_cx'];
-  if(!apiKey || !cseId){
-    document.getElementById('ref-results').innerHTML = '<div style="color:var(--amber);font-size:13px;text-align:center;padding:3rem 2rem"><div style="font-size:28px;margin-bottom:10px">⚙️</div><strong>Google Custom Search noch nicht eingerichtet</strong><br><br>Geh zu <strong>⚙️ Einstellungen</strong> und trag API Key und Search Engine ID ein.</div>';
-    return;
-  }
   var btn = document.getElementById('ref-btn');
   var res = document.getElementById('ref-results');
   var customTag = document.getElementById('ref-custom-tag').value.trim();
   if(customTag && activeTags.indexOf(customTag)<0) activeTags.push(customTag);
   var fullQuery = q + (activeTags.length ? ' ' + activeTags.join(' ') : '');
   btn.disabled = true; btn.innerHTML = '⏳';
-  res.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;gap:12px"><div class="spinner"></div><div style="color:var(--text3);font-size:13px">Suche: <strong style="color:var(--text2)">"'+fullQuery+'"</strong></div></div>';
+  res.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;gap:12px"><div class="spinner"></div><div style="color:var(--text3);font-size:13px">KI sucht nach: <strong style="color:var(--text2)">"'+fullQuery+'"</strong></div></div>';
   try {
-    var url = 'https://www.googleapis.com/customsearch/v1'
-      + '?key=' + encodeURIComponent(apiKey)
-      + '&cx='  + encodeURIComponent(cseId)
-      + '&q='   + encodeURIComponent(fullQuery)
-      + '&searchType=image&num=10&safe=active';
-    var resp = await fetch(url);
-    var data = await resp.json();
-    if(data.error) throw new Error(data.error.message);
-    if(!data.items||!data.items.length) throw new Error('Keine Bilder gefunden – anderen Begriff oder Tags versuchen.');
-    var imgs = data.items.map(function(item){
-      return {
-        title: item.title,
-        image_url: item.link,
-        source_url: (item.image&&item.image.contextLink) ? item.image.contextLink : item.displayLink,
-        site: item.displayLink,
-        thumb: (item.image&&item.image.thumbnailLink) ? item.image.thumbnailLink : item.link
-      };
-    });
+    var imgs = [];
+    // Option 1: Supabase Proxy (KI-Suche via Anthropic)
+    var proxyUrl = (typeof PROXY_URL !== 'undefined') ? PROXY_URL : null;
+    if(proxyUrl){
+      var resp = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({action:'image_search', payload:{query:fullQuery}})
+      });
+      var data = await resp.json();
+      if(data.ok) imgs = data.images;
+      else throw new Error(data.error||'Proxy Fehler');
+    }
+    // Option 2: Google Custom Search API (Fallback)
+    else {
+      var apiKey = D.settings['gcse_api_key'];
+      var cseId  = D.settings['gcse_cx'];
+      if(!apiKey||!cseId){
+        res.innerHTML = '<div style="color:var(--amber);font-size:13px;text-align:center;padding:3rem 2rem"><div style="font-size:28px;margin-bottom:10px">⚙️</div><strong>Kein Such-Service eingerichtet</strong><br><br>Entweder den <strong>Supabase Proxy</strong> deployen (beste Option mit KI)<br>oder einen <strong>Google CSE API Key</strong> in den Einstellungen eintragen.</div>';
+        btn.disabled = false; btn.innerHTML = '🔍 Suchen'; return;
+      }
+      var url = 'https://www.googleapis.com/customsearch/v1'
+        + '?key='+encodeURIComponent(apiKey)
+        + '&cx='+encodeURIComponent(cseId)
+        + '&q='+encodeURIComponent(fullQuery)
+        + '&searchType=image&num=10&safe=active';
+      var r2 = await fetch(url);
+      var d2 = await r2.json();
+      if(d2.error) throw new Error(d2.error.message);
+      if(!d2.items||!d2.items.length) throw new Error('Keine Bilder gefunden.');
+      imgs = d2.items.map(function(item){
+        return {
+          title:item.title, image_url:item.link,
+          source_url:(item.image&&item.image.contextLink)?item.image.contextLink:item.displayLink,
+          site:item.displayLink,
+          thumb:(item.image&&item.image.thumbnailLink)?item.image.thumbnailLink:item.link
+        };
+      });
+    }
+    if(!imgs.length) throw new Error('Keine Bilder gefunden – anderen Begriff oder Tags versuchen.');
     currentRefImgs = imgs;
     renderRefGrid(imgs, fullQuery);
   } catch(e) {
