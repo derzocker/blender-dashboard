@@ -184,6 +184,33 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .filter-clear{color:var(--text3);font-size:12px;cursor:pointer}
 .filter-clear:hover{color:var(--text2)}
 .section-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
+
+/* REFERENCE SEARCH PANEL */
+.ref-panel{position:fixed;inset:0;background:var(--bg);z-index:400;display:none;flex-direction:column}
+.ref-panel.open{display:flex}
+.ref-top{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.ref-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;margin-right:8px;white-space:nowrap}
+.ref-search-input{flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 14px;border-radius:var(--radius);font-size:14px;font-family:'DM Sans',sans-serif;outline:none}
+.ref-search-input:focus{border-color:var(--accent)}
+.ref-search-input::placeholder{color:var(--text3)}
+.ref-body{display:flex;flex:1;overflow:hidden}
+.ref-results-area{flex:1;overflow-y:auto;padding:20px}
+.ref-sidebar{width:260px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.ref-img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.ref-img-item{border-radius:var(--radius);overflow:hidden;cursor:pointer;position:relative;border:2px solid transparent;transition:border-color 0.15s;background:var(--bg3);aspect-ratio:16/10}
+.ref-img-item:hover{border-color:var(--border2)}
+.ref-img-item.selected{border-color:var(--accent)}
+.ref-img-item img{width:100%;height:100%;object-fit:cover;display:block}
+.ref-img-item .ref-img-check{position:absolute;top:6px;right:6px;width:22px;height:22px;background:var(--accent);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700}
+.ref-img-item.selected .ref-img-check{display:flex}
+.ref-img-title{font-size:11px;color:var(--text3);padding:5px 8px;background:rgba(0,0,0,0.6);position:absolute;bottom:0;left:0;right:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ref-selected-thumb{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:4px}
+.ref-selected-list{display:flex;flex-direction:column;gap:6px;flex:1;overflow-y:auto}
+.ref-selected-item{position:relative}
+.ref-selected-item .ref-remove{position:absolute;top:4px;right:4px;width:18px;height:18px;background:rgba(0,0,0,0.7);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;color:#fff;border:none}
+.ref-empty{color:var(--text3);font-size:13px;text-align:center;padding:2rem 0}
+.ref-ai-status{font-size:12px;color:var(--text3);padding:6px 0;display:flex;align-items:center;gap:6px}
+.ref-spinner{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -193,6 +220,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
   <button class="nav-tab" onclick="switchTab('kalender',this)">📅 Kalender</button>
   <button class="nav-tab" onclick="switchTab('statistiken',this)">📊 Statistiken</button>
   <button class="nav-tab" onclick="switchTab('einstellungen',this)">⚙️ Einstellungen</button>
+  <button class="nav-tab" style="margin-left:auto;color:var(--accent2)" onclick="openRefPanel()">🔍 KI Referenzsuche</button>
 </nav>
 <div class="page active" id="page-projekte"></div>
 <div class="page" id="page-kalender"></div>
@@ -261,7 +289,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 <script>
 const{createClient}=supabase;
 let db=null;
-let projects=[],todos=[],shorts=[],sessions=[],settings={},notes=[],inspirations=[],shortPlatforms=[];
+let projects=[],todos=[],shorts=[],sessions=[],settings={},notes=[],inspirations=[],shortPlatforms=[],projectRefs=[];
 let activeFilter=null,expandedIds=new Set(),newTodoInputs={};
 let activeTimers={},activeSessionIds={},activeStartTimes={};
 let noteDebounce={};
@@ -302,7 +330,7 @@ async function init(){
 }
 
 async function loadAll(){
-  const[p,t,s,se,st,n,ins,sp]=await Promise.all([
+  const[p,t,s,se,st,n,ins,sp,pr]=await Promise.all([
     db.from('projects').select('*').order('created_at',{ascending:false}),
     db.from('todos').select('*').order('created_at',{ascending:true}),
     db.from('shorts').select('*').order('created_at',{ascending:false}),
@@ -311,9 +339,10 @@ async function loadAll(){
     db.from('notes').select('*'),
     db.from('inspirations').select('*').order('created_at',{ascending:false}),
     db.from('short_platforms').select('*').order('created_at',{ascending:false}),
+    db.from('project_references').select('*').order('created_at',{ascending:false}),
   ]);
   projects=p.data||[];todos=t.data||[];shorts=s.data||[];sessions=se.data||[];
-  notes=n.data||[];inspirations=ins.data||[];shortPlatforms=sp.data||[];
+  notes=n.data||[];inspirations=ins.data||[];shortPlatforms=sp.data||[];projectRefs=pr?pr.data||[]:[];
   if(st.data)st.data.forEach(s=>settings[s.key]=s.value);
   sessions.filter(s=>!s.ended_at).forEach(s=>{if(!activeSessionIds[s.project_id]){activeSessionIds[s.project_id]=s.id;activeStartTimes[s.project_id]=new Date(s.started_at)}});
 }
@@ -499,6 +528,24 @@ function renderProjects(){
       });
       html+=`</div>`;
 
+      // REFERENCE IMAGES
+      const projRefs=projectRefs.filter(r=>r.project_id===p.id);
+      if(projRefs.length){
+        html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">🖼 Referenzbilder (${projRefs.length})</div><button class="btn" style="font-size:11px;padding:4px 10px" onclick="openRefPanelForProject('${p.id}')">+ KI Suche</button></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px">
+            ${projRefs.map(r=>`<div style="position:relative;aspect-ratio:16/10;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
+              <img src="${r.image_url}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.opacity=0.3"/>
+              <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.65);padding:3px 6px;font-size:10px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.title}</div>
+              <button onclick="deleteRef('${r.id}')" style="position:absolute;top:4px;right:4px;width:18px;height:18px;background:rgba(0,0,0,0.7);border-radius:50%;color:#fff;font-size:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+            </div>`).join('')}
+          </div>
+        </div>`;
+      } else {
+        html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">🖼 Referenzbilder</div><button class="btn" style="font-size:11px;padding:4px 10px" onclick="openRefPanelForProject('${p.id}')">+ KI Suche</button></div>
+          <div class="empty">Noch keine Referenzbilder – nutze die KI-Suche</div>
+        </div>`;
+      }
+
       // TODOS
       const pct=projTodos.length?Math.round(doneTodos/projTodos.length*100):0;
       html+=`<div class="subsection"><div class="subsection-header"><div class="subsection-label">✓ Todo-Liste <span style="font-weight:400">${pct}%</span></div><span style="font-size:12px;color:var(--text3)">${doneTodos}/${projTodos.length}</span></div>
@@ -659,6 +706,21 @@ function renderEinstellungen(){
       <div style="display:flex;gap:10px"><input class="input-field input-mono" style="flex:1" id="setting-folder" placeholder="C:/Users/Name/Blender/Projects" value="${folder}"/><button class="btn-accent" onclick="saveSetting('blender_folder',document.getElementById('setting-folder').value)">Speichern</button></div>
     </div>
     <div class="settings-card">
+      <div class="settings-title">📺 YouTube Auto-Sync</div>
+      <div class="settings-sub">Trag deinen YouTube Data API v3 Key ein. Die Views werden dann automatisch beim Öffnen des Dashboards aktualisiert.<br><span style="font-size:12px">Kostenlos holen: <strong>console.cloud.google.com</strong> → Neues Projekt → YouTube Data API v3 → API Key erstellen → Fertig</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <input class="input-field input-mono" style="flex:1;font-size:12px" id="setting-yt-key" placeholder="AIzaSy..." value="${settings['yt_api_key']||''}"/>
+        <button class="btn-accent" onclick="saveSetting('yt_api_key',document.getElementById('setting-yt-key').value).then(()=>showToast('API Key gespeichert ✓'))">Speichern</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn-green" onclick="syncYouTube(false)" style="flex:1;justify-content:center">🔄 Jetzt synchronisieren</button>
+        <div style="font-size:12px;color:var(--text3)">${settings['yt_last_sync']?'Zuletzt: '+new Date(settings['yt_last_sync']).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'Noch nie synced'}</div>
+      </div>
+      <div style="margin-top:12px;background:var(--bg3);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text3);line-height:1.7">
+        💡 <strong style="color:var(--text2)">So funktioniert es:</strong> Füge bei jedem Short eine Plattform "YouTube" mit dem Video-Link hinzu → das System erkennt die Video-ID automatisch und holt sich die aktuellen Views direkt von YouTube.
+      </div>
+    </div>
+    <div class="settings-card">
       <div class="settings-title">🔌 Blender Addon</div>
       <div class="settings-sub">Erkennt automatisch wenn du eine .blend Datei speicherst und legt das Projekt im Dashboard an.</div>
       <div class="info-box">💡 Installieren: <strong>Edit → Preferences → Add-ons → Install</strong> → blender_dashboard_addon.zip</div>
@@ -815,8 +877,239 @@ async function createInspo(){
   closeModal('modal-inspo');await loadAll();renderProjects();showToast('Inspiration gespeichert ✓');
 }
 async function deleteInspo(id){await db.from('inspirations').delete().eq('id',id);await loadAll();renderProjects()}
+async function deleteRef(id){await db.from('project_references').delete().eq('id',id);await loadAll();renderProjects()}
+function openRefPanelForProject(projId){openRefPanel();setTimeout(()=>{const sel=document.getElementById('ref-project-select');if(sel)sel.value=projId;},100)}
+
+// ============================================================
+// REFERENCE SEARCH
+// ============================================================
+let selectedRefs = [];
+
+function openRefPanel() {
+  const panel = document.getElementById('ref-panel');
+  panel.classList.add('open');
+  // Populate project select
+  const sel = document.getElementById('ref-project-select');
+  sel.innerHTML = '<option value="">– Projekt wählen –</option>' +
+    projects.map(p => `<option value="${p.id}">${statusIcon(p.status)} ${p.name}</option>`).join('');
+  document.getElementById('ref-input').focus();
+}
+
+function closeRefPanel() {
+  document.getElementById('ref-panel').classList.remove('open');
+}
+
+async function runRefSearch() {
+  const query = document.getElementById('ref-input').value.trim();
+  if (!query) return;
+  const results = document.getElementById('ref-results');
+  const btn = document.getElementById('ref-btn');
+  btn.disabled = true;
+  btn.textContent = '...';
+  results.innerHTML = `<div class="ref-ai-status"><div class="ref-spinner"></div> KI sucht nach Referenzbildern für "${query}"...</div>`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        tools: [{ type: "web_search_20250305", name: "web_search" }],
+        messages: [{
+          role: "user",
+          content: `Search the web for high quality reference images for a 3D Blender recreation of: "${query}".
+Find 10-12 images: concept art, official artwork, screenshots, promotional images, fan art.
+Return ONLY a valid JSON array, no other text, no markdown. Each object: {"title":"...","image_url":"direct image URL ending in .jpg/.png/.webp/.jpeg","source_url":"page URL","source":"site name"}
+Only real direct image URLs. No placeholder text.`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const textBlocks = data.content.filter(b => b.type === 'text');
+    const fullText = textBlocks.map(b => b.text).join('');
+
+    // Extract JSON array from response
+    const jsonMatch = fullText.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) throw new Error('Keine Bilder gefunden');
+
+    const images = JSON.parse(jsonMatch[0]);
+    if (!images.length) throw new Error('Keine Bilder gefunden');
+
+    renderRefResults(images, query);
+  } catch(e) {
+    results.innerHTML = `<div class="ref-empty">Fehler: ${e.message}<br><br>Versuche es mit einem anderen Suchbegriff.</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Suchen';
+  }
+}
+
+function renderRefResults(images, query) {
+  const results = document.getElementById('ref-results');
+  let html = `<div style="font-size:12px;color:var(--text3);margin-bottom:12px">${images.length} Ergebnisse für <strong style="color:var(--text)">"${query}"</strong> – Bilder anklicken zum Auswählen</div>`;
+  html += '<div class="ref-img-grid">';
+  images.forEach((img, i) => {
+    const selected = selectedRefs.some(r => r.image_url === img.image_url);
+    html += `<div class="ref-img-item${selected?' selected':''}" onclick="toggleRefSelect(${i},${JSON.stringify(img).replace(/"/g,'&quot;')})" data-idx="${i}">
+      <img src="${img.image_url}" alt="${img.title}" onerror="this.parentElement.style.display='none'" loading="lazy"/>
+      <div class="ref-img-title">${img.title}</div>
+      <div class="ref-img-check">✓</div>
+    </div>`;
+  });
+  html += '</div>';
+  results.innerHTML = html;
+  // Store current results for toggle
+  window.currentRefResults = images;
+}
+
+function toggleRefSelect(idx, imgData) {
+  const existing = selectedRefs.findIndex(r => r.image_url === imgData.image_url);
+  if (existing >= 0) {
+    selectedRefs.splice(existing, 1);
+  } else {
+    selectedRefs.push(imgData);
+  }
+  // Re-render results grid selection state
+  if (window.currentRefResults) renderRefResults(window.currentRefResults, document.getElementById('ref-input').value);
+  renderSelectedRefs();
+}
+
+function renderSelectedRefs() {
+  const list = document.getElementById('ref-selected-list');
+  const empty = document.getElementById('ref-sel-empty');
+  if (!selectedRefs.length) {
+    list.innerHTML = '<div class="ref-empty" id="ref-sel-empty" style="padding:1rem 0">Noch keine Bilder ausgewählt</div>';
+    return;
+  }
+  list.innerHTML = selectedRefs.map((r, i) => `
+    <div class="ref-selected-item">
+      <img class="ref-selected-thumb" src="${r.image_url}" alt="${r.title}" onerror="this.style.display='none'"/>
+      <button class="ref-remove" onclick="removeRefSelect(${i})">✕</button>
+      <div style="font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.title}</div>
+    </div>`).join('');
+}
+
+function removeRefSelect(idx) {
+  selectedRefs.splice(idx, 1);
+  if (window.currentRefResults) renderRefResults(window.currentRefResults, document.getElementById('ref-input').value);
+  renderSelectedRefs();
+}
+
+async function saveRefToProject() {
+  const projId = document.getElementById('ref-project-select').value;
+  if (!projId) { showToast('Bitte ein Projekt wählen'); return; }
+  if (!selectedRefs.length) { showToast('Bitte Bilder auswählen'); return; }
+  const inserts = selectedRefs.map(r => ({ project_id: projId, title: r.title, image_url: r.image_url, source_url: r.source_url || '' }));
+  const { error } = await db.from('project_references').insert(inserts);
+  if (error) { showToast('Fehler: ' + error.message); return; }
+  await loadAll();
+  selectedRefs = [];
+  renderSelectedRefs();
+  showToast(`${inserts.length} Bild${inserts.length > 1 ? 'er' : ''} gespeichert ✓`);
+  const proj = projects.find(p => p.id === projId);
+  if (proj) showToast(`Zu "${proj.name}" hinzugefügt ✓`);
+}
+
+// ============================================================
+// YOUTUBE AUTO-SYNC
+// ============================================================
+function extractYouTubeId(url) {
+  if (!url) return null;
+  const patterns = [
+    /youtube\.com\/watch\?v=([^&\s]+)/,
+    /youtu\.be\/([^?\s]+)/,
+    /youtube\.com\/shorts\/([^?\s]+)/,
+    /youtube\.com\/embed\/([^?\s]+)/,
+  ];
+  for (const p of patterns) { const m = url.match(p); if (m) return m[1]; }
+  return null;
+}
+
+async function syncYouTube(silent=false) {
+  const apiKey = settings['yt_api_key'];
+  if (!apiKey) { if(!silent) showToast('Bitte erst YouTube API Key in Einstellungen eintragen'); return; }
+
+  const ytPlatforms = shortPlatforms.filter(p => p.platform === 'youtube' && p.link);
+  if (!ytPlatforms.length) { if(!silent) showToast('Keine YouTube-Links gefunden'); return; }
+
+  if (!silent) showToast('⏳ YouTube wird synchronisiert...');
+
+  // Extract video IDs
+  const idMap = {};
+  ytPlatforms.forEach(p => { const id = extractYouTubeId(p.link); if (id) idMap[id] = p.id; });
+  const videoIds = Object.keys(idMap);
+  if (!videoIds.length) { if(!silent) showToast('Keine Video-IDs gefunden – Links prüfen'); return; }
+
+  try {
+    // Batch in chunks of 50
+    const chunks = [];
+    for (let i = 0; i < videoIds.length; i += 50) chunks.push(videoIds.slice(i, i + 50));
+    let allStats = {};
+    for (const chunk of chunks) {
+      const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${chunk.join(',')}&key=${apiKey}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error.message);
+      if (data.items) data.items.forEach(item => { allStats[item.id] = { views: parseInt(item.statistics.viewCount||0), title: item.snippet.title }; });
+    }
+
+    let updated = 0;
+    for (const [videoId, platformId] of Object.entries(idMap)) {
+      if (allStats[videoId]) {
+        await db.from('short_platforms').update({ views: allStats[videoId].views }).eq('id', platformId);
+        updated++;
+      }
+    }
+
+    await saveSetting('yt_last_sync', new Date().toISOString());
+    await loadAll();
+    renderProjects();
+    // Update stats if open
+    const statsPage = document.getElementById('page-statistiken');
+    if (statsPage.classList.contains('active')) renderStatistiken();
+    if (!silent) showToast(`✅ ${updated} Videos synchronisiert`);
+  } catch(e) {
+    if (!silent) showToast('YouTube Fehler: ' + e.message);
+    console.error('YouTube sync error:', e);
+  }
+}
+
+// ============================================================
+
+// ============================================================
 
 init();
 </script>
+
+<!-- REFERENCE SEARCH PANEL -->
+<div class="ref-panel" id="ref-panel">
+  <div class="ref-top">
+    <div class="ref-title">🔍 KI Referenzsuche</div>
+    <input class="ref-search-input" id="ref-input" placeholder="z.B. Raccoon City RE2 concept art, Kokiri Forest Zelda, Midgar FF7..." onkeydown="if(event.key==='Enter')runRefSearch()"/>
+    <button class="btn-accent" onclick="runRefSearch()" id="ref-btn">Suchen</button>
+    <button class="btn" onclick="closeRefPanel()">✕ Schließen</button>
+  </div>
+  <div class="ref-body">
+    <div class="ref-results-area" id="ref-results">
+      <div class="ref-empty">Gib einen Suchbegriff ein und drück Enter oder klick auf Suchen.<br><br>Tipp: Sei spezifisch – z.B. <em>"Silent Hill 2 foggy street concept art"</em></div>
+    </div>
+    <div class="ref-sidebar">
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">Ausgewählte Bilder</div>
+      <div class="ref-selected-list" id="ref-selected-list">
+        <div class="ref-empty" id="ref-sel-empty" style="padding:1rem 0">Noch keine Bilder ausgewählt</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Zu Projekt hinzufügen</div>
+        <select class="select-field" style="width:100%;margin-bottom:8px" id="ref-project-select">
+          <option value="">– Projekt wählen –</option>
+        </select>
+        <button class="btn-accent" style="width:100%;justify-content:center" onclick="saveRefToProject()">📌 An Projekt heften</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
