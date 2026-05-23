@@ -146,6 +146,9 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading{display:flex;align-items:center;justify-content:center;height:60vh;flex-direction:column;gap:16px}
 /* REF PANEL */
+.ref-tag{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;user-select:none;transition:all 0.15s;flex-shrink:0}
+.ref-tag:hover{border-color:var(--accent);color:var(--accent2)}
+.ref-tag.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .ref-panel{position:fixed;inset:0;background:var(--bg);z-index:400;display:none;flex-direction:column}
 .ref-panel.open{display:flex}
 .ref-top{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0}
@@ -233,20 +236,43 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 <!-- Reference Panel -->
 <div class="ref-panel" id="ref-panel">
   <div class="ref-top">
-    <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0">🔍 KI Referenzsuche</div>
-    <input class="ifield" style="flex:1" id="ref-q" placeholder="z.B. Raccoon City RE2 concept art..." onkeydown="if(event.key==='Enter')doRefSearch()"/>
-    <button class="btn-accent" id="ref-btn" onclick="doRefSearch()">Suchen</button>
-    <button class="btn" onclick="closeRefPanel()">✕ Schließen</button>
+    <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;color:var(--text)">🔍 KI Referenzsuche</div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;gap:8px">
+        <input class="ifield" style="flex:1" id="ref-q" placeholder="z.B. Raccoon City, Kokiri Forest, Midgar..." onkeydown="if(event.key==='Enter')doRefSearch()"/>
+        <button class="btn-accent" id="ref-btn" onclick="doRefSearch()">🔍 Suchen</button>
+        <button class="btn" onclick="closeRefPanel()">✕</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:11px;color:var(--text3)">Tags:</span>
+        <span class="ref-tag active" onclick="toggleRefTag(this,'concept art')">concept art</span>
+        <span class="ref-tag" onclick="toggleRefTag(this,'screenshot')">screenshot</span>
+        <span class="ref-tag" onclick="toggleRefTag(this,'fan art')">fan art</span>
+        <span class="ref-tag" onclick="toggleRefTag(this,'environment')">environment</span>
+        <span class="ref-tag" onclick="toggleRefTag(this,'3D render')">3D render</span>
+        <span class="ref-tag" onclick="toggleRefTag(this,'official artwork')">official artwork</span>
+        <span class="ref-tag" onclick="toggleRefTag(this,'HD')">HD</span>
+        <span class="ref-tag" onclick="toggleRefTag(this,'artstation')">artstation</span>
+        <span style="font-size:11px;color:var(--text3);margin-left:4px">Eigener Tag:</span>
+        <input class="ifield" id="ref-custom-tag" placeholder="z.B. dark, foggy..." style="width:130px;padding:4px 8px;font-size:12px" onkeydown="if(event.key==='Enter'){addCustomTag(this.value);this.value='';}"/>
+      </div>
+    </div>
   </div>
   <div class="ref-body">
-    <div class="ref-results" id="ref-results"><div style="color:var(--text3);font-size:13px;text-align:center;padding:3rem">Suchbegriff eingeben und Enter drücken</div></div>
+    <div class="ref-results" id="ref-results">
+      <div style="color:var(--text3);font-size:13px;text-align:center;padding:4rem 2rem">
+        <div style="font-size:32px;margin-bottom:12px">🎨</div>
+        Suchbegriff eingeben und Tags auswählen – die KI sucht im Internet nach passenden Referenzbildern
+      </div>
+    </div>
     <div class="ref-sidebar">
-      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">Ausgewählt</div>
-      <div id="ref-sel-list"><div style="color:var(--text3);font-size:13px;padding:8px 0">Noch nichts ausgewählt</div></div>
-      <div>
-        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">An Projekt heften</div>
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Ausgewählt (<span id="ref-sel-count">0</span>)</div>
+      <div id="ref-sel-list" style="flex:1;overflow-y:auto"></div>
+      <div style="flex-shrink:0;padding-top:10px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">An Projekt heften</div>
         <select class="sfield" style="width:100%;margin-bottom:8px" id="ref-proj-sel"><option value="">– Projekt wählen –</option></select>
-        <button class="btn-accent" style="width:100%;justify-content:center" onclick="saveRefs()">📌 Heften</button>
+        <button class="btn-accent" style="width:100%;justify-content:center" onclick="saveRefs()">📌 An Projekt heften</button>
+        <button class="btn" style="width:100%;justify-content:center;margin-top:6px" onclick="selectedRefs=[];renderSelRefs()">Auswahl leeren</button>
       </div>
     </div>
   </div>
