@@ -330,7 +330,8 @@ function init() {
   }
   document.getElementById('page-projekte').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
   try {
-    var sc = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    var slib = window.supabase || window.Supabase || supabase;
+    var sc = slib.createClient(SUPABASE_URL, SUPABASE_KEY);
     db = sc;
     loadAll().then(function() {
       renderProjects();
