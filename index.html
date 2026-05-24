@@ -498,7 +498,7 @@ function renderProjects() {
 
       // TODOS
       var tpct = ptodos.length ? Math.round(done/ptodos.length*100) : 0;
-      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">\u2713 Todo-Liste <span style="font-weight:400">'+tpct+'%</span></div><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text3)">'+done+'/'+ptodos.length+'</span></div></div>';
+      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">\u2713 Todo-Liste <span style="font-weight:400">'+tpct+'%</span></div><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text3)">'+done+'/'+ptodos.length+'</span><label class="btn" style="font-size:11px;padding:3px 9px;cursor:pointer">\uD83D\uDCE5 Import<input type="file" accept=".txt,.md" data-pid="'+p.id+'" style="display:none" onchange="tiLoad(this)"/></label></div></div>';
       html += '<div class="pbar"><div class="pbar-fill" style="width:'+tpct+'%"></div></div>';
       if (!ptodos.length) html += '<div class="empty">Noch keine Tasks</div>';
       ptodos.forEach(function(t){
@@ -1165,6 +1165,92 @@ async function tiConfirm(pid, tasks){
   expandedIds.add(pid);
   renderProjects();
   if(typeof toast === 'function') toast('✅ ' + ins.length + ' Tasks importiert');
+}
+</script>
+
+<script>
+function tiLoad(e){
+  var pid=e.dataset.pid,file=e.files[0];
+  if(!file||!pid)return;
+  var r=new FileReader();
+  r.onload=function(ev){tiPreview(pid,ev.target.result,file.name);e.value='';};
+  r.readAsText(file);
+}
+function tiParse(raw){
+  var out=[];
+  raw.split('\n').forEach(function(l){
+    l=l.trim();
+    if(!l||/^#{1,6} /.test(l)||/^[-=]{3,}$/.test(l))return;
+    var m=l.match(/^[-*] \[([ xX])\] (.+)/);
+    if(m){out.push({text:m[2].trim(),done:m[1]!=' '});return;}
+    var n=l.match(/^\d+[.)] (.+)/);
+    if(n){out.push({text:n[1].trim(),done:false});return;}
+    var t=l.replace(/^[-*\u2022] ?/,'').trim();
+    if(t.length>1)out.push({text:t,done:false});
+  });
+  return out;
+}
+function tiPreview(pid,raw,fname){
+  var tasks=tiParse(raw);
+  if(!tasks.length){toast('Keine Tasks gefunden');return;}
+  var proj=D.projects.find(function(p){return p.id===pid;})||{name:''};
+  var ov=document.createElement('div');
+  ov.className='modal-bg open';ov.id='ti-ov';
+  var md=document.createElement('div');
+  md.className='modal';
+  md.style.cssText='width:420px;max-height:80vh;display:flex;flex-direction:column;gap:10px';
+  var ti=document.createElement('div');ti.className='modal-title';
+  ti.textContent='📥 Todos importieren';md.appendChild(ti);
+  var me=document.createElement('div');
+  me.style.cssText='font-size:12px;color:var(--text3)';
+  me.textContent=proj.name+' · '+fname+' · '+tasks.length+' Tasks';
+  md.appendChild(me);
+  var li=document.createElement('div');
+  li.style.cssText='overflow-y:auto;flex:1;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg3);padding:6px';
+  tasks.forEach(function(t,i){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 4px;border-bottom:1px solid var(--border)';
+    var cb=document.createElement('input');
+    cb.type='checkbox';cb.id='tic-'+i;cb.checked=true;
+    cb.style.cssText='width:15px;height:15px;cursor:pointer;accent-color:#6c63ff;flex-shrink:0';
+    var lb=document.createElement('label');
+    lb.htmlFor='tic-'+i;
+    lb.style.cssText='font-size:13px;cursor:pointer;flex:1'+(t.done?';text-decoration:line-through;color:var(--text3)':'');
+    lb.textContent=t.text;
+    row.appendChild(cb);row.appendChild(lb);li.appendChild(row);
+  });
+  md.appendChild(li);
+  var ft=document.createElement('div');
+  ft.style.cssText='display:flex;gap:8px;justify-content:space-between;align-items:center';
+  var tg=document.createElement('button');tg.className='btn';tg.style.fontSize='12px';tg.textContent='Alle an/ab';
+  tg.onclick=function(){
+    var all=tasks.every(function(_,i){var c=document.getElementById('tic-'+i);return c&&c.checked;});
+    tasks.forEach(function(_,i){var c=document.getElementById('tic-'+i);if(c)c.checked=!all;});
+  };
+  var bg=document.createElement('div');bg.style.cssText='display:flex;gap:8px';
+  var ca=document.createElement('button');ca.className='btn';ca.textContent='Abbrechen';
+  ca.onclick=function(){ov.remove();};
+  var ok=document.createElement('button');ok.className='btn-accent';ok.textContent='✓ Importieren';
+  ok.onclick=function(){tiConfirm(pid,tasks);};
+  bg.appendChild(ca);bg.appendChild(ok);
+  ft.appendChild(tg);ft.appendChild(bg);md.appendChild(ft);
+  ov.appendChild(md);
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+}
+async function tiConfirm(pid,tasks){
+  var ins=[];
+  tasks.forEach(function(t,i){
+    var cb=document.getElementById('tic-'+i);
+    if(cb&&cb.checked)ins.push({project_id:pid,text:t.text,done:t.done});
+  });
+  var ov=document.getElementById('ti-ov');if(ov)ov.remove();
+  if(!ins.length){toast('Nichts ausgewählt');return;}
+  var res=await db.from('todos').insert(ins);
+  if(res.error){toast('Fehler: '+res.error.message);return;}
+  await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',pid);
+  await loadAll();expandedIds.add(pid);renderProjects();
+  toast('✅ '+ins.length+' Tasks importiert');
 }
 </script>
 </body>
