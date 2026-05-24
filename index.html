@@ -498,7 +498,7 @@ function renderProjects() {
 
       // TODOS
       var tpct = ptodos.length ? Math.round(done/ptodos.length*100) : 0;
-      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">✓ Todo-Liste <span style="font-weight:400">'+tpct+'%</span></div><span style="font-size:12px;color:var(--text3)">'+done+'/'+ptodos.length+'</span></div>';
+      html += '<div class="sub"><div class="sub-hdr"><div class="sub-lbl">\u2713 Todo-Liste <span style="font-weight:400">'+tpct+'%</span></div><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text3)">'+done+'/'+ptodos.length+'</span><label class="btn" style="font-size:11px;padding:3px 9px;cursor:pointer" title="Todos importieren">\uD83D\uDCE5<input type="file" accept=".txt,.md" data-pid="'+p.id+'" style="display:none" onchange="tiLoad(this)"/></label></div></div>';
       html += '<div class="pbar"><div class="pbar-fill" style="width:'+tpct+'%"></div></div>';
       if (!ptodos.length) html += '<div class="empty">Noch keine Tasks</div>';
       ptodos.forEach(function(t){
@@ -1036,10 +1036,183 @@ async function saveRefs(){
   toast((proj?'Zu "'+proj.name+'"':'')+(inserts.length)+' Bild'+(inserts.length>1?'er':'')+' gespeichert ✓');
 }
 
+// ── TODO FILE IMPORT ─────────────────────────────────────
+function tiLoad(el){
+  var pid=el.dataset.pid, file=el.files[0];
+  if(!file||!pid) return;
+  var r=new FileReader();
+  r.onload=function(e){ tiPreview(pid,e.target.result,file.name); el.value=''; };
+  r.readAsText(file);
+}
+
+function tiParse(raw){
+  var lines=raw.split('\n');
+  var tasks=[];
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i].trim();
+    if(!l) continue;
+    if(/^#{1,6}\s/.test(l)) continue;
+    if(/^[-=]{3,}$/.test(l)) continue;
+    var mc=l.match(/^[-*]\s*\[([ xX])\]\s*(.+)/);
+    if(mc){tasks.push({text:mc[2].trim(),done:mc[1].toLowerCase()==='x'});continue;}
+    var nm=l.match(/^\d+[.)]\s*(.+)/);
+    if(nm){tasks.push({text:nm[1].trim(),done:false});continue;}
+    var tx=l.replace(/^[-*\u2022]\s*/,'').trim();
+    if(tx.length>1) tasks.push({text:tx,done:false});
+  }
+  return tasks;
+}
+
+function tiPreview(pid,raw,fname){
+  var tasks=tiParse(raw);
+  if(!tasks.length){toast('Keine Tasks gefunden');return;}
+  var proj=D.projects.find(function(p){return p.id===pid;})||{name:''};
+
+  var ov=document.createElement('div');
+  ov.className='modal-bg open'; ov.id='ti-ov';
+  var md=document.createElement('div');
+  md.className='modal';
+  md.style.cssText='width:420px;max-height:80vh;display:flex;flex-direction:column;gap:10px';
+
+  var ti=document.createElement('div'); ti.className='modal-title';
+  ti.textContent='\u2795 Todos importieren'; md.appendChild(ti);
+
+  var me=document.createElement('div');
+  me.style.cssText='font-size:12px;color:var(--text3)';
+  me.textContent=proj.name+' \u00b7 '+fname+' \u00b7 '+tasks.length+' Tasks';
+  md.appendChild(me);
+
+  var li=document.createElement('div');
+  li.style.cssText='overflow-y:auto;flex:1;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg3);padding:6px';
+
+  tasks.forEach(function(t,i){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 4px;border-bottom:1px solid var(--border)';
+    var cb=document.createElement('input');
+    cb.type='checkbox'; cb.id='tic-'+i; cb.checked=true;
+    cb.style.cssText='width:15px;height:15px;cursor:pointer;accent-color:#6c63ff;flex-shrink:0';
+    var lb=document.createElement('label');
+    lb.htmlFor='tic-'+i;
+    lb.style.cssText='font-size:13px;cursor:pointer;flex:1'+(t.done?';text-decoration:line-through;color:var(--text3)':'');
+    lb.textContent=t.text;
+    row.appendChild(cb); row.appendChild(lb); li.appendChild(row);
+  });
+  md.appendChild(li);
+
+  var ft=document.createElement('div');
+  ft.style.cssText='display:flex;gap:8px;justify-content:space-between;align-items:center';
+  var tg=document.createElement('button'); tg.className='btn'; tg.style.fontSize='12px'; tg.textContent='Alle an/ab';
+  tg.onclick=function(){
+    var all=true;
+    for(var i=0;i<tasks.length;i++){var c=document.getElementById('tic-'+i);if(c&&!c.checked){all=false;break;}}
+    for(var i=0;i<tasks.length;i++){var c=document.getElementById('tic-'+i);if(c) c.checked=!all;}
+  };
+  var bg=document.createElement('div'); bg.style.cssText='display:flex;gap:8px';
+  var ca=document.createElement('button'); ca.className='btn'; ca.textContent='Abbrechen';
+  ca.onclick=function(){ov.remove();};
+  var ok=document.createElement('button'); ok.className='btn-accent'; ok.textContent='\u2713 Importieren';
+  ok.onclick=function(){tiConfirm(pid,tasks);};
+  bg.appendChild(ca); bg.appendChild(ok);
+  ft.appendChild(tg); ft.appendChild(bg); md.appendChild(ft);
+  ov.appendChild(md);
+  ov.addEventListener('click',function(e){if(e.target===ov) ov.remove();});
+  document.body.appendChild(ov);
+}
+
+async function tiConfirm(pid,tasks){
+  var ins=[];
+  for(var i=0;i<tasks.length;i++){
+    var cb=document.getElementById('tic-'+i);
+    if(cb&&cb.checked) ins.push({project_id:pid,text:tasks[i].text,done:tasks[i].done});
+  }
+  var ov=document.getElementById('ti-ov'); if(ov) ov.remove();
+  if(!ins.length){toast('Nichts ausgewählt');return;}
+  var res=await db.from('todos').insert(ins);
+  if(res.error){toast('Fehler: '+res.error.message);return;}
+  await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',pid);
+  await loadAll(); expandedIds.add(pid); renderProjects();
+  toast('\u2705 '+ins.length+' Tasks importiert');
+}
+
+
 // ── START ─────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function(){
   init();
 });
 </script>
 </body>
-</html>
+</html>function tiShowPreview(pid, lines, fname) {
+  var proj = D.projects.find(function(p){ return p.id===pid; });
+  var overlay = document.createElement('div');
+  overlay.className = 'modal-bg open';
+  overlay.id = 'ti-modal';
+
+  var modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.style.cssText = 'width:440px;max-height:80vh;display:flex;flex-direction:column';
+
+  var title = document.createElement('div');
+  title.className = 'modal-title';
+  title.textContent = '📄 Todos importieren';
+  modal.appendChild(title);
+
+  var meta = document.createElement('div');
+  meta.style.cssText = 'font-size:12px;color:var(--text3);margin-bottom:4px';
+  meta.textContent = '📁 ' + fname;
+  modal.appendChild(meta);
+
+  var projLine = document.createElement('div');
+  projLine.style.cssText = 'font-size:12px;color:var(--text2);margin-bottom:10px';
+  projLine.innerHTML = 'Projekt: <strong>' + (proj ? proj.name : '') + '</strong>';
+  modal.appendChild(projLine);
+
+  var count = document.createElement('div');
+  count.style.cssText = 'font-size:12px;color:var(--text3);margin-bottom:6px';
+  count.textContent = lines.length + ' Tasks – nicht benötigte abwählen:';
+  modal.appendChild(count);
+
+  var list = document.createElement('div');
+  list.style.cssText = 'overflow-y:auto;flex:1;border:1px solid var(--border);border-radius:var(--radius);padding:8px;background:var(--bg3);margin-bottom:12px';
+  lines.forEach(function(l, i) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:5px 4px;border-bottom:1px solid var(--border)';
+    var cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.id = 'tic-'+i; cb.checked = true;
+    cb.style.cssText = 'width:15px;height:15px;cursor:pointer;accent-color:#6c63ff';
+    var lbl = document.createElement('label');
+    lbl.htmlFor = 'tic-'+i;
+    lbl.style.cssText = 'font-size:13px;cursor:pointer;flex:1';
+    lbl.textContent = l;
+    row.appendChild(cb); row.appendChild(lbl);
+    list.appendChild(row);
+  });
+  modal.appendChild(list);
+
+  var foot = document.createElement('div');
+  foot.style.cssText = 'display:flex;gap:8px;justify-content:space-between;align-items:center';
+
+  var toggleBtn = document.createElement('button');
+  toggleBtn.className = 'btn'; toggleBtn.style.fontSize = '12px';
+  toggleBtn.textContent = 'Alle an/ab';
+  toggleBtn.onclick = function(){ tiToggleAll(lines.length); };
+
+  var cancelBtn = document.createElement('button');
+  cancelBtn.className = 'btn'; cancelBtn.textContent = 'Abbrechen';
+  cancelBtn.onclick = function(){ overlay.remove(); };
+
+  var confirmBtn = document.createElement('button');
+  confirmBtn.className = 'btn-accent'; confirmBtn.textContent = '✓ Importieren';
+  confirmBtn.onclick = function(){ tiConfirm(pid, lines); };
+
+  var btnGroup = document.createElement('div');
+  btnGroup.style.cssText = 'display:flex;gap:8px';
+  btnGroup.appendChild(cancelBtn); btnGroup.appendChild(confirmBtn);
+
+  foot.appendChild(toggleBtn); foot.appendChild(btnGroup);
+  modal.appendChild(foot);
+  overlay.appendChild(modal);
+
+  overlay.addEventListener('click', function(ev){ if(ev.target===overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
