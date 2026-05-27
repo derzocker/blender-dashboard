@@ -98,29 +98,6 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .cl-step.done{background:var(--green2);border-color:rgba(62,207,142,0.2)}
 .cl-box{width:18px;height:18px;border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0;transition:all 0.15s}
 .cl-step.done .cl-box{background:var(--green);border-color:var(--green);color:#000}
-/* TextureSheet Creator Styles */
-.ts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.ts-section { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
-.ts-section h4 { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-.ts-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
-.ts-btn { padding: 6px 10px; background: var(--bg4); border: 1px solid var(--border); color: var(--text2); border-radius: var(--radius); font-size: 11px; cursor: pointer; transition: all 0.15s; }
-.ts-btn:hover { border-color: var(--accent); color: var(--accent2); }
-.ts-input { background: var(--bg4); border: 1px solid var(--border); color: var(--text); padding: 6px 8px; border-radius: var(--radius); font-size: 12px; width: 100%; font-family: 'DM Sans', sans-serif; }
-.ts-input:focus { border-color: var(--accent); outline: none; }
-.ts-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
-.ts-row label { font-size: 11px; color: var(--text3); min-width: 70px; }
-.ts-row input[type="color"] { width: 40px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; }
-.ts-checkbox { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
-.ts-checkbox input { cursor: pointer; }
-.ts-actions { display: flex; gap: 8px; margin-top: 12px; }
-.ts-actions button { flex: 1; }
-.ts-history { background: var(--bg4); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px; max-height: 150px; overflow-y: auto; }
-.ts-history-item { padding: 4px 6px; border-bottom: 1px solid var(--border); font-size: 11px; color: var(--text3); cursor: pointer; transition: all 0.15s; }
-.ts-history-item:hover { background: var(--bg3); color: var(--text2); }
-.ts-status { padding: 8px; border-radius: var(--radius); font-size: 12px; text-align: center; margin-top: 10px; }
-.ts-status.success { background: var(--green2); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
-.ts-status.error { background: var(--red2); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-.ts-status.info { background: var(--blue2); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
 .cl-lbl{font-size:12px;color:var(--text2)}
 .cl-step.done .cl-lbl{color:var(--green)}
 
@@ -186,6 +163,60 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .img-chk{position:absolute;top:6px;right:6px;width:22px;height:22px;background:var(--accent);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700}
 .img-item.sel .img-chk{display:flex}
 .img-lbl{font-size:10px;color:var(--text3);padding:4px 7px;background:rgba(0,0,0,0.6);position:absolute;bottom:0;left:0;right:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* TextureSheet Creator Styles */
+.ts-container { max-width: 1200px; margin: 0 auto; }
+.ts-header { margin-bottom: 1.5rem; }
+.ts-header h2 { font-size: 18px; margin-bottom: 4px; }
+.ts-header p { font-size: 13px; color: var(--text3); }
+.ts-main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
+.ts-left { display: flex; flex-direction: column; gap: 15px; }
+.ts-section { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+.ts-section h4 { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.ts-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+.ts-btn { padding: 6px 10px; background: var(--bg4); border: 1px solid var(--border); color: var(--text2); border-radius: var(--radius); font-size: 11px; cursor: pointer; transition: all 0.15s; }
+.ts-btn:hover { border-color: var(--accent); color: var(--accent2); }
+.ts-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ts-input { background: var(--bg4); border: 1px solid var(--border); color: var(--text); padding: 6px 8px; border-radius: var(--radius); font-size: 12px; width: 100%; font-family: 'DM Sans', sans-serif; box-sizing: border-box; }
+.ts-input:focus { border-color: var(--accent); outline: none; }
+.ts-select { background: var(--bg4); border: 1px solid var(--border); color: var(--text); padding: 6px 8px; border-radius: var(--radius); font-size: 12px; width: 100%; font-family: 'DM Sans', sans-serif; }
+.ts-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+.ts-row label { font-size: 11px; color: var(--text3); min-width: 70px; }
+.ts-row input[type="color"] { width: 40px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; flex-shrink: 0; }
+.ts-checkbox { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
+.ts-checkbox input { cursor: pointer; }
+.ts-actions { display: flex; gap: 8px; }
+.ts-actions button { flex: 1; }
+.ts-preview-container { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px; position: relative; min-height: 250px; }
+.ts-preview-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; display: block; }
+.ts-preview { position: relative; background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: crosshair; user-select: none; width: 100%; aspect-ratio: 1; }
+.ts-preview-canvas { display: block; width: 100%; height: 100%; max-width: 100%; background: white; }
+.ts-texture-item { position: absolute; cursor: move; border: 2px solid var(--accent); border-radius: 4px; background: rgba(108, 99, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--accent); font-weight: 600; transition: all 0.1s; }
+.ts-texture-item:hover { background: rgba(108, 99, 255, 0.2); border-color: var(--accent2); }
+.ts-texture-item.dragging { z-index: 100; opacity: 0.8; box-shadow: 0 5px 20px rgba(108, 99, 255, 0.3); }
+.ts-right { display: flex; flex-direction: column; gap: 15px; }
+.ts-controls { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+.ts-controls h4 { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+.ts-texture-list { max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg4); padding: 6px; margin-bottom: 10px; }
+.ts-texture-entry { padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 11px; color: var(--text3); cursor: pointer; transition: all 0.15s; display: flex; justify-content: space-between; align-items: center; }
+.ts-texture-entry:hover { background: var(--bg3); color: var(--text2); }
+.ts-texture-entry.selected { background: var(--accent); color: white; }
+.ts-export-options { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-top: 15px; }
+.ts-export-options h4 { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.ts-export-btn { width: 100%; padding: 10px; background: var(--green); color: white; border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; transition: all 0.15s; margin-bottom: 8px; }
+.ts-export-btn:hover { background: #35b870; }
+.ts-export-formats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.ts-format-btn { padding: 6px 8px; background: var(--bg4); border: 1px solid var(--border); color: var(--text2); border-radius: var(--radius); font-size: 11px; cursor: pointer; transition: all 0.15s; }
+.ts-format-btn:hover, .ts-format-btn.selected { border-color: var(--accent); color: var(--accent2); }
+.ts-status { padding: 8px; border-radius: var(--radius); font-size: 12px; text-align: center; margin-top: 10px; display: none; }
+.ts-status.show { display: block; }
+.ts-status.success { background: var(--green2); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
+.ts-status.error { background: var(--red2); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+.ts-status.info { background: var(--blue2); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
+.ts-history { background: var(--bg4); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px; max-height: 120px; overflow-y: auto; }
+.ts-history-item { padding: 4px 6px; border-bottom: 1px solid var(--border); font-size: 10px; color: var(--text3); cursor: pointer; transition: all 0.15s; }
+.ts-history-item:hover { background: var(--bg3); color: var(--text2); }
+.ts-info-box { background: var(--blue2); border: 1px solid rgba(59,130,246,0.2); color: var(--blue); padding: 8px; border-radius: var(--radius); font-size: 11px; line-height: 1.5; }
+@media (max-width: 1000px) { .ts-main-grid { grid-template-columns: 1fr; } .ts-right { max-width: 100%; } }
 .sel-thumb{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:3px}
 </style>
 </head>
@@ -198,7 +229,6 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
   <button class="nav-tab" id="ntab-statistiken" onclick="switchTab('statistiken',this)">📊 Statistiken</button>
   <button class="nav-tab" id="ntab-einstellungen" onclick="switchTab('einstellungen',this)">⚙️ Einstellungen</button>
   <button class="nav-tab" id="ntab-texturecreator" onclick="switchTab('texturecreator',this)">🎨 TextureSheet</button>
-</nav>
 
 <div class="page active" id="page-projekte"></div>
 <div class="page" id="page-kalender"></div>
@@ -1279,140 +1309,9 @@ async function tiConfirm(pid,tasks){
 }
 </script>
 
-<!-- TextureSheet Creator Integration -->
+<!-- TextureSheet Creator - Full Featured -->
 <script>
-var TextureSheetCreator = {
-  config: {
-    width: 1024, height: 1024, cols: 4, rows: 4,
-    bg_color: '#ffffff', grid_color: '#646464', grid_width: 2,
-    labels: true, pattern: 'none'
-  },
-  history: [],
-  templates: {
-    game_sprites: { name: 'Game Sprites', width: 512, height: 512, cols: 4, rows: 4, bg_color: '#c8c8c8', grid_color: '#333333' },
-    character: { name: 'Character Sheet', width: 1024, height: 1024, cols: 4, rows: 8, bg_color: '#dcdcdc', grid_color: '#641414' },
-    texture_3d: { name: '3D Texture Maps', width: 2048, height: 2048, cols: 8, rows: 4, bg_color: '#f0f0f0', grid_color: '#003266' },
-    seamless: { name: 'Seamless Tiles', width: 1024, height: 1024, cols: 3, rows: 3, bg_color: '#c0c0c0', grid_color: '#666666' }
-  },
-  patterns: {
-    'none': 'Solid Color', 'grid': 'Grid Pattern', 'checkerboard': 'Checkerboard',
-    'gradient_v': 'Gradient V', 'gradient_h': 'Gradient H', 'dots': 'Dots Pattern'
-  },
-  init: function() {
-    this.loadHistory(); this.render();
-  },
-  render: function() {
-    var page = document.getElementById('page-texturecreator');
-    if (!page) return;
-    var html = '<div style="max-width: 900px; margin: 0 auto;"><div style="margin-bottom: 1.5rem;"><h2 style="font-size: 18px; margin-bottom: 4px;">🎨 TextureSheet Creator</h2><p style="font-size: 13px; color: var(--text3);">Schnell und einfach Texture Sheets erstellen</p></div>';
-    html += '<div style="margin-bottom: 1.5rem;"><h3 style="font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">Templates</h3><div class="ts-buttons">';
-    for (var key in this.templates) {
-      html += '<button class="ts-btn" onclick="TextureSheetCreator.applyTemplate(\'' + key + '\')">' + this.templates[key].name + '</button>';
-    }
-    html += '</div></div><div class="ts-grid" style="margin-bottom: 1.5rem;"><div class="ts-section"><h4>Canvas</h4><div class="ts-row"><label>Width:</label><input type="number" id="ts-width" class="ts-input" value="' + this.config.width + '" min="256" max="4096" step="256" onchange="TextureSheetCreator.updateConfig()"/></div><div class="ts-row"><label>Height:</label><input type="number" id="ts-height" class="ts-input" value="' + this.config.height + '" min="256" max="4096" step="256" onchange="TextureSheetCreator.updateConfig()"/></div></div><div class="ts-section"><h4>Grid</h4><div class="ts-row"><label>Cols:</label><input type="number" id="ts-cols" class="ts-input" value="' + this.config.cols + '" min="1" max="32" onchange="TextureSheetCreator.updateConfig()"/></div><div class="ts-row"><label>Rows:</label><input type="number" id="ts-rows" class="ts-input" value="' + this.config.rows + '" min="1" max="32" onchange="TextureSheetCreator.updateConfig()"/></div><div class="ts-row"><label>Line Width:</label><input type="number" id="ts-grid-width" class="ts-input" value="' + this.config.grid_width + '" min="1" max="10" onchange="TextureSheetCreator.updateConfig()"/></div></div></div><div class="ts-grid" style="margin-bottom: 1.5rem;"><div class="ts-section"><h4>Colors</h4><div class="ts-row"><label>Background:</label><input type="color" id="ts-bg-color" value="' + this.config.bg_color + '" onchange="TextureSheetCreator.updateConfig()"/></div><div class="ts-row"><label>Grid:</label><input type="color" id="ts-grid-color" value="' + this.config.grid_color + '" onchange="TextureSheetCreator.updateConfig()"/></div></div><div class="ts-section"><h4>Options</h4><div style="margin-bottom: 8px;"><label style="font-size: 11px; color: var(--text3); display: block; margin-bottom: 4px;">Pattern</label><select id="ts-pattern" class="ts-input" onchange="TextureSheetCreator.updateConfig()">';
-    for (var pat in this.patterns) {
-      html += '<option value="' + pat + '"' + (pat === this.config.pattern ? ' selected' : '') + '>' + this.patterns[pat] + '</option>';
-    }
-    html += '</select></div><div class="ts-checkbox"><input type="checkbox" id="ts-labels" ' + (this.config.labels ? 'checked' : '') + ' onchange="TextureSheetCreator.updateConfig()"/><label for="ts-labels">Show Tile Labels</label></div></div></div><div class="ts-section" style="grid-column: 1/-1;"><h4>Export</h4><div class="ts-actions"><button class="btn" onclick="TextureSheetCreator.preview()" style="font-size: 12px;">👁️ Preview</button><button class="btn-accent" onclick="TextureSheetCreator.export()" style="font-size: 12px;">💾 Export PNG</button></div><div id="ts-status" style="display: none;"></div></div><div class="ts-section" style="grid-column: 1/-1;"><h4>History (Last 10)</h4><div id="ts-history" class="ts-history"></div><button class="btn" onclick="TextureSheetCreator.clearHistory()" style="font-size: 11px; margin-top: 8px; width: 100%;">🗑️ Clear History</button></div></div>';
-    page.innerHTML = html;
-    this.renderHistory();
-  },
-  updateConfig: function() {
-    this.config = {
-      width: parseInt(document.getElementById('ts-width').value),
-      height: parseInt(document.getElementById('ts-height').value),
-      cols: parseInt(document.getElementById('ts-cols').value),
-      rows: parseInt(document.getElementById('ts-rows').value),
-      bg_color: document.getElementById('ts-bg-color').value,
-      grid_color: document.getElementById('ts-grid-color').value,
-      grid_width: parseInt(document.getElementById('ts-grid-width').value),
-      labels: document.getElementById('ts-labels').checked,
-      pattern: document.getElementById('ts-pattern').value
-    };
-  },
-  applyTemplate: function(key) {
-    var t = this.templates[key];
-    if (!t) return;
-    document.getElementById('ts-width').value = t.width;
-    document.getElementById('ts-height').value = t.height;
-    document.getElementById('ts-cols').value = t.cols;
-    document.getElementById('ts-rows').value = t.rows;
-    document.getElementById('ts-bg-color').value = t.bg_color;
-    document.getElementById('ts-grid-color').value = t.grid_color;
-    this.updateConfig();
-    this.showStatus(t.name + ' applied', 'info');
-  },
-  preview: function() {
-    this.updateConfig();
-    this.showStatus('Preview generated', 'info');
-  },
-  export: function() {
-    this.updateConfig();
-    var entry = { time: new Date().toLocaleString(), config: this.config };
-    this.history.unshift(entry);
-    this.history = this.history.slice(0, 10);
-    this.saveHistory();
-    this.renderHistory();
-    this.showStatus('✓ Export prepared', 'success');
-    console.log('Export config:', this.config);
-  },
-  saveHistory: function() {
-    localStorage.setItem('ts_history', JSON.stringify(this.history));
-  },
-  loadHistory: function() {
-    var saved = localStorage.getItem('ts_history');
-    this.history = saved ? JSON.parse(saved) : [];
-  },
-  renderHistory: function() {
-    var histEl = document.getElementById('ts-history');
-    if (!histEl) return;
-    if (this.history.length === 0) {
-      histEl.textContent = 'No history yet';
-      return;
-    }
-    var html = '';
-    for (var i = 0; i < this.history.length; i++) {
-      html += '<div class="ts-history-item" onclick="TextureSheetCreator.applyHistoryItem(' + i + ')">' + this.history[i].time + ' | ' + this.history[i].config.width + '×' + this.history[i].config.height + ' | ' + this.history[i].config.cols + '×' + this.history[i].config.rows + '</div>';
-    }
-    histEl.innerHTML = html;
-  },
-  applyHistoryItem: function(idx) {
-    var item = this.history[idx];
-    if (!item) return;
-    var c = item.config;
-    document.getElementById('ts-width').value = c.width;
-    document.getElementById('ts-height').value = c.height;
-    document.getElementById('ts-cols').value = c.cols;
-    document.getElementById('ts-rows').value = c.rows;
-    document.getElementById('ts-bg-color').value = c.bg_color;
-    document.getElementById('ts-grid-color').value = c.grid_color;
-    document.getElementById('ts-grid-width').value = c.grid_width;
-    document.getElementById('ts-labels').checked = c.labels;
-    document.getElementById('ts-pattern').value = c.pattern;
-    this.updateConfig();
-    this.showStatus('Config loaded from history', 'info');
-  },
-  clearHistory: function() {
-    if (!confirm('Clear all history?')) return;
-    this.history = [];
-    this.saveHistory();
-    this.renderHistory();
-    this.showStatus('History cleared', 'info');
-  },
-  showStatus: function(msg, type) {
-    var el = document.getElementById('ts-status');
-    if (!el) return;
-    el.textContent = msg;
-    el.className = 'ts-status ' + type;
-    el.style.display = 'block';
-    setTimeout(function() { el.style.display = 'none'; }, 3000);
-  }
-};
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() { TextureSheetCreator.init(); });
-} else {
-  TextureSheetCreator.init();
-}
+var TextureSheetCreator={config:{width:1024,height:1024,cols:4,rows:4,bg_color:'#ffffff',grid_color:'#646464',grid_width:2,labels:true,pattern:'none',export_format:'png'},textures:[],nextTextureId:1,selectedTextureId:null,history:[],draggingTextureId:null,dragOffset:{x:0,y:0},templates:{game_sprites:{name:'Game Sprites',width:512,height:512,cols:4,rows:4,bg_color:'#c8c8c8',grid_color:'#333333'},character:{name:'Character Sheet',width:1024,height:1024,cols:4,rows:8,bg_color:'#dcdcdc',grid_color:'#641414'},texture_3d:{name:'3D Texture Maps',width:2048,height:2048,cols:8,rows:4,bg_color:'#f0f0f0',grid_color:'#003266'},seamless:{name:'Seamless Tiles',width:1024,height:1024,cols:3,rows:3,bg_color:'#c0c0c0',grid_color:'#666666'}},patterns:{'none':'Solid Color','grid':'Grid Pattern','checkerboard':'Checkerboard','gradient_v':'Gradient V','gradient_h':'Gradient H','dots':'Dots Pattern'},init:function(){this.loadHistory();this.render();this.drawPreview();this.setupDragAndDrop();},render:function(){var page=document.getElementById('page-texturecreator');if(!page)return;var html='<div class="ts-container"><div class="ts-header"><h2>🎨 TextureSheet Creator</h2><p>Erstelle Texture Sheets mit Live-Preview und Drag & Move</p></div><div class="ts-main-grid"><div class="ts-left"><div class="ts-section"><h4>Templates</h4><div class="ts-buttons">';for(var key in this.templates){html+='<button class="ts-btn" onclick="TextureSheetCreator.applyTemplate(\''+key+'\')">'+this.templates[key].name+'</button>'}html+='</div></div><div class="ts-grid-2"><div class="ts-section"><h4>Canvas</h4><div class="ts-row"><label>Width:</label><input type="number" id="ts-width" class="ts-input" value="'+this.config.width+'" min="256" max="4096" step="256" onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();"/></div><div class="ts-row"><label>Height:</label><input type="number" id="ts-height" class="ts-input" value="'+this.config.height+'" min="256" max="4096" step="256" onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();"/></div></div><div class="ts-section"><h4>Grid</h4><div class="ts-row"><label>Cols:</label><input type="number" id="ts-cols" class="ts-input" value="'+this.config.cols+'" min="1" max="32" onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();"/></div><div class="ts-row"><label>Rows:</label><input type="number" id="ts-rows" class="ts-input" value="'+this.config.rows+'" min="1" max="32" onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();"/></div><div class="ts-row"><label>Line:</label><input type="number" id="ts-grid-width" class="ts-input" value="'+this.config.grid_width+'" min="1" max="10" onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();"/></div></div></div><div class="ts-grid-2"><div class="ts-section"><h4>Colors</h4><div class="ts-row"><label>BG:</label><input type="color" id="ts-bg-color" value="'+this.config.bg_color+'" onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();"/></div><div class="ts-row"><label>Grid:</label><input type="color" id="ts-grid-color" value="'+this.config.grid_color+'" onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();"/></div></div><div class="ts-section"><h4>Options</h4><div style="margin-bottom: 8px;"><label style="font-size: 11px; color: var(--text3); display: block; margin-bottom: 4px;">Pattern</label><select id="ts-pattern" class="ts-select" onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();">';for(var pat in this.patterns){html+='<option value="'+pat+'"'+(pat===this.config.pattern?' selected':'')+'>'+this.patterns[pat]+'</option>'}html+='</select></div><div class="ts-checkbox"><input type="checkbox" id="ts-labels" '+(this.config.labels?'checked':'')+' onchange="TextureSheetCreator.updateConfig(); TextureSheetCreator.drawPreview();"/><label for="ts-labels">Labels</label></div></div></div><div class="ts-preview-container"><span class="ts-preview-label">Live Preview (Drag textures here)</span><div class="ts-preview" id="ts-preview-container"><canvas id="ts-preview-canvas" class="ts-preview-canvas"></canvas><div id="ts-textures-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div></div></div></div><div class="ts-right"><div class="ts-controls"><h4>Texturen</h4><div class="ts-row" style="margin-bottom: 8px;"><input type="text" id="ts-texture-name" class="ts-input" placeholder="Texture Name" style="flex: 1; margin-right: 4px;"/><button class="ts-btn" onclick="TextureSheetCreator.addTexture()" style="flex-shrink: 0;">+</button></div><div class="ts-texture-list" id="ts-texture-list"></div><div class="ts-info-box">💡 Click to select. Drag im Preview zum Move. Delete zum Löschen.</div></div><div class="ts-export-options"><h4>Export</h4><button class="ts-export-btn" onclick="TextureSheetCreator.exportSheet()">💾 Download Sheet</button><div style="font-size: 11px; color: var(--text3); margin-bottom: 8px;">Format:</div><div class="ts-export-formats"><button class="ts-format-btn selected" onclick="TextureSheetCreator.setExportFormat(\'png\', this)">PNG</button><button class="ts-format-btn" onclick="TextureSheetCreator.setExportFormat(\'jpg\', this)">JPEG</button><button class="ts-format-btn" onclick="TextureSheetCreator.setExportFormat(\'webp\', this)">WEBP</button><button class="ts-format-btn" onclick="TextureSheetCreator.setExportFormat(\'bmp\', this)">BMP</button></div><div id="ts-status" class="ts-status"></div></div><div class="ts-export-options"><h4>History</h4><div class="ts-history" id="ts-history"></div><button class="ts-btn" onclick="TextureSheetCreator.clearHistory()" style="width: 100%; margin-top: 8px;">🗑️ Clear</button></div></div></div></div>';page.innerHTML=html;this.renderTextureList();this.renderHistory();},updateConfig:function(){this.config={width:parseInt(document.getElementById('ts-width').value),height:parseInt(document.getElementById('ts-height').value),cols:parseInt(document.getElementById('ts-cols').value),rows:parseInt(document.getElementById('ts-rows').value),bg_color:document.getElementById('ts-bg-color').value,grid_color:document.getElementById('ts-grid-color').value,grid_width:parseInt(document.getElementById('ts-grid-width').value),labels:document.getElementById('ts-labels').checked,pattern:document.getElementById('ts-pattern').value,export_format:this.config.export_format};},applyTemplate:function(key){var t=this.templates[key];if(!t)return;document.getElementById('ts-width').value=t.width;document.getElementById('ts-height').value=t.height;document.getElementById('ts-cols').value=t.cols;document.getElementById('ts-rows').value=t.rows;document.getElementById('ts-bg-color').value=t.bg_color;document.getElementById('ts-grid-color').value=t.grid_color;this.updateConfig();this.drawPreview();this.showStatus(t.name+' applied','info');},drawPreview:function(){var canvas=document.getElementById('ts-preview-canvas');if(!canvas)return;var container=document.getElementById('ts-preview-container');var rect=container.getBoundingClientRect();var size=Math.min(rect.width,rect.height);canvas.width=size;canvas.height=size;var ctx=canvas.getContext('2d');var cfg=this.config;ctx.fillStyle=cfg.bg_color;ctx.fillRect(0,0,size,size);var tileW=size/cfg.cols;var tileH=size/cfg.rows;ctx.strokeStyle=cfg.grid_color;ctx.lineWidth=cfg.grid_width;for(var i=0;i<=cfg.cols;i++){ctx.beginPath();ctx.moveTo(i*tileW,0);ctx.lineTo(i*tileW,size);ctx.stroke()}for(var i=0;i<=cfg.rows;i++){ctx.beginPath();ctx.moveTo(0,i*tileH);ctx.lineTo(size,i*tileH);ctx.stroke()}if(cfg.labels){ctx.fillStyle=this.getTextColor(cfg.bg_color);ctx.font='11px DM Sans';for(var r=0;r<cfg.rows;r++){for(var c=0;c<cfg.cols;c++){ctx.fillText(c+','+r,c*tileW+4,r*tileH+12)}}}},setupDragAndDrop:function(){var self=this;var container=document.getElementById('ts-preview-container');if(!container)return;container.addEventListener('mousedown',function(e){if(e.target.id==='ts-preview-canvas'){self.onCanvasMouseDown(e)}});document.addEventListener('mousemove',function(e){if(self.draggingTextureId!==null){self.onCanvasMouseMove(e)}});document.addEventListener('mouseup',function(e){self.draggingTextureId=null;self.drawPreview();self.renderTextureList();});},onCanvasMouseDown:function(e){var canvas=document.getElementById('ts-preview-canvas');var rect=canvas.getBoundingClientRect();var x=(e.clientX-rect.left)/rect.width*this.config.width;var y=(e.clientY-rect.top)/rect.height*this.config.height;for(var i=this.textures.length-1;i>=0;i--){var t=this.textures[i];if(x>=t.x&&x<=t.x+t.w&&y>=t.y&&y<=t.y+t.h){this.draggingTextureId=t.id;this.dragOffset={x:x-t.x,y:y-t.y};this.selectedTextureId=t.id;this.renderTextureList();return}}},onCanvasMouseMove:function(e){var canvas=document.getElementById('ts-preview-canvas');var rect=canvas.getBoundingClientRect();var x=(e.clientX-rect.left)/rect.width*this.config.width;var y=(e.clientY-rect.top)/rect.height*this.config.height;for(var i=0;i<this.textures.length;i++){if(this.textures[i].id===this.draggingTextureId){this.textures[i].x=Math.max(0,Math.min(x-this.dragOffset.x,this.config.width-this.textures[i].w));this.textures[i].y=Math.max(0,Math.min(y-this.dragOffset.y,this.config.height-this.textures[i].h));this.drawPreview();break}}},addTexture:function(){var nameEl=document.getElementById('ts-texture-name');var name=nameEl.value.trim();if(!name){this.showStatus('Name eingeben!','error');return}var tileW=this.config.width/this.config.cols;var tileH=this.config.height/this.config.rows;this.textures.push({id:this.nextTextureId++,name:name,x:0,y:0,w:tileW,h:tileH,color:this.getRandomColor()});nameEl.value='';this.renderTextureList();this.drawPreview();this.showStatus('✓ Textur hinzugefügt','success');},deleteTexture:function(id){this.textures=this.textures.filter(function(t){return t.id!==id});this.selectedTextureId=null;this.renderTextureList();this.drawPreview();},renderTextureList:function(){var list=document.getElementById('ts-texture-list');if(!list)return;if(this.textures.length===0){list.innerHTML='<div style="color: var(--text3); padding: 10px; text-align: center; font-size: 11px;">Keine Texturen</div>';return}var html='';for(var i=0;i<this.textures.length;i++){var t=this.textures[i];html+='<div class="ts-texture-entry'+(t.id===this.selectedTextureId?' selected':'')+'" onclick="TextureSheetCreator.selectTexture('+t.id+')"><span style="flex: 1;">'+t.name+'</span><button class="ts-btn" style="font-size: 10px; padding: 2px 4px;" onclick="event.stopPropagation(); TextureSheetCreator.deleteTexture('+t.id+');">✕</button></div>'}list.innerHTML=html;},selectTexture:function(id){this.selectedTextureId=id;this.renderTextureList();},getRandomColor:function(){var colors=['#ff6b6b','#4ecdc4','#45b7d1','#f9ca24','#6c5ce7','#a29bfe'];return colors[Math.floor(Math.random()*colors.length)]},getTextColor:function(bgColor){var rgb=parseInt(bgColor.slice(1),16);var r=(rgb>>16)&255;var g=(rgb>>8)&255;var b=rgb&255;return(r*299+g*587+b*114)/1000>128?'#000000':'#ffffff'},setExportFormat:function(fmt,btn){this.config.export_format=fmt;document.querySelectorAll('.ts-format-btn').forEach(function(b){b.classList.remove('selected')});btn.classList.add('selected')},exportSheet:function(){this.updateConfig();var canvas=document.createElement('canvas');canvas.width=this.config.width;canvas.height=this.config.height;var ctx=canvas.getContext('2d');ctx.fillStyle=this.config.bg_color;ctx.fillRect(0,0,canvas.width,canvas.height);var tileW=canvas.width/this.config.cols;var tileH=canvas.height/this.config.rows;ctx.strokeStyle=this.config.grid_color;ctx.lineWidth=this.config.grid_width;for(var i=0;i<=this.config.cols;i++){ctx.beginPath();ctx.moveTo(i*tileW,0);ctx.lineTo(i*tileW,canvas.height);ctx.stroke()}for(var i=0;i<=this.config.rows;i++){ctx.beginPath();ctx.moveTo(0,i*tileH);ctx.lineTo(canvas.width,i*tileH);ctx.stroke()}if(this.config.labels){ctx.fillStyle=this.getTextColor(this.config.bg_color);ctx.font='14px DM Sans';for(var r=0;r<this.config.rows;r++){for(var c=0;c<this.config.cols;c++){ctx.fillText(c+','+r,c*tileW+6,r*tileH+18)}}}ctx.font='bold 12px DM Sans';for(var i=0;i<this.textures.length;i++){var t=this.textures[i];ctx.fillStyle=t.color;ctx.fillRect(t.x,t.y,t.w,t.h);ctx.fillStyle=this.getTextColor(t.color);var text=t.name.substring(0,20);var metrics=ctx.measureText(text);var x=t.x+(t.w-metrics.width)/2;var y=t.y+(t.h+12)/2;ctx.fillText(text,x,y)}var fmt=this.config.export_format;var mimeType='image/png';var ext='png';if(fmt==='jpg'){mimeType='image/jpeg';ext='jpg'}else if(fmt==='webp'){mimeType='image/webp';ext='webp'}else if(fmt==='bmp'){mimeType='image/bmp';ext='bmp'}canvas.toBlob(function(blob){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='texturesheet-'+new Date().getTime()+'.'+ext;a.click();URL.revokeObjectURL(url)},mimeType,0.95);this.saveToHistory();this.showStatus('✓ Exported: '+ext.toUpperCase(),'success')},saveToHistory:function(){var entry={time:new Date().toLocaleString(),config:this.config,textures:JSON.parse(JSON.stringify(this.textures))};this.history.unshift(entry);this.history=this.history.slice(0,10);localStorage.setItem('ts_history',JSON.stringify(this.history));this.renderHistory()},loadHistory:function(){var saved=localStorage.getItem('ts_history');this.history=saved?JSON.parse(saved):[]},renderHistory:function(){var histEl=document.getElementById('ts-history');if(!histEl)return;if(this.history.length===0){histEl.textContent='Keine History';return}var html='';for(var i=0;i<this.history.length;i++){var h=this.history[i];html+='<div class="ts-history-item" onclick="TextureSheetCreator.loadHistoryItem('+i+')">'+h.time+' | '+h.config.width+'×'+h.config.height+'</div>'}histEl.innerHTML=html},loadHistoryItem:function(idx){var item=this.history[idx];if(!item)return;this.config=item.config;this.textures=JSON.parse(JSON.stringify(item.textures));this.nextTextureId=Math.max.apply(null,this.textures.map(function(t){return t.id}))+1||1;document.getElementById('ts-width').value=this.config.width;document.getElementById('ts-height').value=this.config.height;document.getElementById('ts-cols').value=this.config.cols;document.getElementById('ts-rows').value=this.config.rows;document.getElementById('ts-bg-color').value=this.config.bg_color;document.getElementById('ts-grid-color').value=this.config.grid_color;document.getElementById('ts-grid-width').value=this.config.grid_width;document.getElementById('ts-labels').checked=this.config.labels;document.getElementById('ts-pattern').value=this.config.pattern;this.drawPreview();this.renderTextureList();this.showStatus('Config loaded from history','info')},clearHistory:function(){if(!confirm('History löschen?'))return;this.history=[];localStorage.removeItem('ts_history');this.renderHistory();this.showStatus('History cleared','info')},showStatus:function(msg,type){var el=document.getElementById('ts-status');if(!el)return;el.textContent=msg;el.className='ts-status show '+type;setTimeout(function(){el.classList.remove('show')},3000)}};if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){TextureSheetCreator.init()})}else{TextureSheetCreator.init()}
 </script>
 </body>
 </html>
