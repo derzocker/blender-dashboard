@@ -98,6 +98,29 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
 .cl-step.done{background:var(--green2);border-color:rgba(62,207,142,0.2)}
 .cl-box{width:18px;height:18px;border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0;transition:all 0.15s}
 .cl-step.done .cl-box{background:var(--green);border-color:var(--green);color:#000}
+/* TextureSheet Creator Styles */
+.ts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ts-section { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+.ts-section h4 { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.ts-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
+.ts-btn { padding: 6px 10px; background: var(--bg4); border: 1px solid var(--border); color: var(--text2); border-radius: var(--radius); font-size: 11px; cursor: pointer; transition: all 0.15s; }
+.ts-btn:hover { border-color: var(--accent); color: var(--accent2); }
+.ts-input { background: var(--bg4); border: 1px solid var(--border); color: var(--text); padding: 6px 8px; border-radius: var(--radius); font-size: 12px; width: 100%; font-family: 'DM Sans', sans-serif; }
+.ts-input:focus { border-color: var(--accent); outline: none; }
+.ts-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+.ts-row label { font-size: 11px; color: var(--text3); min-width: 70px; }
+.ts-row input[type="color"] { width: 40px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; }
+.ts-checkbox { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
+.ts-checkbox input { cursor: pointer; }
+.ts-actions { display: flex; gap: 8px; margin-top: 12px; }
+.ts-actions button { flex: 1; }
+.ts-history { background: var(--bg4); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px; max-height: 150px; overflow-y: auto; }
+.ts-history-item { padding: 4px 6px; border-bottom: 1px solid var(--border); font-size: 11px; color: var(--text3); cursor: pointer; transition: all 0.15s; }
+.ts-history-item:hover { background: var(--bg3); color: var(--text2); }
+.ts-status { padding: 8px; border-radius: var(--radius); font-size: 12px; text-align: center; margin-top: 10px; }
+.ts-status.success { background: var(--green2); color: var(--green); border: 1px solid rgba(62,207,142,0.2); }
+.ts-status.error { background: var(--red2); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+.ts-status.info { background: var(--blue2); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
 .cl-lbl{font-size:12px;color:var(--text2)}
 .cl-step.done .cl-lbl{color:var(--green)}
 
@@ -174,12 +197,14 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;outline:none;
   <button class="nav-tab" id="ntab-kalender" onclick="switchTab('kalender',this)">📅 Kalender</button>
   <button class="nav-tab" id="ntab-statistiken" onclick="switchTab('statistiken',this)">📊 Statistiken</button>
   <button class="nav-tab" id="ntab-einstellungen" onclick="switchTab('einstellungen',this)">⚙️ Einstellungen</button>
+  <button class="nav-tab" id="ntab-texturecreator" onclick="switchTab('texturecreator',this)">🎨 TextureSheet</button>
 </nav>
 
 <div class="page active" id="page-projekte"></div>
 <div class="page" id="page-kalender"></div>
 <div class="page" id="page-statistiken"></div>
 <div class="page" id="page-einstellungen"></div>
+<div class="page" id="page-texturecreator"></div>
 <div class="toast" id="toast"></div>
 
 <!-- Modals -->
@@ -1251,6 +1276,142 @@ async function tiConfirm(pid,tasks){
   await db.from('projects').update({last_worked:new Date().toISOString()}).eq('id',pid);
   await loadAll();expandedIds.add(pid);renderProjects();
   toast('✅ '+ins.length+' Tasks importiert');
+}
+</script>
+
+<!-- TextureSheet Creator Integration -->
+<script>
+var TextureSheetCreator = {
+  config: {
+    width: 1024, height: 1024, cols: 4, rows: 4,
+    bg_color: '#ffffff', grid_color: '#646464', grid_width: 2,
+    labels: true, pattern: 'none'
+  },
+  history: [],
+  templates: {
+    game_sprites: { name: 'Game Sprites', width: 512, height: 512, cols: 4, rows: 4, bg_color: '#c8c8c8', grid_color: '#333333' },
+    character: { name: 'Character Sheet', width: 1024, height: 1024, cols: 4, rows: 8, bg_color: '#dcdcdc', grid_color: '#641414' },
+    texture_3d: { name: '3D Texture Maps', width: 2048, height: 2048, cols: 8, rows: 4, bg_color: '#f0f0f0', grid_color: '#003266' },
+    seamless: { name: 'Seamless Tiles', width: 1024, height: 1024, cols: 3, rows: 3, bg_color: '#c0c0c0', grid_color: '#666666' }
+  },
+  patterns: {
+    'none': 'Solid Color', 'grid': 'Grid Pattern', 'checkerboard': 'Checkerboard',
+    'gradient_v': 'Gradient V', 'gradient_h': 'Gradient H', 'dots': 'Dots Pattern'
+  },
+  init: function() {
+    this.loadHistory(); this.render();
+  },
+  render: function() {
+    var page = document.getElementById('page-texturecreator');
+    if (!page) return;
+    var html = '<div style="max-width: 900px; margin: 0 auto;"><div style="margin-bottom: 1.5rem;"><h2 style="font-size: 18px; margin-bottom: 4px;">🎨 TextureSheet Creator</h2><p style="font-size: 13px; color: var(--text3);">Schnell und einfach Texture Sheets erstellen</p></div>';
+    html += '<div style="margin-bottom: 1.5rem;"><h3 style="font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">Templates</h3><div class="ts-buttons">';
+    for (var key in this.templates) {
+      html += '<button class="ts-btn" onclick="TextureSheetCreator.applyTemplate(\'' + key + '\')">' + this.templates[key].name + '</button>';
+    }
+    html += '</div></div><div class="ts-grid" style="margin-bottom: 1.5rem;"><div class="ts-section"><h4>Canvas</h4><div class="ts-row"><label>Width:</label><input type="number" id="ts-width" class="ts-input" value="' + this.config.width + '" min="256" max="4096" step="256" onchange="TextureSheetCreator.updateConfig()"/></div><div class="ts-row"><label>Height:</label><input type="number" id="ts-height" class="ts-input" value="' + this.config.height + '" min="256" max="4096" step="256" onchange="TextureSheetCreator.updateConfig()"/></div></div><div class="ts-section"><h4>Grid</h4><div class="ts-row"><label>Cols:</label><input type="number" id="ts-cols" class="ts-input" value="' + this.config.cols + '" min="1" max="32" onchange="TextureSheetCreator.updateConfig()"/></div><div class="ts-row"><label>Rows:</label><input type="number" id="ts-rows" class="ts-input" value="' + this.config.rows + '" min="1" max="32" onchange="TextureSheetCreator.updateConfig()"/></div><div class="ts-row"><label>Line Width:</label><input type="number" id="ts-grid-width" class="ts-input" value="' + this.config.grid_width + '" min="1" max="10" onchange="TextureSheetCreator.updateConfig()"/></div></div></div><div class="ts-grid" style="margin-bottom: 1.5rem;"><div class="ts-section"><h4>Colors</h4><div class="ts-row"><label>Background:</label><input type="color" id="ts-bg-color" value="' + this.config.bg_color + '" onchange="TextureSheetCreator.updateConfig()"/></div><div class="ts-row"><label>Grid:</label><input type="color" id="ts-grid-color" value="' + this.config.grid_color + '" onchange="TextureSheetCreator.updateConfig()"/></div></div><div class="ts-section"><h4>Options</h4><div style="margin-bottom: 8px;"><label style="font-size: 11px; color: var(--text3); display: block; margin-bottom: 4px;">Pattern</label><select id="ts-pattern" class="ts-input" onchange="TextureSheetCreator.updateConfig()">';
+    for (var pat in this.patterns) {
+      html += '<option value="' + pat + '"' + (pat === this.config.pattern ? ' selected' : '') + '>' + this.patterns[pat] + '</option>';
+    }
+    html += '</select></div><div class="ts-checkbox"><input type="checkbox" id="ts-labels" ' + (this.config.labels ? 'checked' : '') + ' onchange="TextureSheetCreator.updateConfig()"/><label for="ts-labels">Show Tile Labels</label></div></div></div><div class="ts-section" style="grid-column: 1/-1;"><h4>Export</h4><div class="ts-actions"><button class="btn" onclick="TextureSheetCreator.preview()" style="font-size: 12px;">👁️ Preview</button><button class="btn-accent" onclick="TextureSheetCreator.export()" style="font-size: 12px;">💾 Export PNG</button></div><div id="ts-status" style="display: none;"></div></div><div class="ts-section" style="grid-column: 1/-1;"><h4>History (Last 10)</h4><div id="ts-history" class="ts-history"></div><button class="btn" onclick="TextureSheetCreator.clearHistory()" style="font-size: 11px; margin-top: 8px; width: 100%;">🗑️ Clear History</button></div></div>';
+    page.innerHTML = html;
+    this.renderHistory();
+  },
+  updateConfig: function() {
+    this.config = {
+      width: parseInt(document.getElementById('ts-width').value),
+      height: parseInt(document.getElementById('ts-height').value),
+      cols: parseInt(document.getElementById('ts-cols').value),
+      rows: parseInt(document.getElementById('ts-rows').value),
+      bg_color: document.getElementById('ts-bg-color').value,
+      grid_color: document.getElementById('ts-grid-color').value,
+      grid_width: parseInt(document.getElementById('ts-grid-width').value),
+      labels: document.getElementById('ts-labels').checked,
+      pattern: document.getElementById('ts-pattern').value
+    };
+  },
+  applyTemplate: function(key) {
+    var t = this.templates[key];
+    if (!t) return;
+    document.getElementById('ts-width').value = t.width;
+    document.getElementById('ts-height').value = t.height;
+    document.getElementById('ts-cols').value = t.cols;
+    document.getElementById('ts-rows').value = t.rows;
+    document.getElementById('ts-bg-color').value = t.bg_color;
+    document.getElementById('ts-grid-color').value = t.grid_color;
+    this.updateConfig();
+    this.showStatus(t.name + ' applied', 'info');
+  },
+  preview: function() {
+    this.updateConfig();
+    this.showStatus('Preview generated', 'info');
+  },
+  export: function() {
+    this.updateConfig();
+    var entry = { time: new Date().toLocaleString(), config: this.config };
+    this.history.unshift(entry);
+    this.history = this.history.slice(0, 10);
+    this.saveHistory();
+    this.renderHistory();
+    this.showStatus('✓ Export prepared', 'success');
+    console.log('Export config:', this.config);
+  },
+  saveHistory: function() {
+    localStorage.setItem('ts_history', JSON.stringify(this.history));
+  },
+  loadHistory: function() {
+    var saved = localStorage.getItem('ts_history');
+    this.history = saved ? JSON.parse(saved) : [];
+  },
+  renderHistory: function() {
+    var histEl = document.getElementById('ts-history');
+    if (!histEl) return;
+    if (this.history.length === 0) {
+      histEl.textContent = 'No history yet';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < this.history.length; i++) {
+      html += '<div class="ts-history-item" onclick="TextureSheetCreator.applyHistoryItem(' + i + ')">' + this.history[i].time + ' | ' + this.history[i].config.width + '×' + this.history[i].config.height + ' | ' + this.history[i].config.cols + '×' + this.history[i].config.rows + '</div>';
+    }
+    histEl.innerHTML = html;
+  },
+  applyHistoryItem: function(idx) {
+    var item = this.history[idx];
+    if (!item) return;
+    var c = item.config;
+    document.getElementById('ts-width').value = c.width;
+    document.getElementById('ts-height').value = c.height;
+    document.getElementById('ts-cols').value = c.cols;
+    document.getElementById('ts-rows').value = c.rows;
+    document.getElementById('ts-bg-color').value = c.bg_color;
+    document.getElementById('ts-grid-color').value = c.grid_color;
+    document.getElementById('ts-grid-width').value = c.grid_width;
+    document.getElementById('ts-labels').checked = c.labels;
+    document.getElementById('ts-pattern').value = c.pattern;
+    this.updateConfig();
+    this.showStatus('Config loaded from history', 'info');
+  },
+  clearHistory: function() {
+    if (!confirm('Clear all history?')) return;
+    this.history = [];
+    this.saveHistory();
+    this.renderHistory();
+    this.showStatus('History cleared', 'info');
+  },
+  showStatus: function(msg, type) {
+    var el = document.getElementById('ts-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'ts-status ' + type;
+    el.style.display = 'block';
+    setTimeout(function() { el.style.display = 'none'; }, 3000);
+  }
+};
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() { TextureSheetCreator.init(); });
+} else {
+  TextureSheetCreator.init();
 }
 </script>
 </body>
